@@ -35,22 +35,26 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::resource('users', UserController::class);
     Route::resource('programs', AdminProgramController::class);
     Route::resource('programs.kegiatans', AdminKegiatanController::class)->except(['index', 'show']);
+    Route::get('profil', [App\Http\Controllers\Admin\ProfilController::class, 'index'])->name('profil.index');
+    Route::post('profil', [App\Http\Controllers\Admin\ProfilController::class, 'update'])->name('profil.update');
+    
+    Route::get('kontak', [App\Http\Controllers\Admin\KontakController::class, 'index'])->name('kontak.index');
+    Route::post('kontak', [App\Http\Controllers\Admin\KontakController::class, 'update'])->name('kontak.update');
+    
+    Route::resource('berita', App\Http\Controllers\Admin\BeritaController::class);
+    
     Route::get('settings', [SettingController::class, 'index'])->name('settings');
     Route::get('peta', [PetaController::class, 'index'])->name('peta.index');
 });
 
-Route::get('/profil', function () {
-    return view('profil');
-})->name('profil');
+Route::get('/profil', [HomeController::class, 'profil'])->name('profil');
 
 Route::get('/program', [ProgramController::class, 'index'])->name('program');
 Route::get('/program/{id}/kegiatan', [ProgramController::class, 'getKegiatan']);
 
-Route::get('/berita', function () {
-    return view('berita');
-})->name('berita');
+Route::get('/berita', [HomeController::class, 'berita'])->name('berita');
+Route::get('/berita/{slug}', [HomeController::class, 'beritaDetail'])->name('berita.detail');
 
-Route::get('/kontak', function () {
-    return view('kontak');
-})->name('kontak');
+Route::get('/kontak', [HomeController::class, 'kontak'])->name('kontak');
 
+Route::get('/{slug}', [HomeController::class, 'fitur'])->name('fitur.detail');

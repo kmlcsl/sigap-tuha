@@ -46,58 +46,70 @@
     <section class="features">
       <div class="cards">
         @forelse($features as $feature)
-          <article class="card">
-            <div class="ic {{ $feature->color_class }}" aria-hidden="true">
-              @if($feature->icon_svg)
-                {!! $feature->icon_svg !!}
-              @else
-                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-              @endif
-            </div>
-            <h3>{{ $feature->title }}</h3>
-            <p>{{ $feature->description }}</p>
-          </article>
+          <a href="{{ route('fitur.detail', \Illuminate\Support\Str::slug($feature->title)) }}" style="display: contents; text-decoration: none;">
+            <article class="card">
+              <div class="ic {{ $feature->color_class }}" aria-hidden="true">
+                @if($feature->icon_svg)
+                  {!! $feature->icon_svg !!}
+                @else
+                  <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                @endif
+              </div>
+              <h3>{{ $feature->title }}</h3>
+              <p>{{ $feature->description }}</p>
+            </article>
+          </a>
         @empty
           <!-- Fallback static content if database is empty -->
-          <article class="card">
-            <div class="ic blue" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M14 14c3.3 0 6 2.7 6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-            </div>
-            <h3>Pendataan Lansia</h3>
-            <p>Data lansia selalu terupdate dan akurat</p>
-          </article>
+          <a href="{{ route('fitur.detail', 'pendataan-lansia') }}" style="display: contents; text-decoration: none;">
+            <article class="card">
+              <div class="ic blue" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M14 14c3.3 0 6 2.7 6 6" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              </div>
+              <h3>Pendataan Lansia</h3>
+              <p>Data lansia selalu terupdate dan akurat</p>
+            </article>
+          </a>
 
-          <article class="card">
-            <div class="ic gold" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v5M9.5 13.5h5" stroke="#fff" stroke-width="2"/></svg>
-            </div>
-            <h3>Bantuan Darurat</h3>
-            <p>Respon cepat saat situasi darurat</p>
-          </article>
+          <a href="{{ route('fitur.detail', 'bantuan-darurat') }}" style="display: contents; text-decoration: none;">
+            <article class="card">
+              <div class="ic gold" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5h6v2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v5M9.5 13.5h5" stroke="#fff" stroke-width="2"/></svg>
+              </div>
+              <h3>Bantuan Darurat</h3>
+              <p>Respon cepat saat situasi darurat</p>
+            </article>
+          </a>
 
-          <article class="card">
-            <div class="ic red" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5c3-1.5 6-1.5 9 0v14c-3-1.5-6-1.5-9 0V5z"/><path d="M21 5c-3-1.5-6-1.5-9 0v14c3-1.5 6-1.5 9 0V5z"/></svg>
-            </div>
-            <h3>Edukasi &amp; Pelatihan</h3>
-            <p>Tingkatkan pengetahuan dan keterampilan</p>
-          </article>
+          <a href="{{ route('fitur.detail', 'edukasi-pelatihan') }}" style="display: contents; text-decoration: none;">
+            <article class="card">
+              <div class="ic red" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5c3-1.5 6-1.5 9 0v14c-3-1.5-6-1.5-9 0V5z"/><path d="M21 5c-3-1.5-6-1.5-9 0v14c3-1.5 6-1.5 9 0V5z"/></svg>
+              </div>
+              <h3>Edukasi &amp; Pelatihan</h3>
+              <p>Tingkatkan pengetahuan dan keterampilan</p>
+            </article>
+          </a>
 
-          <article class="card">
-            <div class="ic blue" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="8" r="2.5"/><circle cx="17" cy="8" r="2.5"/><circle cx="12" cy="7" r="3"/><path d="M2 19c0-2.8 2.2-5 5-5M22 19c0-2.8-2.2-5-5-5M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
-            </div>
-            <h3>Relawan Siaga</h3>
-            <p>Relawan terlatih, masyarakat terlindungi</p>
-          </article>
+          <a href="{{ route('fitur.detail', 'relawan-siaga') }}" style="display: contents; text-decoration: none;">
+            <article class="card">
+              <div class="ic blue" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="7" cy="8" r="2.5"/><circle cx="17" cy="8" r="2.5"/><circle cx="12" cy="7" r="3"/><path d="M2 19c0-2.8 2.2-5 5-5M22 19c0-2.8-2.2-5-5-5M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+              </div>
+              <h3>Relawan Siaga</h3>
+              <p>Relawan terlatih, masyarakat terlindungi</p>
+            </article>
+          </a>
 
-          <article class="card">
-            <div class="ic gold" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19V5M4 19h16"/><path d="M7 15l3-4 3 2 4-6"/></svg>
-            </div>
-            <h3>Monitoring &amp; Evaluasi</h3>
-            <p>Pantau kegiatan dan evaluasi berkelanjutan</p>
-          </article>
+          <a href="{{ route('fitur.detail', 'monitoring-evaluasi') }}" style="display: contents; text-decoration: none;">
+            <article class="card">
+              <div class="ic gold" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19V5M4 19h16"/><path d="M7 15l3-4 3 2 4-6"/></svg>
+              </div>
+              <h3>Monitoring &amp; Evaluasi</h3>
+              <p>Pantau kegiatan dan evaluasi berkelanjutan</p>
+            </article>
+          </a>
         @endforelse
       </div>
     </section>

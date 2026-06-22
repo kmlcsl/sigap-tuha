@@ -270,16 +270,19 @@
             gap: 12px;
             padding: 10px 12px;
             border-radius: var(--radius-md);
+            border: none;
+            background: #e2e8f0; /* Inactive: distinct solid gray */
             font-size: 13.5px;
             font-weight: 500;
             color: var(--text-secondary);
             transition: all var(--duration-fast) var(--ease-out);
             position: relative;
-            margin-bottom: 2px;
+            margin-bottom: 6px;
         }
 
         .nav-link:hover {
-            background: var(--gray-50);
+            background: var(--gray-100);
+            border-color: var(--gray-300);
             color: var(--text-primary);
         }
 
@@ -746,10 +749,11 @@
 
         /* Card */
         .card {
-            background: var(--surface-primary);
-            border: 1px solid var(--border-secondary);
+            background: var(--surface-primary); /* White background */
+            border: 2px solid #cbd5e1; /* Strong distinct border color as requested */
             border-radius: var(--radius-xl);
             padding: 24px;
+            box-shadow: 0 4px 12px rgba(16, 24, 40, 0.05);
             transition: box-shadow var(--duration-base) var(--ease-out),
                         transform var(--duration-base) var(--ease-out);
         }
@@ -812,6 +816,7 @@
             border: 1px solid var(--border-secondary);
             border-radius: var(--radius-xl);
             padding: 22px;
+            box-shadow: var(--shadow-sm);
             transition: all var(--duration-base) var(--ease-out);
             position: relative;
             overflow: hidden;
@@ -834,10 +839,10 @@
             transform: translate(20%, -20%) scale(1.3);
         }
 
-        .stat-card.brand::before   { background: var(--brand-500); }
-        .stat-card.success::before  { background: var(--success-500); }
-        .stat-card.warning::before  { background: var(--warning-500); }
-        .stat-card.danger::before   { background: var(--danger-500); }
+        .stat-card.brand { background: #bfdbfe; border: none; }
+        .stat-card.success { background: #bbf7d0; border: none; }
+        .stat-card.warning { background: #fef08a; border: none; }
+        .stat-card.danger { background: #fecaca; border: none; }
 
         .stat-card:hover {
             box-shadow: var(--shadow-lg);
@@ -867,13 +872,15 @@
             align-items: center;
             justify-content: center;
             font-size: 18px;
+            background: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .stat-card__icon.brand   { background: var(--brand-50); color: var(--brand-600); }
-        .stat-card__icon.success { background: var(--success-50); color: var(--success-500); }
-        .stat-card__icon.warning { background: var(--warning-50); color: var(--warning-500); }
-        .stat-card__icon.danger  { background: var(--danger-50); color: var(--danger-500); }
-        .stat-card__icon.info    { background: var(--info-50); color: var(--info-500); }
+        .stat-card__icon.brand   { color: var(--brand-600); }
+        .stat-card__icon.success { color: var(--success-500); }
+        .stat-card__icon.warning { color: var(--warning-500); }
+        .stat-card__icon.danger  { color: var(--danger-500); }
+        .stat-card__icon.info    { color: var(--info-500); }
 
         .stat-card__value {
             font-size: 28px;
@@ -1387,22 +1394,43 @@
                 <div class="nav-group">
                     <div class="nav-group__label">Utama</div>
                     <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" id="nav-dashboard">
-                        <span class="nav-link__icon"><i class="fas fa-th-large"></i></span>
+                        <span class="nav-link__icon" style="color: var(--brand-500)"><i class="fas fa-th-large"></i></span>
                         <span class="nav-link__text">Dashboard</span>
                     </a>
                     <a href="{{ route('beranda') }}" class="nav-link" id="nav-beranda" target="_blank">
-                        <span class="nav-link__icon"><i class="fas fa-home"></i></span>
+                        <span class="nav-link__icon" style="color: var(--gray-500)"><i class="fas fa-home"></i></span>
                         <span class="nav-link__text">Lihat Beranda</span>
                         <span class="nav-link__ext-icon"><i class="fas fa-external-link-alt"></i></span>
                     </a>
                 </div>
 
-                {{-- Manajemen Konten --}}
+                {{-- Bagian Utama --}}
                 <div class="nav-group">
-                    <div class="nav-group__label">Manajemen Konten</div>
+                    <div class="nav-group__label">Bagian Utama</div>
+                    <a href="{{ route('admin.profil.index') }}" class="nav-link {{ request()->routeIs('admin.profil.*') ? 'active' : '' }}" id="nav-profil">
+                        <span class="nav-link__icon" style="color: var(--info-500)"><i class="fas fa-id-card"></i></span>
+                        <span class="nav-link__text">Profil</span>
+                    </a>
+                    <a href="{{ route('admin.programs.index') }}" class="nav-link {{ request()->routeIs('admin.programs.*') ? 'active' : '' }}" id="nav-programs">
+                        <span class="nav-link__icon" style="color: var(--success-500)"><i class="fas fa-project-diagram"></i></span>
+                        <span class="nav-link__text">Program & Kegiatan</span>
+                    </a>
+                    <a href="{{ route('admin.berita.index') }}" class="nav-link {{ request()->routeIs('admin.berita.*') ? 'active' : '' }}" id="nav-berita">
+                        <span class="nav-link__icon" style="color: var(--warning-500)"><i class="fas fa-newspaper"></i></span>
+                        <span class="nav-link__text">Berita</span>
+                    </a>
+                    <a href="{{ route('admin.kontak.index') }}" class="nav-link {{ request()->routeIs('admin.kontak.*') ? 'active' : '' }}" id="nav-kontak">
+                        <span class="nav-link__icon" style="color: var(--danger-500)"><i class="fas fa-envelope"></i></span>
+                        <span class="nav-link__text">Kontak</span>
+                    </a>
+                </div>
+
+                {{-- Layanan & Fitur (5 Card) --}}
+                <div class="nav-group">
+                    <div class="nav-group__label">Layanan & Fitur</div>
                     <a href="{{ route('admin.features.index') }}" class="nav-link {{ request()->routeIs('admin.features.*') ? 'active' : '' }}" id="nav-features">
-                        <span class="nav-link__icon"><i class="fas fa-star"></i></span>
-                        <span class="nav-link__text">Fitur Halaman</span>
+                        <span class="nav-link__icon" style="color: var(--brand-600)"><i class="fas fa-star"></i></span>
+                        <span class="nav-link__text">Kelola 5 Card</span>
                     </a>
                 </div>
 
@@ -1424,10 +1452,6 @@
                     <a href="{{ route('admin.edukasi.index') }}" class="nav-link {{ request()->routeIs('admin.edukasi.*') ? 'active' : '' }}" id="nav-edukasi">
                         <span class="nav-link__icon"><i class="fas fa-book-open"></i></span>
                         <span class="nav-link__text">Edukasi BHD</span>
-                    </a>
-                    <a href="{{ route('admin.programs.index') }}" class="nav-link {{ request()->routeIs('admin.programs.*') ? 'active' : '' }}" id="nav-programs">
-                        <span class="nav-link__icon"><i class="fas fa-project-diagram"></i></span>
-                        <span class="nav-link__text">Program & Kegiatan</span>
                     </a>
                 </div>
 

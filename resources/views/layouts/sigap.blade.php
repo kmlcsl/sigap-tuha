@@ -31,6 +31,7 @@
 
         html {
             background: #eef3fb;
+            overflow-x: hidden;
         }
 
         body {
@@ -38,6 +39,14 @@
             color: var(--ink);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            opacity: 1;
+            transition: opacity 0.35s ease-in-out;
+            overflow-x: hidden;
+            width: 100%;
+        }
+
+        body.page-transition {
+            opacity: 0;
         }
 
         a {
@@ -415,10 +424,17 @@
         }
 
         .cards {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 16px;
             padding-bottom: 22px;
+        }
+
+        .cards > a {
+            display: block;
+            width: calc(20% - 13px);
+            text-decoration: none;
         }
 
         .card {
@@ -428,6 +444,7 @@
             text-align: center;
             box-shadow: 0 18px 40px rgba(11, 44, 107, .18);
             transition: .25s;
+            height: 100%;
         }
 
         .card:hover {
@@ -553,8 +570,8 @@
         .program-card {
             display: flex;
             flex-direction: column;
-            background: #fff;
-            border: 1px solid #e2e8f0;
+            background: #E6E6E6;
+            border: 1px solid #c0c0c0;
             border-radius: 24px;
             padding: 28px 24px;
             position: relative;
@@ -892,8 +909,8 @@
                 font-size: 64px;
             }
 
-            .cards {
-                grid-template-columns: repeat(3, 1fr);
+            .cards > a {
+                width: calc(33.33% - 11px);
             }
 
             .program-grid {
@@ -929,8 +946,11 @@
             }
 
             .cards {
-                grid-template-columns: repeat(3, 1fr);
                 gap: 12px;
+            }
+
+            .cards > a {
+                width: calc(33.33% - 8px);
             }
 
             .card {
@@ -998,8 +1018,15 @@
             }
 
             .cards {
-                grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
+            }
+
+            .cards > a {
+                width: calc(50% - 5px);
+                min-width: 0;
+            }
+            .cards > a:last-child:nth-child(odd) {
+                width: 100%;
             }
 
             .card {
@@ -1021,12 +1048,15 @@
             .card h3 {
                 font-size: 11px;
                 letter-spacing: .2px;
+                word-wrap: break-word;
+                hyphens: auto;
             }
 
             .card p {
                 font-size: 10.5px;
                 margin-top: 4px;
                 line-height: 1.35;
+                word-wrap: break-word;
             }
 
             .container {
@@ -1087,8 +1117,15 @@
             }
 
             .cards {
-                grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
+            }
+
+            .cards > a {
+                width: calc(50% - 4px);
+                min-width: 0;
+            }
+            .cards > a:last-child:nth-child(odd) {
+                width: 100%;
             }
 
             .card {
@@ -1110,7 +1147,7 @@
     </style>
 </head>
 
-<body>
+<body class="page-transition">
     <header class="hero @hasSection('content')
 @if (!request()->routeIs('beranda')) hero--subpage @endif
 @endif">
@@ -1174,6 +1211,39 @@
     </header>
 
     <script>
+        // Page Transition
+        document.addEventListener('DOMContentLoaded', () => {
+            requestAnimationFrame(() => {
+                document.body.classList.remove('page-transition');
+            });
+        });
+
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                document.body.classList.remove('page-transition');
+            }
+        });
+
+        document.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (
+                    this.hostname === window.location.hostname &&
+                    !this.hasAttribute('target') &&
+                    !this.hasAttribute('download') &&
+                    this.getAttribute('href') &&
+                    !this.getAttribute('href').startsWith('#') &&
+                    !this.getAttribute('href').startsWith('javascript:')
+                ) {
+                    e.preventDefault();
+                    const target = this.href;
+                    document.body.classList.add('page-transition');
+                    setTimeout(() => {
+                        window.location.href = target;
+                    }, 350);
+                }
+            });
+        });
+
         // Hamburger Menu Toggle
         (function() {
             const btn = document.getElementById('hamburgerBtn');

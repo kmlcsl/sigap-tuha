@@ -1,13 +1,24 @@
 @extends('layouts.sigap')
 
-@section('title', 'Profil - SIGAP TUHA')
+@section('title', ($profil->judul ?? 'Profil') . ' - SIGAP TUHA')
 
 @section('content')
     <div class="page-content">
         <div class="content-box">
-            <h2>Profil SIGAP TUHA</h2>
-            <p>SIGAP TUHA (Siaga, Tanggap dan Peduli untuk Lansia Pasca Bencana) adalah program inovasi dari Karang Taruna Kecamatan Pandrah, Kabupaten Bireuen yang berfokus pada perlindungan dan pendampingan lansia dalam menghadapi situasi bencana maupun pasca bencana.</p>
-            <p style="margin-top: 15px;">Kami berkomitmen untuk memastikan setiap lansia di wilayah Kecamatan Pandrah mendapatkan perhatian dan bantuan yang layak, terutama saat kondisi darurat.</p>
+            @if($profil)
+                <h2>{{ $profil->judul }}</h2>
+                @if($profil->gambar)
+                    <div style="margin: 20px 0; text-align: center;">
+                        <img src="{{ asset($profil->gambar) }}" alt="{{ $profil->judul }}" style="max-width: 100%; border-radius: 8px;">
+                    </div>
+                @endif
+                <div style="line-height: 1.8;">
+                    {!! nl2br(e($profil->konten)) !!}
+                </div>
+            @else
+                <h2>Profil SIGAP TUHA</h2>
+                <p>Belum ada data profil.</p>
+            @endif
         </div>
     </div>
 @endsection

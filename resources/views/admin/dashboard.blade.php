@@ -67,12 +67,12 @@
 {{-- Grid: Welcome + Quick Actions --}}
 <div class="grid grid-2" style="margin-bottom: 28px;">
     {{-- Welcome Card --}}
-    <div class="card">
+    <div class="card" style="background: #ccfbf1; border: none;">
         <div class="card__header">
-            <h3 class="card__title"><i class="fas fa-hand-sparkles"></i> Selamat Datang</h3>
+            <h3 class="card__title"><i class="fas fa-hand-sparkles" style="color: #0d9488;"></i> Selamat Datang</h3>
         </div>
         <div style="display:flex; gap:16px; align-items:flex-start;">
-            <div style="width:52px; height:52px; border-radius:var(--radius-xl); background:linear-gradient(135deg, var(--brand-500), var(--brand-700)); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:52px; height:52px; border-radius:var(--radius-xl); background:linear-gradient(135deg, #0d9488, #0f766e); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <i class="fas fa-shield-alt" style="font-size:22px; color:#fff;"></i>
             </div>
             <div>
@@ -81,10 +81,10 @@
                     Kelola konten landing page, pantau data lansia, dan kelola laporan darurat dari satu tempat terpusat. Pastikan semua informasi selalu akurat dan terbaru.
                 </p>
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                    <a href="{{ route('admin.features.index') }}" class="btn btn-primary btn-sm">
+                    <a href="{{ route('admin.features.index') }}" class="btn btn-primary btn-sm" style="background: #0f766e;">
                         <i class="fas fa-star"></i> Kelola Fitur
                     </a>
-                    <a href="{{ route('beranda') }}" class="btn btn-outline btn-sm" target="_blank">
+                    <a href="{{ route('beranda') }}" class="btn btn-outline btn-sm" target="_blank" style="border-color: #0d9488; color: #0f766e;">
                         <i class="fas fa-external-link-alt"></i> Lihat Beranda
                     </a>
                 </div>
@@ -93,9 +93,9 @@
     </div>
 
     {{-- Quick Stats --}}
-    <div class="card">
+    <div class="card" style="background: #f3e8ff; border: none;">
         <div class="card__header">
-            <h3 class="card__title"><i class="fas fa-chart-pie"></i> Ringkasan Cepat</h3>
+            <h3 class="card__title"><i class="fas fa-chart-pie" style="color: #9333ea;"></i> Ringkasan Cepat</h3>
         </div>
         <div style="display:flex; flex-direction:column; gap:16px;">
             <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--gray-50); border-radius:var(--radius-md);">
@@ -133,9 +133,9 @@
 {{-- Grid: Recent Activity + Status --}}
 <div class="grid grid-2">
     {{-- Aktivitas Terbaru --}}
-    <div class="card">
+    <div class="card" style="background: #ffe4e6; border: none;">
         <div class="card__header">
-            <h3 class="card__title"><i class="fas fa-history"></i> Aktivitas Terbaru2</h3>
+            <h3 class="card__title"><i class="fas fa-history" style="color: #e11d48;"></i> Aktivitas Terbaru</h3>
             <span class="card__action">Lihat semua <i class="fas fa-arrow-right" style="font-size:10px;"></i></span>
         </div>
         <div class="activity-list">
@@ -183,9 +183,9 @@
     </div>
 
     {{-- Status Keamanan --}}
-    <div class="card">
+    <div class="card" style="background: #e0f2fe; border: none;">
         <div class="card__header">
-            <h3 class="card__title"><i class="fas fa-shield-alt"></i> Status Sistem</h3>
+            <h3 class="card__title"><i class="fas fa-shield-alt" style="color: #0284c7;"></i> Status Sistem</h3>
         </div>
         <div style="display:flex; flex-direction:column; gap:18px;">
             {{-- Status Item --}}

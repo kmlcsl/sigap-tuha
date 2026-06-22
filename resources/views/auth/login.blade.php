@@ -55,39 +55,31 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Animated background blobs */
-        body::before,
+        /* Background Image with Blur */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -5%;
+            left: -5%;
+            width: 110%;
+            height: 110%;
+            background-image: url("{{ asset('images/bg-login.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            filter: blur(8px);
+            z-index: 0;
+        }
+
         body::after {
             content: '';
             position: fixed;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.3;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
             z-index: 0;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        body::before {
-            width: 500px;
-            height: 500px;
-            background: var(--brand-500);
-            top: -200px;
-            right: -100px;
-        }
-
-        body::after {
-            width: 400px;
-            height: 400px;
-            background: var(--success-500);
-            bottom: -150px;
-            left: -100px;
-            animation-delay: -10s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.05); }
-            66% { transform: translate(-20px, 20px) scale(0.95); }
         }
 
         .login-container {
@@ -98,7 +90,7 @@
         }
 
         .login-card {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgb(55, 129, 157, 0.40);
             backdrop-filter: blur(20px) saturate(180%);
             -webkit-backdrop-filter: blur(20px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.6);
@@ -162,7 +154,7 @@
 
         .login-card .subtitle {
             font-size: 13.5px;
-            color: var(--gray-500);
+            color: #ffffff;
             margin-bottom: 28px;
             line-height: 1.5;
         }
@@ -176,13 +168,13 @@
             display: block;
             font-size: 13px;
             font-weight: 600;
-            color: var(--gray-900);
+            color: #ffffff;
             margin-bottom: 6px;
         }
 
         .form-group label i {
             margin-right: 5px;
-            color: var(--gray-400);
+            color: #ffffff;
             font-size: 13px;
         }
 
@@ -291,13 +283,13 @@
             gap: 6px;
             margin-top: 22px;
             font-size: 13px;
-            color: var(--brand-600);
+            color: #ffffff;
             font-weight: 600;
             transition: all 0.2s;
         }
 
-        .back-link:hover {
-            color: var(--brand-800);
+        .back-link:hover, .back-link:active {
+            color: #3b82f6; /* blue color for hover and click */
             gap: 8px;
         }
 
@@ -319,16 +311,6 @@
 
             .login-card h1 {
                 font-size: 20px;
-            }
-
-            body::before {
-                width: 300px;
-                height: 300px;
-            }
-
-            body::after {
-                width: 250px;
-                height: 250px;
             }
         }
     </style>
