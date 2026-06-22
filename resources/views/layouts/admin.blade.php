@@ -2,7 +2,7 @@
 <html lang="id" data-theme="light">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="description" content="SIGAP TUHA Admin Panel - Sistem Informasi Gerak Aksi Peduli Terhadap Usia Harapan Aman">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Admin Panel' }} — SIGAP TUHA</title>
@@ -145,9 +145,8 @@
             position: fixed;
             top: 0;
             left: 0;
+            bottom: 0;
             width: var(--sidebar-w);
-            height: 100vh;
-            height: 100dvh;
             background: var(--surface-primary);
             border-right: 1px solid var(--border-secondary);
             display: flex;
@@ -246,6 +245,8 @@
             overflow-x: hidden;
             scrollbar-width: thin;
             scrollbar-color: var(--gray-200) transparent;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
         }
 
         .sidebar__nav::-webkit-scrollbar { width: 4px; }
@@ -1267,11 +1268,8 @@
         @media (max-width: 1024px) {
             .grid-2 { grid-template-columns: 1fr; }
             .grid-3 { grid-template-columns: 1fr 1fr; }
-
             .topbar__search { width: 200px; }
-
             .content-area { padding: 24px 20px 36px; }
-
             .topbar__user-mini-name { display: none; }
         }
 
@@ -1283,48 +1281,25 @@
                 transform: translateX(-100%);
                 box-shadow: none;
             }
-
             .sidebar.open {
                 transform: translateX(0);
                 box-shadow: var(--shadow-2xl);
             }
-
             .main-area { margin-left: 0; }
-
             .topbar__toggle { display: flex; }
             .topbar__search { display: none; }
             .topbar__divider { display: none; }
             .topbar__user-mini .fa-chevron-down { display: none; }
-
-            .topbar {
-                padding: 0 16px;
-                height: 58px;
-            }
-
+            .topbar { padding: 0 16px; height: 58px; }
             .content-area { padding: 20px 16px 32px; }
-
             .stat-card { padding: 18px; }
             .stat-card__value { font-size: 24px; }
             .stat-card__icon { width: 38px; height: 38px; font-size: 16px; }
-
             .page-header__title { font-size: 22px; }
-
             .grid-2, .grid-3 { grid-template-columns: 1fr; }
-
-            .card {
-                padding: 18px;
-                border-radius: var(--radius-lg);
-            }
-
-            .page-header__actions {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .table td, .table th {
-                padding: 10px 12px;
-                font-size: 12.5px;
-            }
+            .card { padding: 18px; border-radius: var(--radius-lg); }
+            .page-header__actions { flex-direction: column; align-items: stretch; }
+            .table td, .table th { padding: 10px 12px; font-size: 12.5px; }
         }
 
         /* ══════════════════════════════════════════════
@@ -1335,12 +1310,21 @@
             .topbar { padding: 0 12px; }
             .card { padding: 14px; }
             .page-header__title { font-size: 20px; }
-
-            .stat-card {
-                padding: 14px 16px;
-            }
-
+            .stat-card { padding: 14px 16px; }
             .stat-card__value { font-size: 22px; }
+            .table td, .table th { padding: 10px 10px; font-size: 12px; }
+        }
+
+        /* ══════════════════════════════════════════════
+           RESPONSIVE — EXTRA SMALL (≤ 360px)
+        ══════════════════════════════════════════════ */
+        @media (max-width: 360px) {
+            .content-area { padding: 12px 10px 24px; }
+            .topbar { padding: 0 10px; }
+            .card { padding: 12px; }
+            .page-header__title { font-size: 18px; }
+            .stat-card { padding: 12px 14px; }
+            .stat-card__value { font-size: 20px; }
         }
 
         /* Focus visible */
@@ -1623,10 +1607,12 @@
             'use strict';
 
             const sidebar   = document.getElementById('sidebar');
-            const overlay    = document.getElementById('sidebarOverlay');
-            const toggle     = document.getElementById('sidebarToggle');
-            const shell      = document.getElementById('adminShell');
+            const overlay   = document.getElementById('sidebarOverlay');
+            const toggle    = document.getElementById('sidebarToggle');
             const BREAKPOINT = 768;
+
+            const isMobileMode = () => window.innerWidth <= BREAKPOINT;
+
             let isOpen = false;
 
             function openSidebar() {
@@ -1634,7 +1620,6 @@
                 sidebar.classList.add('open');
                 overlay.classList.add('active');
                 document.body.style.overflow = 'hidden';
-                // Change hamburger icon to X
                 toggle.innerHTML = '<i class="fas fa-times"></i>';
             }
 
@@ -1650,13 +1635,14 @@
                 isOpen ? closeSidebar() : openSidebar();
             }
 
+            // Only attach toggle click if toggle is visible
             toggle.addEventListener('click', toggleSidebar);
             overlay.addEventListener('click', closeSidebar);
 
-            // Close sidebar on nav click (mobile)
+            // Close sidebar on nav click (only on mobile)
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', () => {
-                    if (window.innerWidth <= BREAKPOINT) closeSidebar();
+                    if (isMobileMode()) closeSidebar();
                 });
             });
 
@@ -1665,16 +1651,16 @@
                 if (e.key === 'Escape' && isOpen) closeSidebar();
             });
 
-            // Handle resize
+            // Handle resize — only close if going back to desktop
             let resizeTimer;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(() => {
-                    if (window.innerWidth > BREAKPOINT && isOpen) closeSidebar();
+                    if (!isMobileMode() && isOpen) closeSidebar();
                 }, 150);
             });
 
-            // Touch / Swipe
+            // Touch swipe to open/close — only on real touch devices
             let touchStartX = 0, touchStartY = 0;
             document.addEventListener('touchstart', e => {
                 touchStartX = e.touches[0].clientX;
@@ -1682,7 +1668,7 @@
             }, { passive: true });
 
             document.addEventListener('touchend', e => {
-                if (window.innerWidth > BREAKPOINT) return;
+                if (!isMobileMode()) return;
                 const diffX = e.changedTouches[0].clientX - touchStartX;
                 const diffY = Math.abs(e.changedTouches[0].clientY - touchStartY);
                 if (diffX > 80 && diffY < 50 && touchStartX < 30 && !isOpen) openSidebar();

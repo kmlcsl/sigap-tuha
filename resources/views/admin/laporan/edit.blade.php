@@ -12,7 +12,7 @@
     </div>
     <form action="{{ route('admin.laporan.update', $laporan) }}" method="POST">
         @csrf @method('PUT')
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div class="grid grid-2" style="gap:20px;">
             <div class="form-group">
                 <label><i class="fas fa-user" style="margin-right:4px; color:var(--text-tertiary)"></i> Lansia <span class="required">*</span></label>
                 <select name="lansia_id" class="form-control" required>
@@ -37,7 +37,7 @@
             <label><i class="fas fa-map-marker-alt" style="margin-right:4px; color:var(--text-tertiary)"></i> Lokasi</label>
             <input type="text" name="lokasi" class="form-control" value="{{ old('lokasi', $laporan->lokasi) }}">
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div class="grid grid-2" style="gap:20px;">
             <div class="form-group">
                 <label><i class="fas fa-bolt" style="margin-right:4px; color:var(--text-tertiary)"></i> Tingkat Urgensi <span class="required">*</span></label>
                 <select name="tingkat_urgensi" class="form-control" required>

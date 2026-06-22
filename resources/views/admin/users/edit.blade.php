@@ -25,7 +25,7 @@
             </select>
             @error('role') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div class="grid grid-2" style="gap:20px;">
             <div class="form-group">
                 <label><i class="fas fa-lock" style="margin-right:4px; color:var(--text-tertiary)"></i> Password Baru</label>
                 <input type="password" name="password" class="form-control" placeholder="Kosongkan jika tidak diubah">

@@ -40,7 +40,7 @@
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
             opacity: 1;
-            transition: opacity 0.35s ease-in-out;
+            transition: opacity 0.2s ease-out;
             overflow-x: hidden;
             width: 100%;
         }
@@ -89,8 +89,11 @@
         }
 
         .hero-bg {
-            position: absolute;
-            inset: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: 0;
         }
 
@@ -152,11 +155,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
+        .brand .logo img,
         .brand .logo svg {
-            width: 34px;
-            height: 34px;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .brand .name {
@@ -1017,6 +1023,11 @@
                 height: 60px;
             }
 
+            .brand .logo {
+                width: 42px;
+                height: 42px;
+            }
+
             .cards {
                 gap: 10px;
             }
@@ -1224,6 +1235,7 @@
             }
         });
 
+
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function(e) {
                 if (
@@ -1239,7 +1251,7 @@
                     document.body.classList.add('page-transition');
                     setTimeout(() => {
                         window.location.href = target;
-                    }, 350);
+                    }, 150);
                 }
             });
         });

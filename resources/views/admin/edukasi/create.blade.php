@@ -16,7 +16,7 @@
             <textarea name="konten" class="form-control" style="min-height:160px;" required placeholder="Isi materi edukasi...">{{ old('konten') }}</textarea>
             @error('konten') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px;">
+        <div class="grid grid-3" style="gap:20px;">
             <div class="form-group">
                 <label><i class="fas fa-tag" style="margin-right:4px; color:var(--text-tertiary)"></i> Kategori <span class="required">*</span></label>
                 <select name="kategori" class="form-control" required>

@@ -9,7 +9,7 @@
     <div class="card__header"><h3 class="card__title"><i class="fas fa-file-medical"></i> Form Laporan Darurat</h3></div>
     <form action="{{ route('admin.laporan.store') }}" method="POST">
         @csrf
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div class="grid grid-2" style="gap:20px;">
             <div class="form-group">
                 <label><i class="fas fa-user" style="margin-right:4px; color:var(--text-tertiary)"></i> Lansia <span class="required">*</span></label>
                 <select name="lansia_id" class="form-control" required>
@@ -36,7 +36,7 @@
             <input type="text" name="lokasi" class="form-control" value="{{ old('lokasi') }}" placeholder="Lokasi kejadian">
             @error('lokasi') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+        <div class="grid grid-2" style="gap:20px;">
             <div class="form-group">
                 <label><i class="fas fa-bolt" style="margin-right:4px; color:var(--text-tertiary)"></i> Tingkat Urgensi <span class="required">*</span></label>
                 <select name="tingkat_urgensi" class="form-control" required>
