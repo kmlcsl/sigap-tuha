@@ -113,7 +113,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
+            width: 100%;
             height: 100vh;
             z-index: 0;
         }
@@ -286,7 +286,8 @@
             display: none;
             position: fixed;
             top: 0;
-            right: -300px;
+            right: 0; /* Posisikan di layar */
+            transform: translateX(100%); /* Geser ke luar tanpa merusak scrollWidth */
             width: 280px;
             max-width: 80vw;
             height: 100vh;
@@ -294,12 +295,12 @@
             z-index: 95;
             padding: 90px 28px 40px;
             box-shadow: -10px 0 40px rgba(11, 44, 107, .2);
-            transition: right .35s cubic-bezier(.4, 0, .2, 1);
+            transition: transform .35s cubic-bezier(.4, 0, .2, 1);
             overflow-y: auto;
         }
 
         .mobile-menu.open {
-            right: 0;
+            transform: translateX(0);
         }
 
         .mobile-menu a {
@@ -1139,6 +1140,10 @@
             .program-card {
                 padding: 22px 18px;
                 border-radius: 18px;
+            }
+            
+            .program-card:hover {
+                transform: none;
             }
 
             .program-card .btn-toggle {

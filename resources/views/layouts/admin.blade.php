@@ -416,6 +416,7 @@
         ══════════════════════════════════════════════ */
         .main-area {
             flex: 1;
+            min-width: 0; /* Mencegah layout rusak karena child lebar */
             margin-left: var(--sidebar-w);
             min-height: 100vh;
             min-height: 100dvh;
@@ -713,6 +714,7 @@
         /* ── Content Area ── */
         .content-area {
             flex: 1;
+            min-width: 0; /* Mencegah layout rusak karena child lebar */
             padding: 28px 32px 40px;
             width: 100%;
         }
@@ -754,6 +756,7 @@
             border: 2px solid #cbd5e1; /* Strong distinct border color as requested */
             border-radius: var(--radius-xl);
             padding: 24px;
+            min-width: 0; /* Mencegah card memanjang di luar container */
             box-shadow: 0 4px 12px rgba(16, 24, 40, 0.05);
             transition: box-shadow var(--duration-base) var(--ease-out),
                         transform var(--duration-base) var(--ease-out);
@@ -1406,6 +1409,10 @@
                     <a href="{{ route('admin.kontak.index') }}" class="nav-link {{ request()->routeIs('admin.kontak.*') ? 'active' : '' }}" id="nav-kontak">
                         <span class="nav-link__icon" style="color: var(--danger-500)"><i class="fas fa-envelope"></i></span>
                         <span class="nav-link__text">Kontak</span>
+                    </a>
+                    <a href="{{ route('admin.features.index') }}" class="nav-link {{ request()->routeIs('admin.features.*') ? 'active' : '' }}" id="nav-features">
+                        <span class="nav-link__icon" style="color: var(--brand-500)"><i class="fas fa-star"></i></span>
+                        <span class="nav-link__text">Fitur Landing Page</span>
                     </a>
                 </div>
 

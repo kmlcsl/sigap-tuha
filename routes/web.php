@@ -6,16 +6,23 @@ use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\HomeController;
 
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\FeatureController;
 
-use App\Http\Controllers\Admin\LansiaController;
-use App\Http\Controllers\Admin\EdukasiController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\PetaController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\FeatureController as AdminFeatureController;
+use App\Http\Controllers\Admin\LansiaController as AdminLansiaController;
+use App\Http\Controllers\Admin\EdukasiController as AdminEdukasiController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\PetaController as AdminPetaController;
 use App\Http\Controllers\Admin\ProgramController as AdminProgramController;
 use App\Http\Controllers\Admin\KegiatanController as AdminKegiatanController;
+use App\Http\Controllers\Admin\ProfilController as AdminProfilController;
+use App\Http\Controllers\Admin\KontakController as AdminKontakController;
+use App\Http\Controllers\Admin\BeritaController as AdminBeritaController;
+use App\Http\Controllers\Admin\BantuanDaruratController as AdminBantuanDaruratController;
+use App\Http\Controllers\Admin\OrganisasiRelawanController as AdminOrganisasiRelawanController;
+use App\Http\Controllers\Admin\RelawanController as AdminRelawanController;
+use App\Http\Controllers\Admin\MonitoringController as AdminMonitoringController;
 
 Route::get('/', [HomeController::class, 'index'])->name('beranda');
 
@@ -26,43 +33,46 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Admin Panel Routes
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('features', FeatureController::class);
-    Route::resource('lansia', LansiaController::class);
-    Route::resource('edukasi', EdukasiController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('programs', AdminProgramController::class);
-    Route::resource('programs.kegiatans', AdminKegiatanController::class)->except(['index', 'show']);
-    Route::get('profil', [App\Http\Controllers\Admin\ProfilController::class, 'index'])->name('profil.index');
-    Route::post('profil', [App\Http\Controllers\Admin\ProfilController::class, 'update'])->name('profil.update');
-    
-    Route::get('kontak', [App\Http\Controllers\Admin\KontakController::class, 'index'])->name('kontak.index');
-    Route::post('kontak', [App\Http\Controllers\Admin\KontakController::class, 'update'])->name('kontak.update');
-    
-    Route::resource('berita', App\Http\Controllers\Admin\BeritaController::class);
-    
-    Route::get('settings', [SettingController::class, 'index'])->name('settings');
-    Route::get('peta', [PetaController::class, 'index'])->name('peta.index');
-    
-    // CARD 1: LANSIA EXPORT
-    Route::get('lansia/export', [LansiaController::class, 'export'])->name('lansia.export');
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('features', AdminFeatureController::class);
+
+    // CARD 1: LANSIA
+    Route::get('lansia/export', [AdminLansiaController::class, 'export'])->name('lansia.export');
+    Route::resource('lansia', AdminLansiaController::class)->parameters(['lansia' => 'lansia']);
 
     // CARD 2: BANTUAN DARURAT
-    Route::resource('bantuan-darurat', App\Http\Controllers\Admin\BantuanDaruratController::class);
-    Route::patch('bantuan-darurat/{bantuan_darurat}/toggle', [App\Http\Controllers\Admin\BantuanDaruratController::class, 'toggleActive'])->name('bantuan-darurat.toggle');
+    Route::resource('bantuan-darurat', AdminBantuanDaruratController::class);
+    Route::patch('bantuan-darurat/{bantuan_darurat}/toggle', [AdminBantuanDaruratController::class, 'toggleActive'])->name('bantuan-darurat.toggle');
+
+    // CARD 3: EDUKASI & PELATIHAN
+    Route::resource('edukasi', AdminEdukasiController::class);
 
     // CARD 4: RELAWAN SIAGA
-    Route::resource('organisasi-relawan', App\Http\Controllers\Admin\OrganisasiRelawanController::class);
-    Route::resource('organisasi-relawan.relawan', App\Http\Controllers\Admin\RelawanController::class);
+    Route::resource('organisasi-relawan', AdminOrganisasiRelawanController::class);
+    Route::resource('organisasi-relawan.relawan', AdminRelawanController::class);
 
     // CARD 5: MONITORING
     Route::prefix('monitoring')->name('monitoring.')->group(function () {
-        Route::get('/', [App\Http\Controllers\Admin\MonitoringController::class, 'index'])->name('index');
-        Route::post('/presensi', [App\Http\Controllers\Admin\MonitoringController::class, 'storePresensi'])->name('presensi.store');
-        Route::post('/kunjungan', [App\Http\Controllers\Admin\MonitoringController::class, 'storeKunjungan'])->name('kunjungan.store');
-        Route::post('/kasus', [App\Http\Controllers\Admin\MonitoringController::class, 'storeKasus'])->name('kasus.store');
-        Route::post('/evaluasi', [App\Http\Controllers\Admin\MonitoringController::class, 'storeEvaluasi'])->name('evaluasi.store');
+        Route::get('/', [AdminMonitoringController::class, 'index'])->name('index');
+        Route::post('/presensi', [AdminMonitoringController::class, 'storePresensi'])->name('presensi.store');
+        Route::post('/kunjungan', [AdminMonitoringController::class, 'storeKunjungan'])->name('kunjungan.store');
+        Route::post('/kasus', [AdminMonitoringController::class, 'storeKasus'])->name('kasus.store');
+        Route::post('/evaluasi', [AdminMonitoringController::class, 'storeEvaluasi'])->name('evaluasi.store');
     });
+
+    Route::resource('users', AdminUserController::class);
+    Route::resource('programs', AdminProgramController::class);
+    Route::resource('programs.kegiatans', AdminKegiatanController::class)->except(['index', 'show']);
+    Route::get('profil', [AdminProfilController::class, 'index'])->name('profil.index');
+    Route::post('profil', [AdminProfilController::class, 'update'])->name('profil.update');
+    
+    Route::get('kontak', [AdminKontakController::class, 'index'])->name('kontak.index');
+    Route::post('kontak', [AdminKontakController::class, 'update'])->name('kontak.update');
+    
+    Route::resource('berita', AdminBeritaController::class);
+    
+    Route::get('settings', [AdminSettingController::class, 'index'])->name('settings');
+    Route::get('peta', [AdminPetaController::class, 'index'])->name('peta.index');
 });
 
 Route::get('/profil', [HomeController::class, 'profil'])->name('profil');

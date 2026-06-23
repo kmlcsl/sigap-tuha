@@ -138,7 +138,6 @@
         </a>
 
         <div style="margin-bottom: 30px; text-align: center;">
-            <div style="font-size: 48px; color: #0d9488; margin-bottom: 16px;"><i class="fas fa-graduation-cap"></i></div>
             <h2 style="font-size: 28px; font-weight: 800; color: var(--ink);">Edukasi & Pelatihan</h2>
             <div style="width: 60px; height: 4px; background: #0d9488; border-radius: 2px; margin: 16px auto;"></div>
             <p style="color: var(--muted); max-width: 600px; margin: 10px auto;">Tingkatkan pengetahuan dan kesiapsiagaan Anda dengan materi pelatihan komprehensif dari SIGAP TUHA.</p>

@@ -3,90 +3,69 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Lansia;
+use App\Models\PendataanLansia;
+use App\Exports\PendataanLansiaExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LansiaController extends Controller
 {
-    public function index(Request $request)
+    private function rules(): array
     {
-        $query = Lansia::query();
-
-        if ($request->filled('search')) {
-            $s = $request->search;
-            $query->where(function ($q) use ($s) {
-                $q->where('nama', 'like', "%$s%")
-                  ->orWhere('desa', 'like', "%$s%")
-                  ->orWhere('alamat', 'like', "%$s%");
-            });
-        }
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-
-        if ($request->filled('jenis_kelamin')) {
-            $query->where('jenis_kelamin', $request->jenis_kelamin);
-        }
-
-        $lansias = $query->orderBy('nama')->get();
-
-        return view('admin.lansia.index', ['lansias' => $lansias]);
+        return [
+            'kecamatan'           => 'required|string|max:150',
+            'jumlah_penduduk_l'   => 'required|integer|min:0',
+            'jumlah_penduduk_p'   => 'required|integer|min:0',
+            'bayi_baru_lahir_l'   => 'required|integer|min:0',
+            'bayi_baru_lahir_p'   => 'required|integer|min:0',
+            'usia_0_11_bulan_l'   => 'required|integer|min:0',
+            'usia_0_11_bulan_p'   => 'required|integer|min:0',
+            'usia_12_59_bulan_l'  => 'required|integer|min:0',
+            'usia_12_59_bulan_p'  => 'required|integer|min:0',
+            'usia_60_72_bulan_l'  => 'required|integer|min:0',
+            'usia_60_72_bulan_p'  => 'required|integer|min:0',
+            'usia_7_9_tahun_l'    => 'required|integer|min:0',
+            'usia_7_9_tahun_p'    => 'required|integer|min:0',
+            'usia_10_12_tahun_l'  => 'required|integer|min:0',
+            'usia_10_12_tahun_p'  => 'required|integer|min:0',
+            'usia_13_14_tahun_l'  => 'required|integer|min:0',
+            'usia_13_14_tahun_p'  => 'required|integer|min:0',
+            'usia_15_59_tahun_l'  => 'required|integer|min:0',
+            'usia_15_59_tahun_p'  => 'required|integer|min:0',
+            'usia_60_69_tahun_l'  => 'required|integer|min:0',
+            'usia_60_69_tahun_p'  => 'required|integer|min:0',
+            'usia_70_plus_l'      => 'required|integer|min:0',
+            'usia_70_plus_p'      => 'required|integer|min:0',
+        ];
     }
 
-    public function export(Request $request)
+    public function index(Request $request)
     {
-        $query = Lansia::query();
+        $query = PendataanLansia::query();
 
         if ($request->filled('search')) {
-            $s = $request->search;
-            $query->where(function ($q) use ($s) {
-                $q->where('nama', 'like', "%$s%")
-                  ->orWhere('desa', 'like', "%$s%");
-            });
-        }
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->filled('jenis_kelamin')) {
-            $query->where('jenis_kelamin', $request->jenis_kelamin);
+            $query->where('kecamatan', 'like', '%' . $request->search . '%');
         }
 
-        $lansias = $query->orderBy('nama')->get();
+        $lansias = $query->orderBy('kecamatan')->get();
 
-        $filename = 'data-lansia-' . now()->format('Y-m-d') . '.csv';
+        // Hitung total agregat untuk stats cards
+        $totalPendudukL  = $lansias->sum('jumlah_penduduk_l');
+        $totalPendudukP  = $lansias->sum('jumlah_penduduk_p');
+        $totalLansiaL    = $lansias->sum('usia_60_69_tahun_l') + $lansias->sum('usia_70_plus_l');
+        $totalLansiaP    = $lansias->sum('usia_60_69_tahun_p') + $lansias->sum('usia_70_plus_p');
 
-        $headers = [
-            'Content-Type'        => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => "attachment; filename=\"$filename\"",
-        ];
+        return view('admin.lansia.index', compact(
+            'lansias',
+            'totalPendudukL', 'totalPendudukP',
+            'totalLansiaL', 'totalLansiaP'
+        ));
+    }
 
-        $callback = function () use ($lansias) {
-            $handle = fopen('php://output', 'w');
-            // BOM for Excel UTF-8
-            fprintf($handle, chr(0xEF) . chr(0xBB) . chr(0xBF));
-            // Header row
-            fputcsv($handle, ['No','Nama Lengkap','Umur','Jenis Kelamin','Alamat','Desa/Kecamatan','Kontak Keluarga','Kondisi Kesehatan','Riwayat Penyakit','Status Bantuan','Tanggal Didaftarkan']);
-
-            foreach ($lansias as $i => $l) {
-                fputcsv($handle, [
-                    $i + 1,
-                    $l->nama,
-                    $l->umur . ' tahun',
-                    $l->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan',
-                    $l->alamat,
-                    $l->desa,
-                    $l->kontak_keluarga ?? '-',
-                    $l->kondisi_kesehatan ?? '-',
-                    $l->riwayat_penyakit ?? '-',
-                    $l->status,
-                    $l->created_at->format('d/m/Y'),
-                ]);
-            }
-            fclose($handle);
-        };
-
-        return response()->stream($callback, 200, $headers);
+    public function export()
+    {
+        $filename = 'pendataan-lansia-' . now()->format('Y-m-d') . '.xlsx';
+        return Excel::download(new PendataanLansiaExport(), $filename);
     }
 
     public function create()
@@ -96,55 +75,45 @@ class LansiaController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'nama'              => 'required|max:150',
-            'umur'              => 'required|integer|min:1|max:150',
-            'jenis_kelamin'     => 'required|in:L,P',
-            'alamat'            => 'required',
-            'desa'              => 'required|max:100',
-            'kontak_keluarga'   => 'nullable|max:20',
-            'riwayat_penyakit'  => 'nullable',
-            'kondisi_kesehatan' => 'nullable|max:100',
-            'status'            => 'required|in:Stabil,Perlu pemantauan,Rujukan segera',
-            'lat'               => 'nullable|numeric',
-            'lng'               => 'nullable|numeric',
-        ]);
+        $validated = $request->validate($this->rules());
+        PendataanLansia::create($validated);
 
-        Lansia::create($validated);
-
-        return redirect()->route('admin.lansia.index')->with('success', 'Data lansia berhasil ditambahkan.');
+        return redirect()
+            ->route('admin.lansia.index')
+            ->with('success', 'Data kecamatan ' . $validated['kecamatan'] . ' berhasil ditambahkan.');
     }
 
-    public function edit(Lansia $lansia)
+    public function show(PendataanLansia $lansia)
     {
-        return view('admin.lansia.edit', ['lansia' => $lansia]);
+        return redirect()->route('admin.lansia.edit', $lansia);
     }
 
-    public function update(Request $request, Lansia $lansia)
+    public function edit(PendataanLansia $lansia)
     {
-        $validated = $request->validate([
-            'nama'              => 'required|max:150',
-            'umur'              => 'required|integer|min:1|max:150',
-            'jenis_kelamin'     => 'required|in:L,P',
-            'alamat'            => 'required',
-            'desa'              => 'required|max:100',
-            'kontak_keluarga'   => 'nullable|max:20',
-            'riwayat_penyakit'  => 'nullable',
-            'kondisi_kesehatan' => 'nullable|max:100',
-            'status'            => 'required|in:Stabil,Perlu pemantauan,Rujukan segera',
-            'lat'               => 'nullable|numeric',
-            'lng'               => 'nullable|numeric',
-        ]);
+        return view('admin.lansia.edit', compact('lansia'));
+    }
 
+    public function update(Request $request, PendataanLansia $lansia)
+    {
+        $rules = $this->rules();
+        // Unique kecamatan ignoring current record
+        $rules['kecamatan'] = 'required|string|max:150|unique:pendataan_lansias,kecamatan,' . $lansia->id;
+
+        $validated = $request->validate($rules);
         $lansia->update($validated);
 
-        return redirect()->route('admin.lansia.index')->with('success', 'Data lansia berhasil diperbarui.');
+        return redirect()
+            ->route('admin.lansia.index')
+            ->with('success', 'Data kecamatan ' . $lansia->kecamatan . ' berhasil diperbarui.');
     }
 
-    public function destroy(Lansia $lansia)
+    public function destroy(PendataanLansia $lansia)
     {
+        $nama = $lansia->kecamatan;
         $lansia->delete();
 
-        return redirect()->route('admin.lansia.index')->with('success', 'Data lansia berhasil dihapus.');
+        return redirect()
+            ->route('admin.lansia.index')
+            ->with('success', 'Data kecamatan ' . $nama . ' berhasil dihapus.');
     }
 }

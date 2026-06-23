@@ -1,192 +1,324 @@
 @extends('layouts.admin')
-@section('header_title', 'Edit Data Lansia')
+@section('header_title', 'Edit Data Kecamatan')
 
 @section('content')
+<style>
+/* ═══════════════════════════════════════════════════
+   Form Pendataan Lansia — Edit
+   Section warna berbeda · Tabel input kompak · Responsif
+═══════════════════════════════════════════════════ */
 
-{{-- Page Header --}}
-<div class="page-header" style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
-    <div>
-        <h1 class="page-header__title">
-            <i class="fas fa-user-edit" style="color:var(--brand-500); margin-right:10px; font-size:22px;"></i>
-            Edit Data Lansia
-        </h1>
-        <p class="page-header__desc">Memperbarui data: <strong>{{ $lansia->nama }}</strong></p>
-    </div>
-    <a href="{{ route('admin.lansia.index') }}" class="btn btn-outline">
-        <i class="fas fa-arrow-left"></i> Kembali
+.pl-form-wrap   { max-width: 960px; }
+
+/* ── Section ── */
+.pl-section {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+.pl-section__head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    font-size: 12.5px;
+    font-weight: 800;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+}
+.pl-section__body { padding: 20px 24px; }
+
+/* Section warna berbeda */
+.pl-section.blue   { border: 1.5px solid #bdd4ff; }
+.pl-section.blue   .pl-section__head { background: linear-gradient(90deg,#1d4ed8,#3b6cf9); color:#fff; }
+.pl-section.blue   .pl-section__body { background: #f0f5ff; }
+
+.pl-section.slate  { border: 1.5px solid #cbd5e1; }
+.pl-section.slate  .pl-section__head { background: linear-gradient(90deg,#334155,#475467); color:#fff; }
+.pl-section.slate  .pl-section__body { background: #f8fafc; }
+
+.pl-section.violet { border: 1.5px solid #ddd6fe; }
+.pl-section.violet .pl-section__head { background: linear-gradient(90deg,#5b21b6,#7c3aed); color:#fff; }
+.pl-section.violet .pl-section__body { background: #f5f3ff; }
+
+/* ── Jumlah Penduduk 2-col ── */
+.pl-penduduk {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+@media (max-width:500px) { .pl-penduduk { grid-template-columns: 1fr; } }
+
+/* ── Tabel Rekap Usia ── */
+.pl-usia-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+.pl-usia-table thead tr {
+    background: linear-gradient(90deg,#0b2c6b,#1d4ed8);
+}
+.pl-usia-table thead th {
+    padding: 11px 14px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .4px;
+    text-align: left;
+}
+.pl-usia-table thead th.center { text-align: center; }
+.pl-usia-table tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    transition: background .12s;
+}
+.pl-usia-table tbody tr:last-child { border-bottom: none; }
+.pl-usia-table tbody tr:hover { background: rgba(29,78,216,.05); }
+.pl-usia-table tbody tr:nth-child(even) { background: rgba(241,245,249,.7); }
+.pl-usia-table tbody tr:nth-child(even):hover { background: rgba(29,78,216,.05); }
+
+.pl-usia-table td {
+    padding: 10px 14px;
+    vertical-align: middle;
+}
+.pl-usia-table td.label {
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    width: 36%;
+}
+.pl-usia-table td.label span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+.pl-usia-table td.label .kelompok-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+.pl-usia-table td.input-cell { width: 32%; }
+.pl-usia-table td.input-cell .input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.pl-usia-table td.input-cell .gender-icon {
+    font-size: 13px;
+    width: 22px;
+    flex-shrink: 0;
+    text-align: center;
+}
+.pl-usia-table td.input-cell input[type="number"] {
+    flex: 1;
+    padding: 7px 10px;
+    border: 1.5px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    font-size: 13.5px;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: #fff;
+    transition: border-color .15s, box-shadow .15s;
+    text-align: center;
+    min-width: 0;
+}
+.pl-usia-table td.input-cell input[type="number"]:focus {
+    outline: none;
+}
+.pl-usia-table td.input-cell input.is-l:focus { border-color: #3b6cf9; box-shadow: 0 0 0 3px rgba(59,108,249,.12); }
+.pl-usia-table td.input-cell input.is-p:focus { border-color: #be185d; box-shadow: 0 0 0 3px rgba(190,24,93,.12); }
+
+/* Responsif */
+@media (max-width: 640px) {
+    .pl-usia-table thead th:last-child { display: none; }
+    .pl-usia-table td.input-cell:last-child { display: none; }
+    .pl-usia-table td.label { width: 50%; }
+    .pl-usia-table td.input-cell { width: 50%; }
+    .pl-section__body { padding: 14px 12px; }
+    .pl-form-wrap { max-width: 100%; }
+}
+
+.pl-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    padding-top: 4px;
+}
+</style>
+
+{{-- Breadcrumb --}}
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;font-size:13px;color:var(--text-tertiary);">
+    <a href="{{ route('admin.lansia.index') }}" style="color:var(--brand-500);font-weight:600;text-decoration:none;">
+        <i class="fas fa-users"></i> Pendataan Lansia
     </a>
+    <i class="fas fa-chevron-right" style="font-size:10px;"></i>
+    <span>Edit — {{ $lansia->kecamatan }}</span>
 </div>
 
-@if($errors->any())
-    <div class="flash-message error" style="margin-bottom:20px;">
-        <i class="fas fa-exclamation-circle"></i>
-        <div>
-            <strong>Terdapat {{ $errors->count() }} kesalahan:</strong>
-            <ul style="margin-top:6px; padding-left:18px; font-size:13px;">
-                @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
-            </ul>
+<div class="pl-form-wrap">
+
+    {{-- Card Header --}}
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;">
+        <div style="background:linear-gradient(135deg,#1e40af,#3b6cf9);padding:22px 28px;color:#fff;">
+            <h2 style="font-size:18px;font-weight:800;margin:0 0 4px;display:flex;align-items:center;gap:10px;">
+                <i class="fas fa-pen-to-square"></i> Edit — {{ $lansia->kecamatan }}
+            </h2>
+            <p style="margin:0;font-size:13px;opacity:.85;">Perbarui rekap jumlah penduduk per kelompok usia untuk kecamatan ini.</p>
         </div>
     </div>
-@endif
 
-{{-- Status Info Bar --}}
-<div style="padding:14px 20px; border-radius:var(--radius-lg); display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;
-    background: {{ $lansia->status=='Stabil' ? 'var(--success-50)' : ($lansia->status=='Perlu pemantauan' ? 'var(--warning-50)' : 'var(--danger-50)') }};
-    border: 1px solid {{ $lansia->status=='Stabil' ? '#a7f3d0' : ($lansia->status=='Perlu pemantauan' ? '#fde68a' : '#fecaca') }};">
-    <i class="fas fa-{{ $lansia->status=='Stabil' ? 'check-circle' : ($lansia->status=='Perlu pemantauan' ? 'exclamation-triangle' : 'exclamation-circle') }}"
-        style="font-size:20px; color:{{ $lansia->status=='Stabil' ? 'var(--success-500)' : ($lansia->status=='Perlu pemantauan' ? 'var(--warning-500)' : 'var(--danger-500)') }}; flex-shrink:0;"></i>
-    <div style="flex:1; min-width:0;">
-        <div style="font-weight:700; font-size:14px; color:var(--text-primary);">{{ $lansia->nama }}</div>
-        <div style="font-size:13px; color:var(--text-secondary);">
-            {{ $lansia->umur }} tahun &bull; {{ $lansia->jenis_kelamin == 'L' ? 'Laki-laki' : 'Perempuan' }} &bull; {{ $lansia->desa }} &bull;
-            Status: <strong>{{ $lansia->status }}</strong>
-        </div>
-    </div>
-    <span class="badge {{ $lansia->status=='Stabil' ? 'badge--success' : ($lansia->status=='Perlu pemantauan' ? 'badge--warning' : 'badge--danger') }}">
-        <span class="badge__dot"></span> {{ $lansia->status }}
-    </span>
-</div>
+    <form action="{{ route('admin.lansia.update', $lansia) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-<form action="{{ route('admin.lansia.update', $lansia) }}" method="POST" id="editLansiaForm">
-@csrf @method('PUT')
-
-{{-- SECTION 1: Data Pribadi --}}
-<div class="card" style="margin-bottom:20px;">
-    <div class="card__header">
-        <h3 class="card__title"><i class="fas fa-id-card"></i> Data Pribadi</h3>
-        <span style="font-size:12px; color:var(--text-tertiary);">ID: <strong>#{{ $lansia->id }}</strong></span>
-    </div>
-
-    <div class="grid grid-2" style="gap:20px;">
-        <div class="form-group" style="grid-column: 1 / -1;">
-            <label><i class="fas fa-user" style="margin-right:5px; color:var(--text-tertiary);"></i> Nama Lengkap <span class="required">*</span></label>
-            <input type="text" name="nama" class="form-control @error('nama') is-error @enderror"
-                value="{{ old('nama', $lansia->nama) }}" required maxlength="200">
-            @error('nama')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
-        </div>
-
-        <div class="form-group">
-            <label><i class="fas fa-birthday-cake" style="margin-right:5px; color:var(--text-tertiary);"></i> Umur <span class="required">*</span></label>
-            <div style="position:relative;">
-                <input type="number" name="umur" class="form-control @error('umur') is-error @enderror"
-                    value="{{ old('umur', $lansia->umur) }}" required min="50" max="150">
-                <span style="position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:13px; color:var(--text-tertiary); pointer-events:none;">tahun</span>
+        {{-- Error summary --}}
+        @if($errors->any())
+        <div class="flash-message danger" style="margin-bottom:16px;">
+            <i class="fas fa-exclamation-circle"></i>
+            <div>
+                <strong>Terdapat {{ $errors->count() }} kesalahan — periksa isian form.</strong>
+                <ul style="margin:6px 0 0 18px;font-size:12.5px;line-height:1.8;">
+                    @foreach($errors->all() as $err)<li>{{ $err }}</li>@endforeach
+                </ul>
             </div>
-            @error('umur')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+        </div>
+        @endif
+
+        {{-- ── SECTION 1: Identitas Wilayah ─────────────────────── --}}
+        <div class="pl-section blue">
+            <div class="pl-section__head">
+                <i class="fas fa-map-location-dot"></i> Identitas Wilayah
+            </div>
+            <div class="pl-section__body">
+                <div class="form-group" style="max-width:420px;margin-bottom:0;">
+                    <label class="form-label" for="kecamatan">
+                        Nama Kecamatan <span style="color:var(--danger-500)">*</span>
+                    </label>
+                    <input type="text" id="kecamatan" name="kecamatan"
+                        class="form-control @error('kecamatan') is-error @enderror"
+                        value="{{ old('kecamatan', $lansia->kecamatan) }}"
+                        placeholder="Contoh: Pandrah" required>
+                    @error('kecamatan')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label><i class="fas fa-venus-mars" style="margin-right:5px; color:var(--text-tertiary);"></i> Jenis Kelamin <span class="required">*</span></label>
-            <select name="jenis_kelamin" class="form-control @error('jenis_kelamin') is-error @enderror" required>
-                <option value="L" {{ old('jenis_kelamin', $lansia->jenis_kelamin)=='L' ? 'selected' : '' }}>Laki-laki</option>
-                <option value="P" {{ old('jenis_kelamin', $lansia->jenis_kelamin)=='P' ? 'selected' : '' }}>Perempuan</option>
-            </select>
-            @error('jenis_kelamin')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+        {{-- ── SECTION 2: Jumlah Penduduk ───────────────────────── --}}
+        <div class="pl-section slate">
+            <div class="pl-section__head">
+                <i class="fas fa-people-group"></i> Jumlah Penduduk
+            </div>
+            <div class="pl-section__body">
+                <div class="pl-penduduk">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">
+                            <i class="fas fa-mars" style="color:var(--brand-500);"></i> Laki-laki (L)
+                        </label>
+                        <input type="number" name="jumlah_penduduk_l"
+                            class="form-control @error('jumlah_penduduk_l') is-error @enderror"
+                            value="{{ old('jumlah_penduduk_l', $lansia->jumlah_penduduk_l) }}" min="0" required>
+                        @error('jumlah_penduduk_l')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">
+                            <i class="fas fa-venus" style="color:#be185d;"></i> Perempuan (P)
+                        </label>
+                        <input type="number" name="jumlah_penduduk_p"
+                            class="form-control @error('jumlah_penduduk_p') is-error @enderror"
+                            value="{{ old('jumlah_penduduk_p', $lansia->jumlah_penduduk_p) }}" min="0" required>
+                        @error('jumlah_penduduk_p')<div class="form-error">{{ $message }}</div>@enderror
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label><i class="fas fa-map-pin" style="margin-right:5px; color:var(--text-tertiary);"></i> Desa <span class="required">*</span></label>
-            <input type="text" name="desa" class="form-control @error('desa') is-error @enderror"
-                value="{{ old('desa', $lansia->desa) }}" required>
-            @error('desa')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+        {{-- ── SECTION 3: Rekap Per Kelompok Usia ───────────────── --}}
+        @php
+            $kelompok = [
+                ['key'=>'bayi_baru_lahir',  'label'=>'Bayi Baru Lahir',  'icon'=>'fa-baby',          'badge_bg'=>'#ede9fe','badge_color'=>'#5b21b6'],
+                ['key'=>'usia_0_11_bulan',  'label'=>'Usia 0–11 Bulan',  'icon'=>'fa-baby-carriage',  'badge_bg'=>'#dbeafe','badge_color'=>'#1d4ed8'],
+                ['key'=>'usia_12_59_bulan', 'label'=>'Usia 12–59 Bulan', 'icon'=>'fa-child',          'badge_bg'=>'#cffafe','badge_color'=>'#0e7490'],
+                ['key'=>'usia_60_72_bulan', 'label'=>'Usia 60–72 Bulan', 'icon'=>'fa-child-reaching', 'badge_bg'=>'#dcfce7','badge_color'=>'#15803d'],
+                ['key'=>'usia_7_9_tahun',   'label'=>'Usia 7–9 Tahun',   'icon'=>'fa-person',         'badge_bg'=>'#d1fae5','badge_color'=>'#065f46'],
+                ['key'=>'usia_10_12_tahun', 'label'=>'Usia 10–12 Tahun', 'icon'=>'fa-person',         'badge_bg'=>'#fef9c3','badge_color'=>'#854d0e'],
+                ['key'=>'usia_13_14_tahun', 'label'=>'Usia 13–14 Tahun', 'icon'=>'fa-user',           'badge_bg'=>'#ffedd5','badge_color'=>'#9a3412'],
+                ['key'=>'usia_15_59_tahun', 'label'=>'Usia 15–59 Tahun', 'icon'=>'fa-user-tie',        'badge_bg'=>'#fee2e2','badge_color'=>'#b91c1c'],
+                ['key'=>'usia_60_69_tahun', 'label'=>'Usia 60–69 Tahun', 'icon'=>'fa-user-clock',      'badge_bg'=>'#fce7f3','badge_color'=>'#9d174d'],
+                ['key'=>'usia_70_plus',     'label'=>'Usia &gt;70 Tahun', 'icon'=>'fa-person-cane',    'badge_bg'=>'#f3e8ff','badge_color'=>'#6b21a8'],
+            ];
+        @endphp
+
+        <div class="pl-section violet">
+            <div class="pl-section__head">
+                <i class="fas fa-chart-bar"></i> Rekap Per Kelompok Usia
+                <span style="font-size:11px;font-weight:500;opacity:.85;margin-left:4px;">(isi 0 jika tidak ada)</span>
+            </div>
+            <div class="pl-section__body" style="padding:0;">
+                <div style="overflow-x:auto;">
+                    <table class="pl-usia-table">
+                        <thead>
+                            <tr>
+                                <th>Kelompok Usia</th>
+                                <th class="center"><i class="fas fa-mars" style="margin-right:5px;"></i>Laki-laki (L)</th>
+                                <th class="center"><i class="fas fa-venus" style="margin-right:5px;"></i>Perempuan (P)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($kelompok as $k)
+                            <tr>
+                                <td class="label">
+                                    <span>
+                                        <i class="fas {{ $k['icon'] }}" style="color:{{ $k['badge_color'] }};width:16px;text-align:center;"></i>
+                                        <span class="kelompok-badge" style="background:{{ $k['badge_bg'] }};color:{{ $k['badge_color'] }};">
+                                            {!! $k['label'] !!}
+                                        </span>
+                                    </span>
+                                </td>
+                                <td class="input-cell">
+                                    <div class="input-wrap">
+                                        <span class="gender-icon" style="color:var(--brand-600);">♂</span>
+                                        <input type="number" name="{{ $k['key'] }}_l"
+                                            class="is-l @error($k['key'].'_l') is-error @enderror"
+                                            value="{{ old($k['key'].'_l', $lansia->{$k['key'].'_l'}) }}"
+                                            min="0" required
+                                            title="{{ $k['label'] }} - Laki-laki">
+                                    </div>
+                                    @error($k['key'].'_l')<div class="form-error" style="font-size:11px;margin-top:3px;">{{ $message }}</div>@enderror
+                                </td>
+                                <td class="input-cell">
+                                    <div class="input-wrap">
+                                        <span class="gender-icon" style="color:#be185d;">♀</span>
+                                        <input type="number" name="{{ $k['key'] }}_p"
+                                            class="is-p @error($k['key'].'_p') is-error @enderror"
+                                            value="{{ old($k['key'].'_p', $lansia->{$k['key'].'_p'}) }}"
+                                            min="0" required
+                                            title="{{ $k['label'] }} - Perempuan">
+                                    </div>
+                                    @error($k['key'].'_p')<div class="form-error" style="font-size:11px;margin-top:3px;">{{ $message }}</div>@enderror
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
-        <div class="form-group" style="grid-column: 1 / -1;">
-            <label><i class="fas fa-map-marker-alt" style="margin-right:5px; color:var(--text-tertiary);"></i> Alamat Lengkap <span class="required">*</span></label>
-            <textarea name="alamat" class="form-control @error('alamat') is-error @enderror" rows="3" required>{{ old('alamat', $lansia->alamat) }}</textarea>
-            @error('alamat')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+        {{-- ── Tombol Aksi ───────────────────────────────────────── --}}
+        <div class="pl-actions">
+            <a href="{{ route('admin.lansia.index') }}" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Batal
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Perbarui Data
+            </button>
         </div>
 
-        <div class="form-group">
-            <label><i class="fas fa-phone" style="margin-right:5px; color:var(--text-tertiary);"></i> Kontak Keluarga</label>
-            <input type="tel" name="kontak_keluarga" class="form-control @error('kontak_keluarga') is-error @enderror"
-                value="{{ old('kontak_keluarga', $lansia->kontak_keluarga) }}" placeholder="Nomor HP keluarga">
-            @error('kontak_keluarga')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
-        </div>
-
-        <div class="form-group">
-            <label><i class="fas fa-flag" style="margin-right:5px; color:var(--text-tertiary);"></i> Status Kesehatan <span class="required">*</span></label>
-            <select name="status" class="form-control @error('status') is-error @enderror" required>
-                <option value="Stabil" {{ old('status', $lansia->status)=='Stabil' ? 'selected' : '' }}>✅ Stabil</option>
-                <option value="Perlu pemantauan" {{ old('status', $lansia->status)=='Perlu pemantauan' ? 'selected' : '' }}>⚠️ Perlu Pemantauan</option>
-                <option value="Rujukan segera" {{ old('status', $lansia->status)=='Rujukan segera' ? 'selected' : '' }}>🚨 Rujukan Segera</option>
-            </select>
-            @error('status')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
-        </div>
-    </div>
-</div>
-
-{{-- SECTION 2: Kondisi Kesehatan --}}
-<div class="card" style="margin-bottom:20px;">
-    <div class="card__header">
-        <h3 class="card__title"><i class="fas fa-heartbeat"></i> Kondisi Kesehatan</h3>
-    </div>
-
-    <div class="form-group">
-        <label><i class="fas fa-stethoscope" style="margin-right:5px; color:var(--text-tertiary);"></i> Kondisi Kesehatan Saat Ini</label>
-        <input type="text" name="kondisi_kesehatan" class="form-control @error('kondisi_kesehatan') is-error @enderror"
-            value="{{ old('kondisi_kesehatan', $lansia->kondisi_kesehatan) }}"
-            placeholder="Contoh: Hipertensi, Diabetes Melitus">
-        @error('kondisi_kesehatan')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
-    </div>
-
-    <div class="form-group">
-        <label><i class="fas fa-notes-medical" style="margin-right:5px; color:var(--text-tertiary);"></i> Riwayat Penyakit</label>
-        <textarea name="riwayat_penyakit" class="form-control @error('riwayat_penyakit') is-error @enderror"
-            rows="3" placeholder="Riwayat penyakit sebelumnya...">{{ old('riwayat_penyakit', $lansia->riwayat_penyakit) }}</textarea>
-        @error('riwayat_penyakit')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
-    </div>
-</div>
-
-{{-- SECTION 3: Koordinat --}}
-<div class="card" style="margin-bottom:24px;">
-    <div class="card__header">
-        <h3 class="card__title"><i class="fas fa-map-marked-alt"></i> Koordinat Lokasi</h3>
-        <span style="font-size:12px; color:var(--text-tertiary);">Opsional</span>
-    </div>
-
-    <div class="grid grid-2" style="gap:20px;">
-        <div class="form-group">
-            <label><i class="fas fa-crosshairs" style="margin-right:5px; color:var(--text-tertiary);"></i> Latitude</label>
-            <input type="text" name="lat" class="form-control @error('lat') is-error @enderror"
-                value="{{ old('lat', $lansia->lat) }}" placeholder="Contoh: 5.187234">
-            @error('lat')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
-        </div>
-        <div class="form-group">
-            <label><i class="fas fa-crosshairs" style="margin-right:5px; color:var(--text-tertiary);"></i> Longitude</label>
-            <input type="text" name="lng" class="form-control @error('lng') is-error @enderror"
-                value="{{ old('lng', $lansia->lng) }}" placeholder="Contoh: 97.234567">
-            @error('lng')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
-        </div>
-    </div>
-</div>
-
-{{-- Actions --}}
-<div style="display:flex; gap:12px; flex-wrap:wrap; padding:4px 0 24px;">
-    <button type="submit" class="btn btn-primary" id="submitBtn">
-        <i class="fas fa-save"></i> Simpan Perubahan
-    </button>
-    <a href="{{ route('admin.lansia.index') }}" class="btn btn-outline">
-        <i class="fas fa-times"></i> Batal
-    </a>
-    <form action="{{ route('admin.lansia.destroy', $lansia) }}" method="POST" style="margin-left:auto;"
-        onsubmit="return confirm('Hapus data lansia {{ addslashes($lansia->nama) }} secara permanen?')">
-        @csrf @method('DELETE')
-        <button type="submit" class="btn btn-danger">
-            <i class="fas fa-trash-alt"></i> Hapus Data
-        </button>
     </form>
 </div>
 
-</form>
-@endsection
-
-@section('scripts')
-<script>
-document.getElementById('editLansiaForm').addEventListener('submit', function () {
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
-});
-</script>
 @endsection

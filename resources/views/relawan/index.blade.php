@@ -111,7 +111,6 @@
         </a>
 
         <div style="margin-bottom: 30px; text-align: center;">
-            <div style="font-size: 48px; color: #12b76a; margin-bottom: 16px;"><i class="fas fa-hands-helping"></i></div>
             <h2 style="font-size: 28px; font-weight: 800; color: var(--ink);">Relawan Siaga</h2>
             <div style="width: 60px; height: 4px; background: #12b76a; border-radius: 2px; margin: 16px auto;"></div>
             @php

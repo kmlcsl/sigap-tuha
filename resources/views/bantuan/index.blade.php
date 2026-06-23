@@ -55,7 +55,6 @@
         </a>
 
         <div style="margin-bottom: 30px; text-align: center;">
-            <div style="font-size: 48px; color: var(--red); margin-bottom: 16px;"><i class="fas fa-ambulance"></i></div>
             <h2 style="font-size: 28px; font-weight: 800; color: var(--ink);">Bantuan Darurat</h2>
             <div style="width: 60px; height: 4px; background: var(--red); border-radius: 2px; margin: 16px auto;"></div>
             <p style="color: var(--muted); max-width: 600px; margin: 10px auto;">Hubungi langsung via WhatsApp — Satu klik, bantuan segera datang.</p>

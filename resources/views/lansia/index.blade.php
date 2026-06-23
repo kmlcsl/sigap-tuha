@@ -4,402 +4,552 @@
 
 @section('content')
 <style>
-/* ── Halaman Pendataan Lansia ── */
-.lansia-page { padding: 0; }
+/* ═══════════════════════════════════════════════════════════════
+   Pendataan Lansia — Public Landing Page
+   Modern glassmorphism · Animated chart bars · Modal popup
+═══════════════════════════════════════════════════════════════ */
 
-/* Stat cards */
-.lansia-stats {
+/* ── Stat Cards ── */
+.pl-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-.lansia-stat-card {
-    background: #E6E6E6;
-    border-radius: 24px;
-    padding: 22px 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    border: 1px solid #c0c0c0;
-    border-top: 4px solid var(--card-color, #1d4ed8);
-    text-align: center;
-    transition: transform .2s, box-shadow .2s;
-}
-.lansia-stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
-.lansia-stat-card__value { font-size: 36px; font-weight: 800; color: var(--card-color, #1d4ed8); line-height: 1; margin-bottom: 6px; }
-.lansia-stat-card__label { font-size: 12.5px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .5px; }
-
-/* Chart container */
-.chart-card {
-    background: #E6E6E6;
-    border-radius: 24px;
-    padding: 24px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    border: 1px solid #c0c0c0;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
     margin-bottom: 32px;
 }
-.chart-card__title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
-
-/* Table */
-.lansia-table-card {
-    background: #E6E6E6;
-    border-radius: 24px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    border: 1px solid #c0c0c0;
-    overflow: hidden;
+.pl-stat {
+    background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(239,246,255,.95));
+    border-radius: 20px;
+    padding: 22px 20px;
+    box-shadow: 0 4px 20px rgba(11,44,107,.08);
+    border: 1px solid rgba(189,212,255,.5);
+    border-top: 4px solid var(--sc, #1d4ed8);
+    text-align: center;
+    transition: transform .25s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+    cursor: default;
 }
-.lansia-table-card table { width: 100%; border-collapse: collapse; font-size: 14px; }
-.lansia-table-card thead tr { background: rgba(0,0,0,0.05); color: var(--ink); border-bottom: 2px solid #c0c0c0; }
-.lansia-table-card thead th { padding: 14px 16px; font-weight: 700; font-size: 13px; text-align: left; white-space: nowrap; }
-.lansia-table-card tbody tr { border-bottom: 1px solid #d1d5db; transition: background .15s; }
-.lansia-table-card tbody tr:hover { background: rgba(255,255,255,0.5); }
-.lansia-table-card tbody td { padding: 13px 16px; color: var(--muted); vertical-align: middle; }
+.pl-stat:hover { transform: translateY(-6px); box-shadow: 0 12px 32px rgba(11,44,107,.15); }
+.pl-stat__num  { font-size: 40px; font-weight: 900; color: var(--sc); line-height: 1; }
+.pl-stat__sub  { font-size: 11.5px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: .5px; margin-top: 6px; }
+.pl-stat__lp   { display: flex; justify-content: center; gap: 12px; margin-top: 8px; font-size: 12px; font-weight: 600; }
+.lbl-l         { color: #1d4ed8; }
+.lbl-p         { color: #be185d; }
 
-/* Klik desa */
-.desa-link {
+/* ── Chart Card ── */
+.pl-chart-card {
+    background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(239,246,255,.95));
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 4px 20px rgba(11,44,107,.08);
+    border: 1px solid rgba(189,212,255,.5);
+    margin-bottom: 32px;
+}
+.pl-chart-card__title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0b2c6b;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.pl-chart-card__hint {
+    font-size: 12.5px;
+    color: #64748b;
+    margin-bottom: 20px;
+}
+.chart-wrap { position: relative; height: 300px; }
+
+/* ── Table Card ── */
+.pl-table-card {
+    background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(239,246,255,.95));
+    border-radius: 24px;
+    box-shadow: 0 4px 20px rgba(11,44,107,.08);
+    border: 1px solid rgba(189,212,255,.5);
+    overflow-x: auto;
+    margin-bottom: 32px;
+}
+.pl-table-card table  { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.pl-table-card thead tr { background: linear-gradient(90deg,#0b2c6b,#1d4ed8); color: #fff; }
+.pl-table-card thead th { padding: 14px 16px; font-weight: 700; font-size: 12px; text-align: left; white-space: nowrap; letter-spacing: .3px; }
+.pl-table-card tbody tr { border-bottom: 1px solid #e8f0ff; transition: background .15s; cursor: pointer; }
+.pl-table-card tbody tr:hover { background: rgba(29,78,216,.06); }
+.pl-table-card tbody td { padding: 13px 16px; color: #374151; vertical-align: middle; }
+.pl-table-card tfoot tr { background: #0b2c6b; color: #fff; font-weight: 800; }
+.pl-table-card tfoot td { padding: 13px 16px; }
+
+/* ── Kecamatan link ── */
+.kec-link {
     color: #1d4ed8;
     font-weight: 700;
-    cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    transition: color .15s;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    transition: all .15s;
 }
-.desa-link:hover { color: #2563eb; }
+.kec-link:hover { color: #1e40af; text-decoration: underline; text-underline-offset: 3px; }
 
-/* Badge */
-.badge-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 11.5px;
-    font-weight: 600;
+/* ── Pill badge ── */
+.pl-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 999px;
+    font-size: 11.5px; font-weight: 700;
 }
-.badge-status.stabil { background: #dcfce7; color: #15803d; }
-.badge-status.pantau { background: #fef9c3; color: #a16207; }
-.badge-status.rujukan { background: #fee2e2; color: #dc2626; }
+.pl-pill.l  { background: #dbeafe; color: #1d4ed8; }
+.pl-pill.p  { background: #fce7f3; color: #be185d; }
+.pl-pill.tot{ background: #0b2c6b; color: #fff; }
 
-/* Modal */
+/* ── Back button ── */
+.pl-back {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 18px;
+    background: rgba(255,255,255,.9);
+    color: #0b2c6b;
+    border-radius: 14px;
+    font-weight: 700; font-size: 13.5px;
+    text-decoration: none;
+    box-shadow: 0 2px 10px rgba(11,44,107,.1);
+    border: 1px solid rgba(189,212,255,.5);
+    transition: all .2s; margin-bottom: 24px;
+}
+.pl-back:hover { background: #1d4ed8; color: #fff; box-shadow: 0 4px 14px rgba(29,78,216,.3); }
+
+/* ══════════════════════════════════════════
+   MODAL POPUP
+══════════════════════════════════════════ */
 .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-    display: none;
-    align-items: center;
-    justify-content: center;
+    position: fixed; inset: 0;
+    background: rgba(8,24,60,.65);
+    backdrop-filter: blur(6px);
+    z-index: 2000;
+    display: none; align-items: center; justify-content: center;
     padding: 16px;
+    animation: fadein .2s;
 }
-.modal-overlay.active { display: flex; }
+.modal-overlay.open { display: flex; }
+@keyframes fadein { from { opacity:0; } to { opacity:1; } }
+
 .modal-box {
     background: #fff;
-    border-radius: 20px;
-    max-width: 620px;
-    width: 100%;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.25);
-    animation: modalIn .25s ease;
+    border-radius: 24px;
+    max-width: 680px; width: 100%;
+    max-height: 88vh; overflow-y: auto;
+    box-shadow: 0 32px 80px rgba(11,44,107,.35);
+    animation: slideUp .3s cubic-bezier(.34,1.56,.64,1);
 }
-@keyframes modalIn {
-    from { opacity:0; transform: scale(.94) translateY(12px); }
+@keyframes slideUp {
+    from { opacity:0; transform: scale(.93) translateY(20px); }
     to   { opacity:1; transform: scale(1) translateY(0); }
 }
 .modal-header {
-    background: #0b2c6b;
-    color: #fff;
-    padding: 20px 24px;
-    border-radius: 20px 20px 0 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    background: linear-gradient(135deg,#0b2c6b,#1d4ed8);
+    padding: 22px 26px; border-radius: 24px 24px 0 0;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 1;
 }
-.modal-header h3 { font-size: 17px; font-weight: 700; margin: 0; }
+.modal-header h3 { font-size: 17px; font-weight: 800; color: #fff; margin: 0; }
 .modal-close {
-    background: rgba(255,255,255,0.2);
-    border: none;
-    color: #fff;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background .15s;
+    background: rgba(255,255,255,.18); border: none; color: #fff;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; cursor: pointer; transition: background .15s;
 }
-.modal-close:hover { background: rgba(255,255,255,0.3); }
-.modal-body { padding: 24px; }
-.usia-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-.usia-table th { background: #eff6ff; color: #1d4ed8; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
-.usia-table td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; color: #374151; }
-.usia-table tr:last-child td { border-bottom: none; }
-.usia-table tr:hover td { background: #f8faff; }
-.usia-count { font-weight: 800; color: #0b2c6b; font-size: 16px; }
+.modal-close:hover { background: rgba(255,255,255,.3); }
+
+.modal-body { padding: 26px; }
+
+/* Tabel detail dalam modal */
+.usia-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.usia-table thead tr { background: #eff6ff; }
+.usia-table thead th {
+    padding: 11px 14px; font-weight: 800; font-size: 11.5px;
+    color: #1d4ed8; text-transform: uppercase; letter-spacing: .5px; text-align: left;
+}
+.usia-table thead th.r { text-align: right; }
+.usia-table tbody tr { border-bottom: 1px solid #f1f5f9; transition: background .12s; }
+.usia-table tbody tr:hover td { background: #f8fbff; }
+.usia-table tbody td { padding: 11px 14px; color: #374151; }
+.usia-table tbody td.num { text-align: right; font-weight: 700; }
+.usia-table tbody td.num-l { color: #1d4ed8; }
+.usia-table tbody td.num-p { color: #be185d; }
+.usia-table tbody td.num-tot { color: #0b2c6b; font-size: 15px; font-weight: 900; }
+.usia-table tfoot tr { background: #0b2c6b; }
+.usia-table tfoot td { padding: 12px 14px; color: #fff; font-weight: 800; font-size: 14px; text-align: right; }
+.usia-table tfoot td:first-child { text-align: left; }
 
 @media (max-width: 640px) {
-    .lansia-stats { grid-template-columns: 1fr 1fr; }
-    .lansia-table-card { overflow-x: auto; }
-    .lansia-stat-card__value { font-size: 28px; }
-}
-
-.btn-back {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: #f1f5f9;
-    color: var(--navy);
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    transition: 0.2s;
-    margin-bottom: 20px;
-}
-.btn-back:hover {
-    background: #e2e8f0;
-    color: var(--blue);
+    .pl-stats { grid-template-columns: 1fr 1fr; }
+    .pl-stat__num { font-size: 30px; }
+    .chart-wrap { height: 220px; }
+    .modal-box { max-height: 92vh; }
+    .usia-table { font-size: 12px; }
 }
 </style>
 
 <div class="page-content">
-    <div class="content-box" style="background:rgba(255,255,255,0.95);max-width:100%;padding:40px 28px;">
-        
-        <a href="{{ route('beranda') }}" class="btn-back">
+    <div class="content-box" style="background:rgba(255,255,255,.97);max-width:100%;padding:40px 28px;">
+
+        <a href="{{ route('beranda') }}" class="pl-back">
             <i class="fas fa-arrow-left"></i> Kembali ke Beranda
         </a>
 
-        <div style="margin-bottom: 30px; text-align: center;">
-            <div style="font-size: 48px; color: #1d4ed8; margin-bottom: 16px;"><i class="fas fa-users"></i></div>
-            <h2 style="font-size: 28px; font-weight: 800; color: var(--ink);">Pendataan Lansia</h2>
-            <div style="width: 60px; height: 4px; background: #1d4ed8; border-radius: 2px; margin: 16px auto;"></div>
-            <p style="color: var(--muted); max-width: 600px; margin: 10px auto;">Data penduduk sasaran. Rekap data lansia yang terdampak bencana, diperbarui secara berkala oleh tim SIGAP TUHA.</p>
+        {{-- ── Hero ────────────────────────────────────────────── --}}
+        <div style="text-align:center;margin-bottom:36px;">
+            <h1 style="font-size:30px;font-weight:900;color:#0b2c6b;margin:0 0 8px;">Pendataan Lansia</h1>
+            <div style="width:60px;height:4px;background:linear-gradient(90deg,#1d4ed8,#7c3aed);border-radius:2px;margin:12px auto;"></div>
+            <p style="color:#64748b;max-width:580px;margin:8px auto;font-size:14.5px;line-height:1.7;">
+                Rekap data kependudukan per kelompok usia per kecamatan — diperbarui secara berkala oleh tim <strong>SIGAP TUHA</strong>.
+                Klik nama kecamatan atau batang grafik untuk melihat detail lengkap.
+            </p>
         </div>
 
-        {{-- STAT CARDS --}}
-        <div class="lansia-stats">
-            @php
-                $totalAll    = $lansias->count();
-                $stabil      = $lansias->where('status','Stabil')->count();
-                $pantau      = $lansias->where('status','Perlu pemantauan')->count();
-                $rujukan     = $lansias->where('status','Rujukan segera')->count();
-                $desaCount   = $lansias->groupBy('desa')->count();
-            @endphp
-            <div class="lansia-stat-card" style="--card-color:#1d4ed8;">
-                <div class="lansia-stat-card__value">{{ $totalAll }}</div>
-                <div class="lansia-stat-card__label">Total Lansia</div>
-            </div>
-            <div class="lansia-stat-card" style="--card-color:#15803d;">
-                <div class="lansia-stat-card__value">{{ $stabil }}</div>
-                <div class="lansia-stat-card__label">Kondisi Stabil</div>
-            </div>
-            <div class="lansia-stat-card" style="--card-color:#a16207;">
-                <div class="lansia-stat-card__value">{{ $pantau }}</div>
-                <div class="lansia-stat-card__label">Perlu Pemantauan</div>
-            </div>
-            <div class="lansia-stat-card" style="--card-color:#dc2626;">
-                <div class="lansia-stat-card__value">{{ $rujukan }}</div>
-                <div class="lansia-stat-card__label">Rujukan Segera</div>
-            </div>
-            <div class="lansia-stat-card" style="--card-color:#7c3aed;">
-                <div class="lansia-stat-card__value">{{ $desaCount }}</div>
-                <div class="lansia-stat-card__label">Desa/Kecamatan</div>
-            </div>
-        </div>
-
-        {{-- GRAFIK --}}
-        <div class="chart-card">
-            <div class="chart-card__title">
-                <i class="fas fa-chart-bar" style="margin-right:6px; color:#1d4ed8;"></i>
-                Jumlah Lansia per Desa / Kecamatan
-            </div>
-            <div style="position:relative;height:260px;">
-                <canvas id="chartDesa"></canvas>
-            </div>
-        </div>
-
-        {{-- TABEL PER DESA --}}
-        <div style="margin-bottom: 20px;">
-            <div style="font-size: 20px; font-weight: 800; color: var(--ink); margin-bottom: 6px;">
-                <i class="fas fa-table" style="margin-right:6px; color:#1d4ed8;"></i> Data Ringkasan per Desa/Kecamatan
-            </div>
-            <p style="color: var(--muted); font-size: 14px;">Klik nama desa untuk melihat detail rentang usia penduduk</p>
-        </div>
-
+        {{-- ── Stat Cards ──────────────────────────────────────── --}}
         @php
-            $perDesa = $lansias->groupBy('desa');
+            $totalKec       = $lansias->count();
+            $totalPendL     = $lansias->sum('jumlah_penduduk_l');
+            $totalPendP     = $lansias->sum('jumlah_penduduk_p');
+            $totalPend      = $totalPendL + $totalPendP;
+            $totalLansiaL   = $lansias->sum('usia_60_69_tahun_l') + $lansias->sum('usia_70_plus_l');
+            $totalLansiaP   = $lansias->sum('usia_60_69_tahun_p') + $lansias->sum('usia_70_plus_p');
+            $totalLansia    = $totalLansiaL + $totalLansiaP;
+            $totalSeniorL   = $lansias->sum('usia_70_plus_l');
+            $totalSeniorP   = $lansias->sum('usia_70_plus_p');
         @endphp
+        <div class="pl-stats">
+            <div class="pl-stat" style="--sc:#1d4ed8;">
+                <div class="pl-stat__num">{{ $totalKec }}</div>
+                <div class="pl-stat__sub">Kecamatan</div>
+            </div>
+            <div class="pl-stat" style="--sc:#0891b2;">
+                <div class="pl-stat__num">{{ number_format($totalPend) }}</div>
+                <div class="pl-stat__sub">Total Penduduk</div>
+                <div class="pl-stat__lp">
+                    <span class="lbl-l"><i class="fas fa-mars"></i> {{ number_format($totalPendL) }}</span>
+                    <span class="lbl-p"><i class="fas fa-venus"></i> {{ number_format($totalPendP) }}</span>
+                </div>
+            </div>
+            <div class="pl-stat" style="--sc:#dc2626;">
+                <div class="pl-stat__num">{{ number_format($totalLansia) }}</div>
+                <div class="pl-stat__sub">Total Lansia (60+)</div>
+                <div class="pl-stat__lp">
+                    <span class="lbl-l"><i class="fas fa-mars"></i> {{ number_format($totalLansiaL) }}</span>
+                    <span class="lbl-p"><i class="fas fa-venus"></i> {{ number_format($totalLansiaP) }}</span>
+                </div>
+            </div>
+            <div class="pl-stat" style="--sc:#9f1239;">
+                <div class="pl-stat__num">{{ number_format($totalSeniorL + $totalSeniorP) }}</div>
+                <div class="pl-stat__sub">Lansia Senior (&gt;70 Thn)</div>
+                <div class="pl-stat__lp">
+                    <span class="lbl-l"><i class="fas fa-mars"></i> {{ number_format($totalSeniorL) }}</span>
+                    <span class="lbl-p"><i class="fas fa-venus"></i> {{ number_format($totalSeniorP) }}</span>
+                </div>
+            </div>
+        </div>
 
-        <div class="lansia-table-card">
+        {{-- ── Grafik ───────────────────────────────────────────── --}}
+        <div class="pl-chart-card">
+            <div class="pl-chart-card__title">
+                <i class="fas fa-chart-bar" style="color:#1d4ed8;"></i>
+                Distribusi Penduduk per Kecamatan
+            </div>
+            <div class="pl-chart-card__hint">
+                <i class="fas fa-hand-pointer" style="color:#1d4ed8;"></i>
+                Klik batang grafik untuk melihat detail seluruh kelompok usia kecamatan tersebut.
+            </div>
+            <div class="chart-wrap">
+                <canvas id="chartKec"></canvas>
+            </div>
+        </div>
+
+        {{-- ── Tabel Ringkasan ─────────────────────────────────── --}}
+        <div style="margin-bottom:18px;">
+            <div style="font-size:20px;font-weight:800;color:#0b2c6b;margin-bottom:4px;">
+                <i class="fas fa-table" style="margin-right:6px;color:#1d4ed8;"></i>Ringkasan Per Kecamatan
+            </div>
+            <p style="color:#64748b;font-size:14px;margin:0;">
+                Klik baris atau nama kecamatan untuk melihat <strong>detail lengkap seluruh kelompok usia (L, P, Total)</strong>.
+            </p>
+        </div>
+
+        <div class="pl-table-card">
             <table>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>Nama Desa / Kecamatan</th>
-                        <th>Total Lansia</th>
-                        <th>Stabil</th>
-                        <th>Perlu Pantau</th>
-                        <th>Rujukan</th>
-                        <th>Detail Usia</th>
+                        <th style="width:40px;">#</th>
+                        <th>Kecamatan</th>
+                        <th style="text-align:center;">Penduduk L</th>
+                        <th style="text-align:center;">Penduduk P</th>
+                        <th style="text-align:center;">Total Penduduk</th>
+                        <th style="text-align:center;">Lansia (60+) L</th>
+                        <th style="text-align:center;">Lansia (60+) P</th>
+                        <th style="text-align:center;">Total Lansia</th>
+                        <th style="text-align:center;width:100px;">Detail</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($perDesa as $desa => $group)
+                    @forelse($lansias as $i => $row)
                     @php
-                        $jml       = $group->count();
-                        $jStabil   = $group->where('status','Stabil')->count();
-                        $jPantau   = $group->where('status','Perlu pemantauan')->count();
-                        $jRujukan  = $group->where('status','Rujukan segera')->count();
-
-                        // Hitung per rentang usia (field umur = tahun)
-                        $usia = [
-                            'Bayi (< 1 tahun)'         => $group->where('umur', '<', 1)->count(),
-                            'Balita (1–4 tahun)'        => $group->whereBetween('umur', [1, 4])->count(),
-                            'Pra-sekolah (5–6 tahun)'   => $group->whereBetween('umur', [5, 6])->count(),
-                            'SD Awal (7–9 tahun)'       => $group->whereBetween('umur', [7, 9])->count(),
-                            'SD Akhir (10–12 tahun)'    => $group->whereBetween('umur', [10, 12])->count(),
-                            'Remaja Awal (13–14 tahun)' => $group->whereBetween('umur', [13, 14])->count(),
-                            'Dewasa (15–59 tahun)'      => $group->whereBetween('umur', [15, 59])->count(),
-                            'Lansia Muda (60–69 tahun)' => $group->whereBetween('umur', [60, 69])->count(),
-                            'Lansia Tua (≥ 70 tahun)'   => $group->where('umur', '>=', 70)->count(),
-                        ];
-                        $usiaJson = json_encode($usia);
+                        $lansiaL = $row->usia_60_69_tahun_l + $row->usia_70_plus_l;
+                        $lansiaP = $row->usia_60_69_tahun_p + $row->usia_70_plus_p;
+                        $detail  = json_encode($row->getDetailUsiaArray());
                     @endphp
-                    <tr>
-                        <td style="font-weight:700;color:#64748b;">{{ $loop->iteration }}</td>
+                    <tr onclick="showModal('{{ addslashes($row->kecamatan) }}', {{ $detail }})" style="cursor:pointer;">
+                        <td style="font-weight:700;color:#94a3b8;font-size:12px;">{{ str_pad($i+1,2,'0',STR_PAD_LEFT) }}</td>
                         <td>
-                            <span class="desa-link" onclick="showModal('{{ addslashes($desa) }}', {{ $usiaJson }})">
-                                <i class="fas fa-map-marker-alt" style="margin-right:4px;"></i>
-                                {{ $desa ?: 'Tidak Diketahui' }}
+                            <span class="kec-link">
+                                <i class="fas fa-location-dot" style="font-size:11px;color:#1d4ed8;"></i>
+                                {{ $row->kecamatan }}
                             </span>
                         </td>
-                        <td><strong>{{ $jml }}</strong> orang</td>
-                        <td><span class="badge-status stabil">{{ $jStabil }}</span></td>
-                        <td><span class="badge-status pantau">{{ $jPantau }}</span></td>
-                        <td><span class="badge-status rujukan">{{ $jRujukan }}</span></td>
-                        <td>
-                            <button onclick="showModal('{{ addslashes($desa) }}', {{ $usiaJson }})"
-                                style="background:rgba(255,255,255,0.7);border:1px solid #c0c0c0;color:#1d4ed8;padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;"
-                                onmouseover="this.style.background='#1d4ed8';this.style.color='#fff';"
-                                onmouseout="this.style.background='rgba(255,255,255,0.7)';this.style.color='#1d4ed8';">
-                                🔍 Lihat Detail
+                        <td style="text-align:center;"><span class="pl-pill l"><i class="fas fa-mars"></i> {{ number_format($row->jumlah_penduduk_l) }}</span></td>
+                        <td style="text-align:center;"><span class="pl-pill p"><i class="fas fa-venus"></i> {{ number_format($row->jumlah_penduduk_p) }}</span></td>
+                        <td style="text-align:center;font-weight:800;color:#0b2c6b;font-size:15px;">{{ number_format($row->jumlah_penduduk_l + $row->jumlah_penduduk_p) }}</td>
+                        <td style="text-align:center;"><span class="pl-pill l">{{ number_format($lansiaL) }}</span></td>
+                        <td style="text-align:center;"><span class="pl-pill p">{{ number_format($lansiaP) }}</span></td>
+                        <td style="text-align:center;"><span class="pl-pill tot">{{ number_format($lansiaL + $lansiaP) }}</span></td>
+                        <td style="text-align:center;">
+                            <button onclick="event.stopPropagation();showLansiaModal('{{ addslashes($row->kecamatan) }}', {{ $detail }})"
+                                style="background:linear-gradient(135deg,#1d4ed8,#0b2c6b);border:none;color:#fff;padding:6px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;"
+                                onmouseover="this.style.transform='scale(1.05)'"
+                                onmouseout="this.style.transform=''">
+                                <i class="fas fa-search"></i> Detail
                             </button>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" style="text-align:center;padding:40px;color:#64748b;">
-                            <i class="fas fa-users" style="font-size:32px; margin-bottom:12px; opacity:0.5; display:block;"></i>
-                            Belum ada data lansia tersedia
+                        <td colspan="9" style="text-align:center;padding:48px;color:#94a3b8;">
+                            <i class="fas fa-database" style="font-size:40px;margin-bottom:14px;display:block;opacity:.4;"></i>
+                            Data belum tersedia
                         </td>
                     </tr>
                     @endforelse
                 </tbody>
+                @if($lansias->count())
+                <tfoot>
+                    <tr>
+                        <td colspan="2" style="text-align:left;">TOTAL</td>
+                        <td style="text-align:center;">{{ number_format($totalPendL) }}</td>
+                        <td style="text-align:center;">{{ number_format($totalPendP) }}</td>
+                        <td style="text-align:center;font-size:16px;">{{ number_format($totalPend) }}</td>
+                        <td style="text-align:center;">{{ number_format($totalLansiaL) }}</td>
+                        <td style="text-align:center;">{{ number_format($totalLansiaP) }}</td>
+                        <td style="text-align:center;font-size:16px;">{{ number_format($totalLansia) }}</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+                @endif
             </table>
         </div>
-    </div>
-</div>
 
-{{-- MODAL DETAIL RENTANG USIA --}}
-<div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
+    </div>{{-- /content-box --}}
+</div>{{-- /page-content --}}
+
+{{-- ═══════════════════════════════════════════
+     MODAL DETAIL RENTANG USIA
+═══════════════════════════════════════════ --}}
+<div class="modal-overlay" id="modalOverlay">
     <div class="modal-box">
         <div class="modal-header">
             <h3 id="modalTitle">Detail Rentang Usia</h3>
-            <button class="modal-close" onclick="closeModal()">×</button>
+            <button class="modal-close" onclick="closeLansiaModal()" aria-label="Tutup">×</button>
         </div>
         <div class="modal-body">
-            <p style="font-size:13px;color:#64748b;margin-bottom:16px;">
-                Detail jumlah penduduk berdasarkan kelompok usia di desa/kecamatan ini.
+            <p style="font-size:13px;color:#64748b;margin-bottom:18px;">
+                Rincian jumlah penduduk per kelompok usia — Laki-laki (L), Perempuan (P), dan Total.
             </p>
             <table class="usia-table">
                 <thead>
                     <tr>
                         <th>Kelompok Usia</th>
-                        <th style="text-align:right;">Jumlah</th>
+                        <th class="r" style="color:#1d4ed8;">L</th>
+                        <th class="r" style="color:#be185d;">P</th>
+                        <th class="r" style="color:#0b2c6b;">Total</th>
                     </tr>
                 </thead>
                 <tbody id="modalBody"></tbody>
+                <tfoot>
+                    <tr>
+                        <td id="modalTotalLabel" style="text-align:left;">Grand Total Penduduk</td>
+                        <td id="modalTotalL"></td>
+                        <td id="modalTotalP"></td>
+                        <td id="modalTotalTot" style="font-size:17px;"></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{{-- ═══════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════ --}}
+@php
+$kecamatanJson = $lansias->map(function($r) {
+    return [
+        'kecamatan'  => $r->kecamatan,
+        'penduduk_l' => $r->jumlah_penduduk_l,
+        'penduduk_p' => $r->jumlah_penduduk_p,
+        'detail'     => $r->getDetailUsiaArray(),
+    ];
+})->values()->toArray();
+@endphp
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script>
-// ── Grafik Batang per Desa ──
-(function() {
-    const data = @json($perDesa->map(fn($g) => $g->count()));
-    const labels = @json($perDesa->keys());
-    const colors = labels.map((_, i) => `hsl(${220 + i * 18}, 75%, ${45 + i % 3 * 8}%)`);
+// Pindahkan modal ke body agar tidak terperangkap z-index dari parent container
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.appendChild(document.getElementById('modalOverlay'));
+});
 
-    new Chart(document.getElementById('chartDesa'), {
+// ── Data dari Laravel ──────────────────────────────────────────
+const kecamatanData = {!! json_encode($kecamatanJson) !!};
+
+// ── Chart.js Bar Chart ─────────────────────────────────────────
+(function() {
+    const labels    = kecamatanData.map(d => d.kecamatan);
+    const dataL     = kecamatanData.map(d => d.penduduk_l);
+    const dataP     = kecamatanData.map(d => d.penduduk_p);
+
+    const chart = new Chart(document.getElementById('chartKec'), {
         type: 'bar',
         data: {
-            labels: labels,
-            datasets: [{
-                label: 'Jumlah Lansia',
-                data: Object.values(data),
-                backgroundColor: colors,
-                borderRadius: 8,
-                borderSkipped: false,
-            }]
+            labels,
+            datasets: [
+                {
+                    label: 'Laki-laki',
+                    data: dataL,
+                    backgroundColor: 'rgba(29,78,216,.75)',
+                    hoverBackgroundColor: 'rgba(29,78,216,1)',
+                    borderRadius: { topLeft: 6, topRight: 6 },
+                    borderSkipped: false,
+                },
+                {
+                    label: 'Perempuan',
+                    data: dataP,
+                    backgroundColor: 'rgba(190,24,93,.65)',
+                    hoverBackgroundColor: 'rgba(190,24,93,.9)',
+                    borderRadius: { topLeft: 6, topRight: 6 },
+                    borderSkipped: false,
+                }
+            ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: { display: false },
-                tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} orang` } }
+                legend: {
+                    position: 'top',
+                    labels: { font: { size: 12, weight: '600' }, usePointStyle: true, pointStyleWidth: 10 }
+                },
+                tooltip: {
+                    backgroundColor: '#0b2c6b',
+                    titleFont: { size: 13, weight: '700' },
+                    bodyFont:  { size: 12 },
+                    padding: 12,
+                    callbacks: {
+                        label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toLocaleString()} jiwa`
+                    }
+                }
             },
             scales: {
-                y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { color: '#c0c0c0' } },
-                x: { grid: { display: false } }
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size: 11, weight: '600' }, color: '#475467' }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(11,44,107,.07)' },
+                    ticks: {
+                        font: { size: 11 },
+                        callback: v => v.toLocaleString()
+                    }
+                }
+            },
+            onClick(_, elements) {
+                if (!elements.length) return;
+                const idx = elements[0].index;
+                const row = kecamatanData[idx];
+                showLansiaModal(row.kecamatan, row.detail);
+            },
+            onHover(event, elements) {
+                event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
             }
         }
     });
 })();
 
-// ── Modal Logic ──
-function showModal(desa, usiaData) {
-    document.getElementById('modalTitle').textContent = '📍 Detail Usia — ' + (desa || 'Tidak Diketahui');
+// ── Modal Logic ────────────────────────────────────────────────
+function showLansiaModal(kecamatan, detail) {
+    document.getElementById('modalTitle').innerHTML = '<i class="fas fa-map-marker-alt" style="color:#ef4444;margin-right:6px;"></i>' + (kecamatan || 'Kecamatan');
+
     const tbody = document.getElementById('modalBody');
     tbody.innerHTML = '';
-    let total = 0;
-    Object.entries(usiaData).forEach(([label, count]) => {
-        total += count;
+
+    let sumL = 0, sumP = 0, sumTot = 0;
+
+    // Icons per row (menggunakan FontAwesome)
+    const icons = [
+        '<i class="fas fa-users" style="color:var(--brand-500);width:16px;text-align:center;"></i>', 
+        '<i class="fas fa-baby" style="color:#5b21b6;width:16px;text-align:center;"></i>', 
+        '<i class="fas fa-baby-carriage" style="color:#1d4ed8;width:16px;text-align:center;"></i>', 
+        '<i class="fas fa-child" style="color:#0e7490;width:16px;text-align:center;"></i>', 
+        '<i class="fas fa-child-reaching" style="color:#15803d;width:16px;text-align:center;"></i>', 
+        '<i class="fas fa-person" style="color:#065f46;width:16px;text-align:center;"></i>', 
+        '<i class="fas fa-person" style="color:#854d0e;width:16px;text-align:center;"></i>', 
+        '<i class="fas fa-user" style="color:#9a3412;width:16px;text-align:center;"></i>', 
+        '<i class="fas fa-user-tie" style="color:#b91c1c;width:16px;text-align:center;"></i>', 
+        '<i class="fas fa-user-clock" style="color:#9d174d;width:16px;text-align:center;"></i>', 
+        '<i class="fas fa-person-cane" style="color:#6b21a8;width:16px;text-align:center;"></i>'
+    ];
+
+    detail.forEach((row, i) => {
+        const l   = row.l   ?? 0;
+        const p   = row.p   ?? 0;
+        const tot = row.total ?? (l + p);
+
+        // Baris pertama (Jumlah Penduduk) tidak dimasukkan ke sum baris lain
+        if (i > 0) { sumL += l; sumP += p; sumTot += tot; }
+
         const tr = document.createElement('tr');
+
+        // Baris Jumlah Penduduk punya styling khusus
+        if (i === 0) {
+            tr.style.background = '#f8f9ff';
+            tr.style.fontWeight = '700';
+        }
+
         tr.innerHTML = `
-            <td>${label}</td>
-            <td style="text-align:right;"><span class="usia-count">${count}</span> <small style="color:#94a3b8;">orang</small></td>
+            <td style="${i===0?'color:#0b2c6b;':''}">
+                ${icons[i] || '<i class="fas fa-user"></i>'} ${row.label}
+                ${i===0 ? '<span style="font-size:10.5px;color:#64748b;font-weight:400;margin-left:4px;">(data sensus)</span>' : ''}
+            </td>
+            <td class="num num-l" style="${i===0?'color:#1d4ed8;':''}">${l.toLocaleString()}</td>
+            <td class="num num-p" style="${i===0?'color:#be185d;':''}">${p.toLocaleString()}</td>
+            <td class="num num-tot" style="${i===0?'font-size:15px;':''}">${tot.toLocaleString()}</td>
         `;
         tbody.appendChild(tr);
     });
-    const trTotal = document.createElement('tr');
-    trTotal.style.background = '#eff6ff';
-    trTotal.innerHTML = `
-        <td style="font-weight:800;color:#0b2c6b;">Total</td>
-        <td style="text-align:right;font-weight:800;color:#0b2c6b;font-size:17px;">${total} <small style="color:#64748b;font-size:12px;">orang</small></td>
-    `;
-    tbody.appendChild(trTotal);
-    document.getElementById('modalOverlay').classList.add('active');
+
+    // Footer total (seluruh kelompok usia, kecuali baris Jumlah Penduduk)
+    document.getElementById('modalTotalLabel').textContent = 'Total Semua Kelompok Usia';
+    document.getElementById('modalTotalL').textContent     = sumL.toLocaleString();
+    document.getElementById('modalTotalP').textContent     = sumP.toLocaleString();
+    document.getElementById('modalTotalTot').textContent   = sumTot.toLocaleString();
+
+    document.getElementById('modalOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('active');
+function closeLansiaModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
     document.body.style.overflow = '';
 }
 
-function closeModalOutside(e) {
-    if (e.target === document.getElementById('modalOverlay')) closeModal();
-}
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+// Tutup saat klik di luar modal box
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeLansiaModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLansiaModal(); });
 </script>
+
 @endsection

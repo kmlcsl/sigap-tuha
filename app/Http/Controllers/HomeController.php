@@ -3,6 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Feature;
+use App\Models\Profil;
+use App\Models\Kontak;
+use App\Models\Berita;
+use App\Models\PendataanLansia;
+use App\Models\BantuanDarurat;
+use App\Models\Edukasi;
+use App\Models\OrganisasiRelawan;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -16,49 +23,52 @@ class HomeController extends Controller
 
     public function profil()
     {
-        $profil = \App\Models\Profil::first();
+        $profil = Profil::first();
         return view('profil', compact('profil'));
     }
 
     public function kontak()
     {
-        $kontak = \App\Models\Kontak::first();
+        $kontak = Kontak::first();
         return view('kontak', compact('kontak'));
     }
 
     public function berita()
     {
-        $beritas = \App\Models\Berita::where('status', 'published')->latest()->get();
+        $beritas = Berita::where('status', 'published')->latest()->get();
         return view('berita', compact('beritas'));
     }
 
     public function beritaDetail($slug)
     {
-        $berita = \App\Models\Berita::where('slug', $slug)->where('status', 'published')->firstOrFail();
+        $berita = Berita::where('slug', $slug)->where('status', 'published')->firstOrFail();
         return view('berita_detail', compact('berita'));
     }
 
     public function lansia()
     {
-        $lansias = \App\Models\Lansia::orderBy('nama')->get();
-        return view('lansia.index', compact('lansias'));
+        $lansias = PendataanLansia::orderBy('kecamatan')->get();
+        $feature = Feature::where('title', 'Pendataan Lansia')->first();
+        return view('lansia.index', compact('lansias', 'feature'));
     }
 
     public function bantuanDarurat()
     {
-        $bantuan = \App\Models\BantuanDarurat::aktif()->get();
-        return view('bantuan.index', compact('bantuan'));
+        $bantuan = BantuanDarurat::aktif()->get();
+        $feature = Feature::where('title', 'Bantuan Darurat')->first();
+        return view('bantuan.index', compact('bantuan', 'feature'));
     }
 
     public function edukasi()
     {
-        $edukasi = \App\Models\Edukasi::where('is_published', true)->orderBy('order')->get();
-        return view('edukasi.index', compact('edukasi'));
+        $edukasi = Edukasi::where('is_published', true)->orderBy('order')->get();
+        $feature = Feature::where('title', 'Edukasi & Pelatihan')->first();
+        return view('edukasi.index', compact('edukasi', 'feature'));
     }
 
     public function edukasiDetail($id)
     {
-        $edukasi = \App\Models\Edukasi::where('is_published', true)
+        $edukasi = Edukasi::where('is_published', true)
             ->where(function($query) use ($id) {
                 $query->where('id', $id)->orWhere('slug', $id);
             })->firstOrFail();
@@ -67,8 +77,9 @@ class HomeController extends Controller
 
     public function relawan()
     {
-        $organisasi = \App\Models\OrganisasiRelawan::aktif()->with('relawans')->get();
-        return view('relawan.index', compact('organisasi'));
+        $organisasi = OrganisasiRelawan::aktif()->with('relawans')->get();
+        $feature = Feature::where('title', 'Relawan Siaga')->first();
+        return view('relawan.index', compact('organisasi', 'feature'));
     }
 
     public function fitur($slug)
