@@ -8,13 +8,24 @@
         @csrf
         <div class="form-group">
             <label><i class="fas fa-heading" style="margin-right:4px; color:var(--text-tertiary)"></i> Judul Materi <span class="required">*</span></label>
-            <input type="text" name="judul" class="form-control" value="{{ old('judul') }}" required placeholder="Judul materi edukasi">
+            <input type="text" name="judul" id="judul" class="form-control" value="{{ old('judul') }}" required placeholder="Judul materi edukasi">
             @error('judul') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
+        </div>
+        <div class="form-group">
+            <label><i class="fas fa-link" style="margin-right:4px; color:var(--text-tertiary)"></i> Slug</label>
+            <input type="text" name="slug" id="slug" class="form-control" value="{{ old('slug') }}" placeholder="contoh: dasar-bantuan-hidup">
+            <div class="form-hint"><i class="fas fa-info-circle"></i> Dibuat otomatis dari judul jika kosong.</div>
+            @error('slug') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
         </div>
         <div class="form-group">
             <label><i class="fas fa-align-left" style="margin-right:4px; color:var(--text-tertiary)"></i> Konten <span class="required">*</span></label>
             <textarea name="konten" class="form-control" style="min-height:160px;" required placeholder="Isi materi edukasi...">{{ old('konten') }}</textarea>
             @error('konten') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
+        </div>
+        <div class="form-group">
+            <label><i class="fas fa-list-ul" style="margin-right:4px; color:var(--text-tertiary)"></i> Materi Pembahasan</label>
+            <textarea name="materi_pembahasan" class="form-control" style="min-height:120px;" rows="5" placeholder="1. Pengenalan BHD&#10;2. Teknik kompresi dada&#10;3. Pemberian nafas buatan">{{ old('materi_pembahasan') }}</textarea>
+            @error('materi_pembahasan') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
         </div>
         <div class="grid grid-3" style="gap:20px;">
             <div class="form-group">
@@ -40,8 +51,21 @@
         </div>
         <div class="form-group">
             <label><i class="fas fa-video" style="margin-right:4px; color:var(--text-tertiary)"></i> URL Video</label>
-            <input type="url" name="url_video" class="form-control" value="{{ old('url_video') }}" placeholder="https://youtube.com/...">
+            <input type="url" name="url_video" id="url_video" class="form-control" value="{{ old('url_video') }}" placeholder="https://youtube.com/...">
             <div class="form-hint"><i class="fas fa-info-circle"></i> Isi jika jenis materi adalah Video.</div>
+            <div id="youtube-preview" style="max-width:320px;"></div>
+        </div>
+        <div class="form-group">
+            <label><i class="fas fa-clock" style="margin-right:4px; color:var(--text-tertiary)"></i> Durasi (menit)</label>
+            <input type="number" name="durasi_menit" class="form-control" value="{{ old('durasi_menit') }}" placeholder="30" min="1">
+            @error('durasi_menit') <div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div> @enderror
+        </div>
+        <div class="form-group">
+            <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="hidden" name="sertifikat_tersedia" value="0">
+                <input type="checkbox" name="sertifikat_tersedia" value="1" {{ old('sertifikat_tersedia') ? 'checked' : '' }} style="width:18px; height:18px; accent-color:var(--brand-600);">
+                <span><i class="fas fa-certificate" style="margin-right:4px; color:var(--text-tertiary)"></i> Peserta dapat mencetak sertifikat setelah menonton</span>
+            </label>
         </div>
         <div class="form-group">
             <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
@@ -56,4 +80,44 @@
         </div>
     </form>
 </div>
+@endsection
+@section('scripts')
+<script>
+function extractYoutubeId(url) {
+    const patterns = [
+        /youtu\.be\/([^#&?]*)/,
+        /youtube\.com\/watch\?v=([^#&?]*)/,
+        /youtube\.com\/embed\/([^#&?]*)/
+    ];
+    for (const p of patterns) {
+        const m = url.match(p);
+        if (m) return m[1];
+    }
+    return null;
+}
+
+document.getElementById('url_video')?.addEventListener('input', function() {
+    const id = extractYoutubeId(this.value);
+    const preview = document.getElementById('youtube-preview');
+    if (id && preview) {
+        preview.innerHTML = `<img src="https://img.youtube.com/vi/${id}/hqdefault.jpg" style="width:100%;border-radius:8px;margin-top:8px;" alt="Thumbnail">`;
+    } else if (preview) {
+        preview.innerHTML = '';
+    }
+});
+
+document.getElementById('judul')?.addEventListener('input', function() {
+    const slugField = document.getElementById('slug');
+    if (slugField && !slugField.dataset.manualEdit) {
+        slugField.value = this.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+});
+document.getElementById('slug')?.addEventListener('input', function() {
+    this.dataset.manualEdit = 'true';
+});
+
+if (document.getElementById('url_video')?.value) {
+    document.getElementById('url_video').dispatchEvent(new Event('input'));
+}
+</script>
 @endsection

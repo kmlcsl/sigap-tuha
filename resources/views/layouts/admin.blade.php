@@ -1409,35 +1409,32 @@
                     </a>
                 </div>
 
-                {{-- Layanan & Fitur (5 Card) --}}
+                {{-- 5 Card Utama --}}
                 <div class="nav-group">
-                    <div class="nav-group__label">Layanan & Fitur</div>
-                    <a href="{{ route('admin.features.index') }}" class="nav-link {{ request()->routeIs('admin.features.*') ? 'active' : '' }}" id="nav-features">
-                        <span class="nav-link__icon" style="color: var(--brand-600)"><i class="fas fa-star"></i></span>
-                        <span class="nav-link__text">Kelola 5 Card</span>
+                    <div class="nav-group__label">5 Card Utama</div>
+                    <a href="{{ route('admin.lansia.index') }}" class="nav-link {{ request()->routeIs('admin.lansia.*') ? 'active' : '' }}" id="nav-lansia">
+                        <span class="nav-link__icon" style="color: var(--info-500)"><i class="fas fa-users"></i></span>
+                        <span class="nav-link__text">Pendataan Lansia</span>
+                    </a>
+                    <a href="{{ route('admin.bantuan-darurat.index') }}" class="nav-link {{ request()->routeIs('admin.bantuan-darurat.*') ? 'active' : '' }}" id="nav-bantuan">
+                        <span class="nav-link__icon" style="color: var(--danger-500)"><i class="fas fa-ambulance"></i></span>
+                        <span class="nav-link__text">Bantuan Darurat</span>
+                    </a>
+                    <a href="{{ route('admin.edukasi.index') }}" class="nav-link {{ request()->routeIs('admin.edukasi.*') ? 'active' : '' }}" id="nav-edukasi">
+                        <span class="nav-link__icon" style="color: var(--warning-500)"><i class="fas fa-graduation-cap"></i></span>
+                        <span class="nav-link__text">Edukasi & Pelatihan</span>
+                    </a>
+                    <a href="{{ route('admin.organisasi-relawan.index') }}" class="nav-link {{ request()->routeIs('admin.organisasi-relawan.*', 'admin.relawan.*') ? 'active' : '' }}" id="nav-relawan">
+                        <span class="nav-link__icon" style="color: var(--success-500)"><i class="fas fa-hands-helping"></i></span>
+                        <span class="nav-link__text">Relawan Siaga</span>
+                    </a>
+                    <a href="{{ route('admin.monitoring.index') }}" class="nav-link {{ request()->routeIs('admin.monitoring.*') ? 'active' : '' }}" id="nav-monitoring">
+                        <span class="nav-link__icon" style="color: var(--brand-500)"><i class="fas fa-chart-line"></i></span>
+                        <span class="nav-link__text">Monitoring & Evaluasi</span>
                     </a>
                 </div>
 
-                {{-- Data & Laporan --}}
-                <div class="nav-group">
-                    <div class="nav-group__label">Data & Laporan</div>
-                    <a href="{{ route('admin.lansia.index') }}" class="nav-link {{ request()->routeIs('admin.lansia.*') ? 'active' : '' }}" id="nav-lansia">
-                        <span class="nav-link__icon"><i class="fas fa-users"></i></span>
-                        <span class="nav-link__text">Data Lansia</span>
-                    </a>
-                    <a href="{{ route('admin.laporan.index') }}" class="nav-link {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}" id="nav-laporan">
-                        <span class="nav-link__icon"><i class="fas fa-file-alt"></i></span>
-                        <span class="nav-link__text">Laporan Darurat</span>
-                    </a>
-                    <a href="{{ route('admin.peta.index') }}" class="nav-link {{ request()->routeIs('admin.peta.*') ? 'active' : '' }}" id="nav-peta">
-                        <span class="nav-link__icon"><i class="fas fa-map-marked-alt"></i></span>
-                        <span class="nav-link__text">Peta Sebaran</span>
-                    </a>
-                    <a href="{{ route('admin.edukasi.index') }}" class="nav-link {{ request()->routeIs('admin.edukasi.*') ? 'active' : '' }}" id="nav-edukasi">
-                        <span class="nav-link__icon"><i class="fas fa-book-open"></i></span>
-                        <span class="nav-link__text">Edukasi BHD</span>
-                    </a>
-                </div>
+
 
                 {{-- Sistem --}}
                 <div class="nav-group">
@@ -1491,53 +1488,53 @@
 
                 <div class="topbar__actions">
                     @php
-                        $recentLaporan = \App\Models\LaporanDarurat::where('status', 'Baru')->with('lansia')->latest()->take(3)->get();
-                        $unreadCount = \App\Models\LaporanDarurat::where('status', 'Baru')->count();
+                        $recentRujukan = \App\Models\Lansia::where('status', 'Rujukan segera')->latest()->take(3)->get();
+                        $rujukanCount  = \App\Models\Lansia::where('status', 'Rujukan segera')->count();
                     @endphp
 
                     {{-- Notifikasi Dropdown --}}
                     <div class="dropdown-container">
                         <button class="topbar__action-btn" id="notifBtn" title="Notifikasi" onclick="toggleDropdown('notifDropdown')">
                             <i class="far fa-bell"></i>
-                            @if($unreadCount > 0)
+                            @if($rujukanCount > 0)
                                 <span class="topbar__notif-dot"></span>
                             @endif
                         </button>
                         <div class="dropdown-menu" id="notifDropdown" style="width: 320px;">
                             <div class="dropdown-header">
-                                <span>Notifikasi</span>
-                                @if($unreadCount > 0)
-                                    <span class="badge badge--danger" style="font-size:10px;">{{ $unreadCount }} Baru</span>
+                                <span>Perlu Perhatian</span>
+                                @if($rujukanCount > 0)
+                                    <span class="badge badge--danger" style="font-size:10px;">{{ $rujukanCount }} Lansia</span>
                                 @endif
                             </div>
                             <div style="max-height: 300px; overflow-y: auto;">
-                                @forelse($recentLaporan as $lap)
-                                    <a href="{{ route('admin.laporan.edit', $lap->id) }}" class="dropdown-item" style="align-items:flex-start; gap:14px;">
+                                @forelse($recentRujukan as $lansia)
+                                    <a href="{{ route('admin.lansia.edit', $lansia->id) }}" class="dropdown-item" style="align-items:flex-start; gap:14px;">
                                         <div style="width:32px; height:32px; border-radius:50%; background:var(--danger-50); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                            <i class="fas fa-exclamation-circle" style="color:var(--danger-500); font-size:14px; margin:0;"></i>
+                                            <i class="fas fa-user-injured" style="color:var(--danger-500); font-size:14px; margin:0;"></i>
                                         </div>
                                         <div>
                                             <div style="font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:4px;">
-                                                Laporan Darurat: {{ $lap->lansia->nama ?? 'Anonim' }}
+                                                {{ $lansia->nama }}
                                             </div>
-                                            <div style="font-size:12px; color:var(--text-secondary); line-height:1.4;">
-                                                {{ Str::limit($lap->kondisi, 40) }}
+                                            <div style="font-size:12px; color:var(--danger-500); line-height:1.4; font-weight:500;">
+                                                <i class="fas fa-exclamation-triangle" style="font-size:10px;"></i> Rujukan Segera
                                             </div>
-                                            <div style="font-size:11px; color:var(--text-tertiary); margin-top:6px;">
-                                                <i class="far fa-clock" style="font-size:10px;"></i> {{ $lap->created_at->diffForHumans() }}
+                                            <div style="font-size:11px; color:var(--text-tertiary); margin-top:4px;">
+                                                {{ $lansia->desa }} &bull; {{ $lansia->kondisi_kesehatan ?? 'Perlu penanganan' }}
                                             </div>
                                         </div>
                                     </a>
                                 @empty
                                     <div style="padding: 30px 20px; text-align:center; color:var(--text-tertiary); font-size:13px;">
-                                        <i class="far fa-bell-slash" style="font-size:24px; margin-bottom:10px; opacity:0.5;"></i><br>
-                                        Tidak ada notifikasi baru
+                                        <i class="fas fa-check-circle" style="font-size:24px; margin-bottom:10px; opacity:0.5; color:var(--success-500);"></i><br>
+                                        Semua lansia dalam kondisi baik
                                     </div>
                                 @endforelse
                             </div>
                             <div class="dropdown-divider" style="margin:0;"></div>
-                            <a href="{{ route('admin.laporan.index') }}" class="dropdown-item" style="justify-content:center; font-size:12.5px; font-weight:600; color:var(--brand-600);">
-                                Lihat Semua Laporan
+                            <a href="{{ route('admin.lansia.index') }}?status=Rujukan+segera" class="dropdown-item" style="justify-content:center; font-size:12.5px; font-weight:600; color:var(--danger-500);">
+                                <i class="fas fa-users" style="font-size:11px;"></i>&nbsp; Lihat Semua Lansia Rujukan
                             </a>
                         </div>
                     </div>

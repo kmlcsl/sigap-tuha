@@ -3,15 +3,21 @@
 @section('content')
 <div class="page-header" style="display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:16px;">
     <div>
-        <h1 class="page-header__title">Edukasi BHD</h1>
+        <h1 class="page-header__title">Edukasi & Pelatihan</h1>
         <p class="page-header__desc">Kelola materi edukasi Bantuan Hidup Dasar dan panduan darurat.</p>
     </div>
     <a href="{{ route('admin.edukasi.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Materi</a>
 </div>
 <div class="card">
-    <div class="card__header">
+    <div class="card__header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
         <h3 class="card__title"><i class="fas fa-book-open"></i> Daftar Materi Edukasi</h3>
-        <span style="font-size:13px; color:var(--text-tertiary);"><i class="fas fa-info-circle"></i> Total: {{ $edukasis->count() }} materi</span>
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <span style="font-size:13px; color:var(--text-tertiary);"><i class="fas fa-info-circle"></i> Total: {{ $edukasis->count() }} materi</span>
+            <div style="position:relative;">
+                <i class="fas fa-search" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text-tertiary); font-size:13px;"></i>
+                <input type="text" id="searchEdukasi" placeholder="Cari judul materi..." class="form-control" style="padding-left:32px; min-width:220px; height:36px; font-size:13px;">
+            </div>
+        </div>
     </div>
     @if($edukasis->isEmpty())
         <div class="empty-state">
@@ -22,20 +28,22 @@
         </div>
     @else
         <div class="table-wrap">
-            <table class="table">
+            <table class="table" id="edukasiTable">
                 <thead>
                     <tr>
                         <th style="width:50px">#</th>
                         <th><i class="fas fa-heading" style="margin-right:4px"></i> Judul</th>
                         <th><i class="fas fa-tag" style="margin-right:4px"></i> Kategori</th>
                         <th><i class="fas fa-file" style="margin-right:4px"></i> Jenis</th>
+                        <th><i class="fas fa-clock" style="margin-right:4px"></i> Durasi</th>
+                        <th><i class="fas fa-certificate" style="margin-right:4px"></i> Sertifikat</th>
                         <th><i class="fas fa-eye" style="margin-right:4px"></i> Status</th>
-                        <th style="width:160px; text-align:center"><i class="fas fa-cogs" style="margin-right:4px"></i> Aksi</th>
+                        <th style="width:200px; text-align:center"><i class="fas fa-cogs" style="margin-right:4px"></i> Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($edukasis as $i => $edu)
-                    <tr>
+                    <tr class="edukasi-row" data-judul="{{ strtolower($edu->judul) }}">
                         <td><span style="font-weight:600; color:var(--text-tertiary);">{{ $i + 1 }}</span></td>
                         <td><span style="font-weight:600; color:var(--text-primary);">{{ $edu->judul }}</span></td>
                         <td><span class="badge badge--brand">{{ $edu->kategori }}</span></td>
@@ -49,6 +57,20 @@
                             @endif
                         </td>
                         <td>
+                            @if($edu->durasi_menit)
+                                <span style="font-size:13px; color:var(--text-secondary);">⏱ {{ $edu->durasi_menit }} menit</span>
+                            @else
+                                <span style="color:var(--text-tertiary);">—</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($edu->sertifikat_tersedia)
+                                <span class="badge badge--success">🎓 Ya</span>
+                            @else
+                                <span class="badge badge--neutral">Tidak</span>
+                            @endif
+                        </td>
+                        <td>
                             @if($edu->is_published)
                                 <span class="badge badge--success"><span class="badge__dot"></span> Publik</span>
                             @else
@@ -56,7 +78,8 @@
                             @endif
                         </td>
                         <td>
-                            <div style="display:flex; gap:6px; justify-content:center;">
+                            <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                                <a href="/edukasi/{{ $edu->id }}" target="_blank" class="btn btn-outline btn-sm" title="Preview"><i class="fas fa-external-link-alt"></i> Preview</a>
                                 <a href="{{ route('admin.edukasi.edit', $edu) }}" class="btn btn-outline btn-sm"><i class="fas fa-pen"></i> Edit</a>
                                 <form action="{{ route('admin.edukasi.destroy', $edu) }}" method="POST" onsubmit="return confirm('Yakin hapus materi ini?')">
                                     @csrf @method('DELETE')
@@ -71,4 +94,15 @@
         </div>
     @endif
 </div>
+@endsection
+@section('scripts')
+<script>
+document.getElementById('searchEdukasi')?.addEventListener('input', function() {
+    const query = this.value.toLowerCase().trim();
+    document.querySelectorAll('.edukasi-row').forEach(row => {
+        const judul = row.dataset.judul || '';
+        row.style.display = judul.includes(query) ? '' : 'none';
+    });
+});
+</script>
 @endsection

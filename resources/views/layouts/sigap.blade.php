@@ -1073,6 +1073,7 @@
             .heart-logo {
                 width: 60px;
                 height: 60px;
+                margin-top: 12px;
             }
 
             .brand .logo {
@@ -1177,6 +1178,7 @@
             .heart-logo {
                 width: 50px;
                 height: 50px;
+                margin-top: 10px;
             }
 
             .cards {
