@@ -40,13 +40,34 @@
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
             opacity: 1;
-            transition: opacity 0.2s ease-out;
+            transition: opacity 0.6s ease;
             overflow-x: hidden;
             width: 100%;
         }
 
         body.page-transition {
             opacity: 0;
+        }
+
+        /* Top Loading Bar (YouTube Style) */
+        #top-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gold);
+            z-index: 9999;
+            width: 0%;
+            opacity: 0;
+            pointer-events: none;
+            transition: width 0.1s ease, opacity 0.3s ease;
+            box-shadow: 0 0 10px var(--gold), 0 0 5px var(--gold);
+        }
+
+        #top-loader.loading {
+            opacity: 1;
+            width: 85%;
+            transition: width 10s cubic-bezier(0.1, 0.05, 0, 1);
         }
 
         a {
@@ -474,6 +495,22 @@
             height: 26px;
         }
 
+        .icon-mask {
+            display: inline-block;
+            background-color: currentColor;
+            -webkit-mask-size: contain;
+            -webkit-mask-position: center;
+            -webkit-mask-repeat: no-repeat;
+            mask-size: contain;
+            mask-position: center;
+            mask-repeat: no-repeat;
+        }
+
+        .card .ic .icon-mask {
+            width: 28px;
+            height: 28px;
+        }
+
         .ic.blue {
             background: var(--blue);
         }
@@ -484,6 +521,14 @@
 
         .ic.red {
             background: var(--red);
+        }
+
+        .ic.green {
+            background: #12b76a;
+        }
+
+        .ic.purple {
+            background: #8b5cf6;
         }
 
         .card h3 {
@@ -643,7 +688,9 @@
             gap: 8px;
             transition: all .3s;
             position: relative;
-            z-index: 1;
+            z-index: 10;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .program-card .btn-toggle:hover {
@@ -974,6 +1021,11 @@
                 height: 22px;
             }
 
+            .card .ic .icon-mask {
+                width: 18px;
+                height: 18px;
+            }
+
             .card h3 {
                 font-size: 12px;
             }
@@ -1159,6 +1211,7 @@
 </head>
 
 <body class="page-transition">
+    <div id="top-loader"></div>
     <header class="hero @hasSection('content')
 @if (!request()->routeIs('beranda')) hero--subpage @endif
 @endif">
@@ -1230,11 +1283,13 @@
         });
 
         window.addEventListener('pageshow', function (event) {
+            const loader = document.getElementById('top-loader');
+            if (loader) loader.classList.remove('loading');
+            
             if (event.persisted) {
                 document.body.classList.remove('page-transition');
             }
         });
-
 
         document.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -1246,12 +1301,18 @@
                     !this.getAttribute('href').startsWith('#') &&
                     !this.getAttribute('href').startsWith('javascript:')
                 ) {
-                    e.preventDefault();
-                    const target = this.href;
+                    // Instantly fade out current page without delaying browser navigation
                     document.body.classList.add('page-transition');
-                    setTimeout(() => {
-                        window.location.href = target;
-                    }, 150);
+                    
+                    const loader = document.getElementById('top-loader');
+                    if (loader) {
+                        loader.style.transition = 'none';
+                        loader.style.width = '0%';
+                        setTimeout(() => {
+                            loader.style.transition = '';
+                            loader.classList.add('loading');
+                        }, 10);
+                    }
                 }
             });
         });

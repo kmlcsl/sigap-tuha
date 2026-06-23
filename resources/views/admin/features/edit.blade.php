@@ -55,7 +55,7 @@
 @endif
 
 <div style="max-width:800px;">
-<form action="{{ route('admin.features.update', $feature) }}" method="POST" id="editFeatureForm">
+<form action="{{ route('admin.features.update', $feature) }}" method="POST" id="editFeatureForm" enctype="multipart/form-data">
 @csrf @method('PUT')
 
     {{-- SECTION 1: Konten --}}
@@ -132,6 +132,25 @@
             </div>
         </div>
 
+        {{-- Icon Image --}}
+        <div class="form-group" style="margin-top:20px; margin-bottom:20px;">
+            <label for="icon_image">
+                <i class="fas fa-image" style="margin-right:5px; color:var(--text-tertiary);"></i>
+                Upload Icon Image <span style="font-size:11px; color:var(--text-tertiary); font-weight:400;">(Opsional, diutamakan)</span>
+            </label>
+            @if($feature->icon_image)
+                <div style="margin-bottom:12px; display:flex; align-items:center; gap:12px;">
+                    <div style="width:48px; height:48px; background:#f1f5f9; border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                        <img src="{{ Storage::url($feature->icon_image) }}" alt="Current Icon" style="width:32px; height:32px; object-fit:contain;">
+                    </div>
+                    <span style="font-size:13px; color:var(--text-secondary);">Gambar saat ini. Unggah file baru untuk mengganti.</span>
+                </div>
+            @endif
+            <input type="file" name="icon_image" id="icon_image" class="form-control @error('icon_image') is-error @enderror" accept="image/png,image/jpeg,image/svg+xml">
+            @error('icon_image')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+            <div class="form-hint">Format disarankan: PNG transparan hitam/putih. Jika diisi, akan otomatis menimpa Icon SVG dan warnanya akan tersinkronisasi.</div>
+        </div>
+
         <div class="form-group" style="margin-bottom:0; margin-top:4px;">
             <label for="icon_svg">
                 <i class="fas fa-code" style="margin-right:5px; color:var(--text-tertiary);"></i>
@@ -144,9 +163,11 @@
         </div>
     </div>
 
+</form>
+
     {{-- Actions --}}
     <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:24px;">
-        <button type="submit" class="btn btn-primary" id="submitBtn">
+        <button type="submit" class="btn btn-primary" id="submitBtn" form="editFeatureForm">
             <i class="fas fa-save"></i> Simpan Perubahan
         </button>
         <a href="{{ route('admin.features.index') }}" class="btn btn-outline">
@@ -161,8 +182,6 @@
             </button>
         </form>
     </div>
-
-</form>
 </div>
 
 @endsection

@@ -114,8 +114,8 @@
             @if(isset($profil) && $profil->updated_at)
                 <div style="margin-top:16px; padding:12px; background:var(--gray-50); border-radius:var(--radius-md); text-align:center;">
                     <div style="font-size:11px; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;">Terakhir Diperbarui</div>
-                    <div style="font-size:13px; font-weight:600; color:var(--text-primary);">{{ $profil->updated_at->format('d M Y') }}</div>
-                    <div style="font-size:12px; color:var(--text-tertiary);">{{ $profil->updated_at->format('H:i') }} WIB &bull; {{ $profil->updated_at->diffForHumans() }}</div>
+                    <div style="font-size:13px; font-weight:600; color:var(--text-primary);">{{ $profil->updated_at->translatedFormat('d M Y') }}</div>
+                    <div style="font-size:12px; color:var(--text-tertiary);">{{ $profil->updated_at->translatedFormat('H:i') }} WIB &bull; {{ $profil->updated_at->diffForHumans() }}</div>
                 </div>
             @endif
         </div>

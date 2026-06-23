@@ -6,8 +6,10 @@
     <div class="page-content">
         <div class="content-box">
             <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 20px;">
-                <div class="ic {{ $feature->color_class ?? 'blue' }}" style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background: var(--{{ $feature->color_class ?? 'blue' }}); flex-shrink: 0;">
-                    @if(isset($feature->icon_svg))
+                <div class="ic {{ $feature->color_class ?? 'blue' }}" style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; flex-shrink: 0;">
+                    @if(isset($feature->icon_image) && $feature->icon_image)
+                        <span style="display:inline-block; width:30px; height:30px; background-color: currentColor; -webkit-mask-image: url('{{ Storage::url($feature->icon_image) }}'); -webkit-mask-size: contain; -webkit-mask-position: center; -webkit-mask-repeat: no-repeat; mask-image: url('{{ Storage::url($feature->icon_image) }}'); mask-size: contain; mask-position: center; mask-repeat: no-repeat;"></span>
+                    @elseif(isset($feature->icon_svg))
                         {!! str_replace('<svg', '<svg style="width: 30px; height: 30px;"', $feature->icon_svg) !!}
                     @else
                         <svg viewBox="0 0 24 24" fill="currentColor" style="width: 30px; height: 30px;"><circle cx="12" cy="12" r="10"/></svg>

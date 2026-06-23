@@ -13,6 +13,7 @@ class Feature extends Model
         'title',
         'description',
         'icon_svg',
+        'icon_image',
         'color_class',
         'order',
     ];

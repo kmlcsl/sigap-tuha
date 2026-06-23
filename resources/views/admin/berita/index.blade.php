@@ -169,7 +169,7 @@
                             @endif
                         </td>
                         <td class="col-date" style="font-size:12.5px; color:var(--text-secondary);">
-                            {{ $berita->created_at->format('d M Y') }}
+                            {{ $berita->created_at->translatedFormat('d M Y') }}
                         </td>
                         <td>
                             <div style="display:flex; gap:5px; justify-content:center; flex-wrap:wrap;">

@@ -52,14 +52,14 @@
                                 </div>
                             @endif
                             <div style="padding: 20px;">
-                                <div class="berita-card-date" style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 8px;"><i class="fas fa-calendar-alt"></i> {{ $berita->created_at->format('d M Y') }}</div>
+                                <div class="berita-card-date" style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 8px;"><i class="fas fa-calendar-alt"></i> {{ $berita->created_at->translatedFormat('d F Y') }}</div>
                                 <h3 class="berita-card-title" style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; line-height: 1.4;">
-                                    <a href="javascript:void(0)" onclick="openBeritaModal('{{ addslashes($berita->judul) }}', '{{ $berita->created_at->format('d F Y') }}', '{{ $berita->gambar ? asset($berita->gambar) : '' }}', `{{ addslashes(nl2br(e($berita->konten))) }}`)" style="color: inherit; text-decoration: none;">{{ $berita->judul }}</a>
+                                    <a href="javascript:void(0)" onclick="openBeritaModal('{{ addslashes($berita->judul) }}', '{{ $berita->created_at->translatedFormat('d F Y') }}', '{{ $berita->gambar ? asset($berita->gambar) : '' }}', `{{ addslashes(nl2br(e($berita->konten))) }}`)" style="color: inherit; text-decoration: none;">{{ $berita->judul }}</a>
                                 </h3>
                                 <p class="berita-card-desc" style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
                                     {{ Str::limit(strip_tags($berita->konten), 100) }}
                                 </p>
-                                <a href="javascript:void(0)" onclick="openBeritaModal('{{ addslashes($berita->judul) }}', '{{ $berita->created_at->format('d F Y') }}', '{{ $berita->gambar ? asset($berita->gambar) : '' }}', `{{ addslashes(nl2br(e($berita->konten))) }}`)" class="berita-card-link" style="display: inline-block; font-size: 14px; font-weight: 600; color: var(--brand-600); text-decoration: none; cursor:pointer;">Baca Selengkapnya <i class="fas fa-arrow-right" style="font-size: 12px; margin-left: 4px;"></i></a>
+                                <a href="javascript:void(0)" onclick="openBeritaModal('{{ addslashes($berita->judul) }}', '{{ $berita->created_at->translatedFormat('d F Y') }}', '{{ $berita->gambar ? asset($berita->gambar) : '' }}', `{{ addslashes(nl2br(e($berita->konten))) }}`)" class="berita-card-link" style="display: inline-block; font-size: 14px; font-weight: 600; color: var(--brand-600); text-decoration: none; cursor:pointer;">Baca Selengkapnya <i class="fas fa-arrow-right" style="font-size: 12px; margin-left: 4px;"></i></a>
                             </div>
                         </div>
                     @endforeach

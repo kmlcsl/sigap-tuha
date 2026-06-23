@@ -217,8 +217,8 @@
                             @endif
                         </td>
                         <td>
-                            <div style="font-size:13px; color:var(--text-secondary); font-weight:500;">{{ $lap->created_at->format('d M Y') }}</div>
-                            <div style="font-size:11.5px; color:var(--text-tertiary);">{{ $lap->created_at->format('H:i') }} &bull; {{ $lap->created_at->diffForHumans() }}</div>
+                            <div style="font-size:13px; color:var(--text-secondary); font-weight:500;">{{ $lap->created_at->translatedFormat('d M Y') }}</div>
+                            <div style="font-size:11.5px; color:var(--text-tertiary);">{{ $lap->created_at->translatedFormat('H:i') }} &bull; {{ $lap->created_at->diffForHumans() }}</div>
                         </td>
                         <td>
                             <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">

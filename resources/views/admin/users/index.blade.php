@@ -182,7 +182,7 @@
                             @endif
                         </td>
                         <td class="col-join">
-                            <div style="font-size:13px; color:var(--text-secondary);">{{ $user->created_at->format('d M Y') }}</div>
+                            <div style="font-size:13px; color:var(--text-secondary);">{{ $user->created_at->translatedFormat('d M Y') }}</div>
                         </td>
                         <td>
                             <div style="display:flex; gap:5px; justify-content:center;">

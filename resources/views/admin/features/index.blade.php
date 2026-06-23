@@ -175,7 +175,7 @@
             <div class="stat-card__icon warning"><i class="fas fa-clock"></i></div>
         </div>
         <div class="stat-card__value" style="font-size:18px; margin-top:4px;">
-            {{ $features->sortByDesc('updated_at')->first()?->updated_at?->format('d M') ?? '—' }}
+            {{ $features->sortByDesc('updated_at')->first()?->updated_at?->translatedFormat('d M') ?? '—' }}
         </div>
         <div class="stat-card__change up" style="font-size:10.5px;"><i class="fas fa-sync" style="font-size:9px"></i> Diperbarui</div>
     </div>
@@ -230,7 +230,9 @@
                 <div class="feature-card__body">
                     <div class="feature-card__icon-row">
                         <div class="feature-card__icon" style="background:{{ $colors['bg'] }};">
-                            @if($feature->icon_svg)
+                            @if($feature->icon_image)
+                                <span style="display:inline-block; width:22px; height:22px; background-color: #fff; -webkit-mask-image: url('{{ Storage::url($feature->icon_image) }}'); -webkit-mask-size: contain; -webkit-mask-position: center; -webkit-mask-repeat: no-repeat; mask-image: url('{{ Storage::url($feature->icon_image) }}'); mask-size: contain; mask-position: center; mask-repeat: no-repeat;"></span>
+                            @elseif($feature->icon_svg)
                                 {!! $feature->icon_svg !!}
                             @elseif($feature->icon)
                                 <i class="{{ $feature->icon }}"></i>

@@ -53,7 +53,7 @@
         <div class="card__header">
             <h3 class="card__title"><i class="fas fa-edit"></i> Form Edit Program</h3>
             <span style="font-size:12px; color:var(--text-tertiary);">
-                <i class="far fa-clock"></i> Diperbarui: {{ $program->updated_at->format('d M Y, H:i') }}
+                <i class="far fa-clock"></i> Diperbarui: {{ $program->updated_at->translatedFormat('d M Y, H:i') }}
             </span>
         </div>
 

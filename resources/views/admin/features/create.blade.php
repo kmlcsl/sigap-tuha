@@ -69,7 +69,7 @@
 @endif
 
 <div style="max-width:800px;">
-<form action="{{ route('admin.features.store') }}" method="POST" id="featureForm">
+<form action="{{ route('admin.features.store') }}" method="POST" id="featureForm" enctype="multipart/form-data">
 @csrf
 
     {{-- SECTION 1: Konten Utama --}}
@@ -151,6 +151,17 @@
                 @error('order')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
                 <div class="form-hint"><i class="fas fa-info-circle" style="font-size:10px;"></i> Angka lebih kecil tampil lebih dulu</div>
             </div>
+        </div>
+
+        {{-- Icon Image --}}
+        <div class="form-group" style="margin-bottom:20px;">
+            <label for="icon_image">
+                <i class="fas fa-image" style="margin-right:5px; color:var(--text-tertiary);"></i>
+                Upload Icon Image <span style="font-size:11px; color:var(--text-tertiary); font-weight:400;">(Opsional, diutamakan)</span>
+            </label>
+            <input type="file" name="icon_image" id="icon_image" class="form-control @error('icon_image') is-error @enderror" accept="image/png,image/jpeg,image/svg+xml">
+            @error('icon_image')<div class="form-error"><i class="fas fa-exclamation-circle"></i> {{ $message }}</div>@enderror
+            <div class="form-hint">Format disarankan: PNG transparan hitam/putih. Jika diisi, akan otomatis menimpa Icon SVG dan warnanya akan tersinkronisasi.</div>
         </div>
 
         {{-- Icon SVG --}}
@@ -240,6 +251,36 @@ document.getElementById('description').addEventListener('input', function () {
 document.getElementById('order').addEventListener('input', function () {
     document.getElementById('previewCard').querySelector('span').textContent = '#' + (this.value || '1');
 });
+
+// Icon preview handlers
+const previewIconDiv = document.getElementById('previewIcon');
+const defaultStar = '<i class="fas fa-star"></i>';
+
+function updateIconPreview() {
+    const fileInput = document.getElementById('icon_image');
+    const svgInput = document.getElementById('icon_svg');
+    
+    if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewIconDiv.innerHTML = `<img src="${e.target.result}" style="width:24px; height:24px; object-fit:contain; filter: brightness(0) invert(1);">`;
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    } else if (svgInput.value.trim() !== '') {
+        previewIconDiv.innerHTML = svgInput.value;
+        const svgEl = previewIconDiv.querySelector('svg');
+        if(svgEl) {
+            svgEl.style.width = '24px';
+            svgEl.style.height = '24px';
+            svgEl.style.fill = 'currentColor';
+        }
+    } else {
+        previewIconDiv.innerHTML = defaultStar;
+    }
+}
+
+document.getElementById('icon_image').addEventListener('change', updateIconPreview);
+document.getElementById('icon_svg').addEventListener('input', updateIconPreview);
 
 // Init swatch
 updateSwatch(document.getElementById('colorSelect').value);

@@ -17,7 +17,7 @@
 
             <div style="padding: 32px;">
                 <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px; color: var(--text-tertiary); font-size: 14px;">
-                    <span><i class="fas fa-calendar-alt"></i> {{ $berita->created_at->format('d F Y') }}</span>
+                    <span><i class="fas fa-calendar-alt"></i> {{ $berita->created_at->translatedFormat('d F Y') }}</span>
                     <span><i class="fas fa-user-edit"></i> Admin</span>
                 </div>
 

@@ -49,7 +49,9 @@
           <a href="{{ route('fitur.detail', \Illuminate\Support\Str::slug($feature->title)) }}">
             <article class="card">
               <div class="ic {{ $feature->color_class }}" aria-hidden="true">
-                @if($feature->icon_svg)
+                @if($feature->icon_image)
+                  <span class="icon-mask" style="-webkit-mask-image: url('{{ Storage::url($feature->icon_image) }}'); mask-image: url('{{ Storage::url($feature->icon_image) }}');"></span>
+                @elseif($feature->icon_svg)
                   {!! $feature->icon_svg !!}
                 @else
                   <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
