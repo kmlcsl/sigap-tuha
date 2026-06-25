@@ -26,40 +26,40 @@
 
     <div class="stat-card success">
         <div class="stat-card__top">
-            <span class="stat-card__label">Total Lansia</span>
+            <span class="stat-card__label">Desa Terdata</span>
             <div class="stat-card__icon success">
-                <i class="fas fa-users"></i>
+                <i class="fas fa-map-marked-alt"></i>
             </div>
         </div>
-        <div class="stat-card__value">128</div>
+        <div class="stat-card__value">{{ $desaCount }}</div>
         <div class="stat-card__change up">
-            <i class="fas fa-arrow-up" style="font-size:10px"></i> +12 bulan ini
+            <i class="fas fa-arrow-up" style="font-size:10px"></i> Aktif
         </div>
     </div>
 
     <div class="stat-card warning">
         <div class="stat-card__top">
-            <span class="stat-card__label">Perlu Pemantauan</span>
+            <span class="stat-card__label">Lansia Prioritas</span>
             <div class="stat-card__icon warning">
-                <i class="fas fa-exclamation-triangle"></i>
+                <i class="fas fa-users"></i>
             </div>
         </div>
-        <div class="stat-card__value">23</div>
-        <div class="stat-card__change down">
-            <i class="fas fa-arrow-down" style="font-size:10px"></i> -3 minggu ini
+        <div class="stat-card__value">{{ $lansiaPrioritasCount }}</div>
+        <div class="stat-card__change up">
+            <i class="fas fa-arrow-up" style="font-size:10px"></i> Aktif
         </div>
     </div>
 
     <div class="stat-card danger">
         <div class="stat-card__top">
-            <span class="stat-card__label">Laporan Darurat</span>
+            <span class="stat-card__label">Kontak Darurat</span>
             <div class="stat-card__icon danger">
-                <i class="fas fa-bell"></i>
+                <i class="fas fa-phone-alt"></i>
             </div>
         </div>
-        <div class="stat-card__value">7</div>
+        <div class="stat-card__value">{{ $bantuanCount }}</div>
         <div class="stat-card__change up">
-            <i class="fas fa-arrow-up" style="font-size:10px"></i> +2 hari ini
+            <i class="fas fa-arrow-up" style="font-size:10px"></i> Tersedia
         </div>
     </div>
 </div>
@@ -100,31 +100,31 @@
         <div style="display:flex; flex-direction:column; gap:16px;">
             <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--gray-50); border-radius:var(--radius-md);">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <i class="fas fa-check-circle" style="color:var(--success-500);"></i>
-                    <span style="font-size:13.5px; font-weight:500; color:var(--text-secondary);">Lansia Stabil</span>
+                    <i class="fas fa-puzzle-piece" style="color:var(--success-500);"></i>
+                    <span style="font-size:13.5px; font-weight:500; color:var(--text-secondary);">Total Fitur Aktif</span>
                 </div>
-                <span style="font-size:15px; font-weight:700; color:var(--text-primary);">98</span>
+                <span style="font-size:15px; font-weight:700; color:var(--text-primary);">{{ $featureCount }}</span>
             </div>
             <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--gray-50); border-radius:var(--radius-md);">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <i class="fas fa-eye" style="color:var(--warning-500);"></i>
-                    <span style="font-size:13.5px; font-weight:500; color:var(--text-secondary);">Perlu Pemantauan</span>
+                    <i class="fas fa-map" style="color:var(--warning-500);"></i>
+                    <span style="font-size:13.5px; font-weight:500; color:var(--text-secondary);">Total Desa Terdata</span>
                 </div>
-                <span style="font-size:15px; font-weight:700; color:var(--text-primary);">23</span>
+                <span style="font-size:15px; font-weight:700; color:var(--text-primary);">{{ $desaCount }}</span>
             </div>
             <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--gray-50); border-radius:var(--radius-md);">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <i class="fas fa-ambulance" style="color:var(--danger-500);"></i>
-                    <span style="font-size:13.5px; font-weight:500; color:var(--text-secondary);">Rujukan Segera</span>
+                    <i class="fas fa-book-medical" style="color:var(--danger-500);"></i>
+                    <span style="font-size:13.5px; font-weight:500; color:var(--text-secondary);">Modul Edukasi</span>
                 </div>
-                <span style="font-size:15px; font-weight:700; color:var(--text-primary);">7</span>
+                <span style="font-size:15px; font-weight:700; color:var(--text-primary);">{{ $edukasiCount }}</span>
             </div>
             <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:var(--gray-50); border-radius:var(--radius-md);">
                 <div style="display:flex; align-items:center; gap:10px;">
                     <i class="fas fa-user-friends" style="color:var(--brand-500);"></i>
-                    <span style="font-size:13.5px; font-weight:500; color:var(--text-secondary);">Relawan Aktif</span>
+                    <span style="font-size:13.5px; font-weight:500; color:var(--text-secondary);">Organisasi Relawan</span>
                 </div>
-                <span style="font-size:15px; font-weight:700; color:var(--text-primary);">34</span>
+                <span style="font-size:15px; font-weight:700; color:var(--text-primary);">{{ $relawanCount }}</span>
             </div>
         </div>
     </div>

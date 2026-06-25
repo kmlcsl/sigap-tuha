@@ -1,6 +1,9 @@
 @extends('layouts.sigap')
 
 @section('content')
+    <!-- LEAFLET CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+
     <!-- HERO CONTENT -->
     <div class="hero-grid">
       <div class="hero-text">
@@ -42,8 +45,8 @@
       <div class="hero-photo" aria-hidden="true"></div>
     </div>
 
-    <!-- FEATURE CARDS (di dalam hero -> satu layar) -->
-    <section class="features">
+    <!-- FEATURE CARDS -->
+    <section class="features" style="margin-top: 25vh;">
       <div class="cards">
         @forelse($features as $feature)
           <a href="{{ route('fitur.detail', \Illuminate\Support\Str::slug($feature->title)) }}">
@@ -115,4 +118,155 @@
         @endforelse
       </div>
     </section>
+
+    <!-- PETA SEBARAN LANSIA -->
+    <style>
+        .map-wrapper {
+            width: 100%;
+            height: 500px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(11, 44, 107, 0.15);
+            z-index: 1;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Penyesuaian khusus mobile */
+        @media (max-width: 768px) {
+            .features {
+                margin-top: 50px !important; /* Jangan pakai vh terlalu besar di mobile karena layar pendek */
+                padding: 0 10px;
+            }
+            .map-section {
+                padding: 20px 0 20px !important;
+                margin-top: 10px !important;
+            }
+            .map-wrapper {
+                height: 350px; /* Peta lebih pendek di layar kecil */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .map-wrapper {
+                height: 300px; /* Peta lebih kecil di HP */
+            }
+        }
+    </style>
+    <section class="map-section" style="padding: 20px 0 80px; margin-top: 60px;">
+        <div class="content-box" style="margin-top: 20px;">
+            <h2 style="text-align: center; margin-bottom: 8px;">Peta Sebaran Lansia</h2>
+            <p style="text-align: center; color: var(--muted); margin-bottom: 24px;">Pemetaan titik lokasi desa beserta informasi lansia prioritas.</p>
+            <div id="map" class="map-wrapper"></div>
+        </div>
+    </section>
+
+    <!-- LEAFLET JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inisialisasi Peta
+            // Default center ke Kecamatan Pandrah, Bireuen
+            var map = L.map('map').setView([5.074190, 96.365904], 12);
+
+            // Google Maps Tile Layer
+            L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                attribution: '&copy; Google Maps'
+            }).addTo(map);
+
+            // Data Titik Lansia Prioritas
+            var lansiasRaw = @json($lansias ?? []);
+            
+            // Kelompokkan lansia berdasarkan koordinat yang persis sama
+            var groupedLansias = {};
+            lansiasRaw.forEach(function(lansia) {
+                if (lansia.latitude && lansia.longitude) {
+                    var key = lansia.latitude.trim() + ',' + lansia.longitude.trim();
+                    if (!groupedLansias[key]) {
+                        groupedLansias[key] = [];
+                    }
+                    groupedLansias[key].push(lansia);
+                }
+            });
+
+            // Loop per koordinat unik
+            Object.keys(groupedLansias).forEach(function(key) {
+                var group = groupedLansias[key];
+                var lat = parseFloat(group[0].latitude);
+                var lng = parseFloat(group[0].longitude);
+                
+                if(!isNaN(lat) && !isNaN(lng)) {
+                    // Header Popup (Jika lebih dari 1 orang di 1 rumah/titik)
+                    var popupContent = `<div style="font-family: 'Segoe UI', sans-serif; min-width: 220px; max-height: 260px; overflow-y: auto; padding-right: 4px;">`;
+                    
+                    if (group.length > 1) {
+                        popupContent += `
+                            <div style="background: #e0e7ff; padding: 6px 10px; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid #3b6cf9;">
+                                <strong style="color: #1e40af; font-size: 13px;">🏠 Terdapat ${group.length} Lansia di Lokasi Ini</strong>
+                            </div>
+                        `;
+                    }
+
+                    // Loop orang-orang di titik ini
+                    group.forEach(function(lansia, index) {
+                        var namaDesa = lansia.desa ? lansia.desa.desa : 'Tidak Diketahui';
+                        var penyakitHtml = '';
+                        
+                        if(lansia.riwayat_penyakit) {
+                            penyakitHtml = `
+                                <div style="margin-top: 6px; padding: 6px 8px; background: #fee2e2; border-radius: 6px; font-size: 11.5px; border-left: 3px solid #ef4444;">
+                                    <strong style="color:#b91c1c;">💊 Penyakit:</strong> <span style="color:#7f1d1d;">${lansia.riwayat_penyakit}</span>
+                                </div>
+                            `;
+                        }
+
+                        var divider = index > 0 ? `<hr style="border:0; border-top:1px dashed #cbd5e1; margin:12px 0;">` : '';
+
+                        popupContent += `
+                            ${divider}
+                            <div style="margin-bottom: 6px;">
+                                <h3 style="margin: 0 0 4px 0; color: #0b2c6b; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                                    <i class="fas fa-person-cane" style="color:var(--brand-500);"></i> ${lansia.nama_lansia}
+                                </h3>
+                                <div style="font-size: 12px; color: #475569;">
+                                    <strong>📍 Desa:</strong> ${namaDesa} &nbsp;|&nbsp; <strong>⏳ Usia:</strong> ${lansia.umur} Thn
+                                </div>
+                                ${penyakitHtml}
+                            </div>
+                        `;
+                    });
+
+                    popupContent += `</div>`;
+
+                    L.marker([lat, lng]).addTo(map)
+                        .bindPopup(popupContent, {
+                            maxWidth: 320,
+                            className: 'custom-popup'
+                        });
+                }
+            });
+
+            // Hapus blok fitBounds(bounds) karena kita ingin selalu menyorot area kecamatan secara utuh
+
+            // Load Boundary Polygon Kecamatan Pandrah (dari OpenStreetMap)
+            fetch('/data/pandrah.geojson')
+                .then(response => response.json())
+                .then(data => {
+                    var boundaryLayer = L.geoJSON(data, {
+                        style: {
+                            color: '#ef4444',     // Warna garis tepi (merah)
+                            weight: 2,            // Ketebalan garis
+                            opacity: 0.9,
+                            fillColor: '#fee2e2', // Warna isi area
+                            fillOpacity: 0.35
+                        }
+                    }).addTo(map);
+
+                    // Selalu fokuskan peta ke area batas kecamatan (polygon), 
+                    // baik sudah ada marker lansia maupun belum, agar nampak area kecamatannya.
+                    map.fitBounds(boundaryLayer.getBounds(), { padding: [20, 20] });
+                })
+                .catch(err => console.error("Error loading boundary:", err));
+        });
+    </script>
 @endsection

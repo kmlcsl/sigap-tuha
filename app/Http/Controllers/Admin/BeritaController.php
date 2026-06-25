@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Berita;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class BeritaController extends Controller
 {
@@ -33,10 +34,7 @@ class BeritaController extends Controller
         $data['slug'] = Str::slug($request->judul) . '-' . time();
 
         if ($request->hasFile('gambar')) {
-            $image = $request->file('gambar');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/berita'), $imageName);
-            $data['gambar'] = 'images/berita/' . $imageName;
+            $data['gambar'] = $request->file('gambar')->store('berita', 'public');
         }
 
         Berita::create($data);
@@ -65,10 +63,10 @@ class BeritaController extends Controller
         $data = $request->except('gambar');
 
         if ($request->hasFile('gambar')) {
-            $image = $request->file('gambar');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/berita'), $imageName);
-            $data['gambar'] = 'images/berita/' . $imageName;
+            if ($berita->gambar) {
+                Storage::disk('public')->delete($berita->gambar);
+            }
+            $data['gambar'] = $request->file('gambar')->store('berita', 'public');
         }
 
         $berita->update($data);
@@ -78,6 +76,9 @@ class BeritaController extends Controller
 
     public function destroy(Berita $beritum)
     {
+        if ($beritum->gambar) {
+            Storage::disk('public')->delete($beritum->gambar);
+        }
         $beritum->delete();
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil dihapus!');
     }

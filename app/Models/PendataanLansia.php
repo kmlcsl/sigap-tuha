@@ -9,7 +9,7 @@ class PendataanLansia extends Model
     protected $table = 'pendataan_lansias';
 
     protected $fillable = [
-        'kecamatan',
+        'desa',
         'jumlah_penduduk_l',
         'jumlah_penduduk_p',
         'bayi_baru_lahir_l',
@@ -131,5 +131,10 @@ class PendataanLansia extends Model
             ['label' => 'Usia 60–69 Tahun',    'l' => $this->usia_60_69_tahun_l, 'p' => $this->usia_60_69_tahun_p, 'total' => $this->usia_60_69_tahun_l + $this->usia_60_69_tahun_p],
             ['label' => 'Usia >70 Tahun',      'l' => $this->usia_70_plus_l,     'p' => $this->usia_70_plus_p,     'total' => $this->usia_70_plus_l + $this->usia_70_plus_p],
         ];
+    }
+
+    public function lansiaPrioritas()
+    {
+        return $this->hasMany(LansiaPrioritas::class, 'pendataan_lansia_id');
     }
 }

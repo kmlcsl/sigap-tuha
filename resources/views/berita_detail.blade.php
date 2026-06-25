@@ -12,7 +12,7 @@
 
         <div class="content-box" style="padding: 0; overflow: hidden; border-radius: var(--radius-xl);">
             @if($berita->gambar)
-                <img src="{{ asset($berita->gambar) }}" alt="{{ $berita->judul }}" style="width: 100%; max-height: 400px; object-fit: cover;">
+                <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}" style="width: 100%; max-height: 400px; object-fit: cover;">
             @endif
 
             <div style="padding: 32px;">

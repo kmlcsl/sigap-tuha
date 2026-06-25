@@ -22,10 +22,7 @@ class OrganisasiRelawan extends Model
         'urutan',
     ];
 
-    public function relawans()
-    {
-        return $this->hasMany(Relawan::class, 'organisasi_id');
-    }
+
 
     public function scopeAktif($query)
     {

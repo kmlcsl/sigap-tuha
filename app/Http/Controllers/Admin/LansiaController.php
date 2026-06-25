@@ -13,7 +13,7 @@ class LansiaController extends Controller
     private function rules(): array
     {
         return [
-            'kecamatan'           => 'required|string|max:150',
+            'desa'                => 'required|string|max:150',
             'jumlah_penduduk_l'   => 'required|integer|min:0',
             'jumlah_penduduk_p'   => 'required|integer|min:0',
             'bayi_baru_lahir_l'   => 'required|integer|min:0',
@@ -44,10 +44,10 @@ class LansiaController extends Controller
         $query = PendataanLansia::query();
 
         if ($request->filled('search')) {
-            $query->where('kecamatan', 'like', '%' . $request->search . '%');
+            $query->where('desa', 'like', '%' . $request->search . '%');
         }
 
-        $lansias = $query->orderBy('kecamatan')->get();
+        $lansias = $query->orderBy('desa')->get();
 
         // Hitung total agregat untuk stats cards
         $totalPendudukL  = $lansias->sum('jumlah_penduduk_l');
@@ -76,11 +76,24 @@ class LansiaController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate($this->rules());
-        PendataanLansia::create($validated);
+        $lansia = PendataanLansia::create($validated);
+
+        $prioritasData = $request->input('prioritas', []);
+        foreach ($prioritasData as $p) {
+            if (!empty($p['nama_lansia'])) {
+                $lansia->lansiaPrioritas()->create([
+                    'nama_lansia'      => $p['nama_lansia'],
+                    'umur'             => $p['umur'] ?? 0,
+                    'riwayat_penyakit' => $p['riwayat_penyakit'],
+                    'latitude'         => $p['latitude'],
+                    'longitude'        => $p['longitude'],
+                ]);
+            }
+        }
 
         return redirect()
             ->route('admin.lansia.index')
-            ->with('success', 'Data kecamatan ' . $validated['kecamatan'] . ' berhasil ditambahkan.');
+            ->with('success', 'Data desa ' . $validated['desa'] . ' berhasil ditambahkan.');
     }
 
     public function show(PendataanLansia $lansia)
@@ -95,25 +108,48 @@ class LansiaController extends Controller
 
     public function update(Request $request, PendataanLansia $lansia)
     {
-        $rules = $this->rules();
-        // Unique kecamatan ignoring current record
-        $rules['kecamatan'] = 'required|string|max:150|unique:pendataan_lansias,kecamatan,' . $lansia->id;
-
-        $validated = $request->validate($rules);
+        $validated = $request->validate($this->rules());
         $lansia->update($validated);
+
+        $prioritasData = $request->input('prioritas', []);
+        
+        $keepIds = collect($prioritasData)->pluck('id')->filter()->toArray();
+        $lansia->lansiaPrioritas()->whereNotIn('id', $keepIds)->delete();
+
+        foreach ($prioritasData as $p) {
+            if (!empty($p['nama_lansia'])) {
+                if (!empty($p['id'])) {
+                    $lansia->lansiaPrioritas()->where('id', $p['id'])->update([
+                        'nama_lansia'      => $p['nama_lansia'],
+                        'umur'             => $p['umur'] ?? 0,
+                        'riwayat_penyakit' => $p['riwayat_penyakit'],
+                        'latitude'         => $p['latitude'],
+                        'longitude'        => $p['longitude'],
+                    ]);
+                } else {
+                    $lansia->lansiaPrioritas()->create([
+                        'nama_lansia'      => $p['nama_lansia'],
+                        'umur'             => $p['umur'] ?? 0,
+                        'riwayat_penyakit' => $p['riwayat_penyakit'],
+                        'latitude'         => $p['latitude'],
+                        'longitude'        => $p['longitude'],
+                    ]);
+                }
+            }
+        }
 
         return redirect()
             ->route('admin.lansia.index')
-            ->with('success', 'Data kecamatan ' . $lansia->kecamatan . ' berhasil diperbarui.');
+            ->with('success', 'Data desa ' . $lansia->desa . ' berhasil diperbarui.');
     }
 
     public function destroy(PendataanLansia $lansia)
     {
-        $nama = $lansia->kecamatan;
+        $nama = $lansia->desa;
         $lansia->delete();
 
         return redirect()
             ->route('admin.lansia.index')
-            ->with('success', 'Data kecamatan ' . $nama . ' berhasil dihapus.');
+            ->with('success', 'Data desa ' . $nama . ' berhasil dihapus.');
     }
 }

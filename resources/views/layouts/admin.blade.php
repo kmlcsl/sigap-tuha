@@ -16,12 +16,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
-        /* ══════════════════════════════════════════════════════════════
-           SIGAP TUHA — Admin Panel Design System 2026
-           Modern glassmorphism · Fluid responsive · Micro-animations
-           All icons powered by Font Awesome 6
-        ══════════════════════════════════════════════════════════════ */
-
         :root {
             /* Brand Palette */
             --brand-50:  #eef4ff;
@@ -1495,8 +1489,8 @@
 
                 <div class="topbar__actions">
                     @php
-                        $recentRujukan = \App\Models\Lansia::where('status', 'Rujukan segera')->latest()->take(3)->get();
-                        $rujukanCount  = \App\Models\Lansia::where('status', 'Rujukan segera')->count();
+                        $recentRujukan = \App\Models\LansiaPrioritas::latest()->take(3)->get();
+                        $rujukanCount  = \App\Models\LansiaPrioritas::count();
                     @endphp
 
                     {{-- Notifikasi Dropdown --}}
@@ -1516,19 +1510,19 @@
                             </div>
                             <div style="max-height: 300px; overflow-y: auto;">
                                 @forelse($recentRujukan as $lansia)
-                                    <a href="{{ route('admin.lansia.edit', $lansia->id) }}" class="dropdown-item" style="align-items:flex-start; gap:14px;">
-                                        <div style="width:32px; height:32px; border-radius:50%; background:var(--danger-50); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                            <i class="fas fa-user-injured" style="color:var(--danger-500); font-size:14px; margin:0;"></i>
+                                    <a href="#" class="dropdown-item" style="align-items:flex-start; gap:14px;">
+                                        <div style="width:32px; height:32px; border-radius:50%; background:var(--warning-50); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <i class="fas fa-exclamation-circle" style="color:var(--warning-500); font-size:14px; margin:0;"></i>
                                         </div>
                                         <div>
                                             <div style="font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:4px;">
-                                                {{ $lansia->nama }}
+                                                {{ $lansia->nama_lansia }}
                                             </div>
-                                            <div style="font-size:12px; color:var(--danger-500); line-height:1.4; font-weight:500;">
-                                                <i class="fas fa-exclamation-triangle" style="font-size:10px;"></i> Rujukan Segera
+                                            <div style="font-size:12px; color:var(--warning-500); line-height:1.4; font-weight:500;">
+                                                <i class="fas fa-star" style="font-size:10px;"></i> Prioritas
                                             </div>
                                             <div style="font-size:11px; color:var(--text-tertiary); margin-top:4px;">
-                                                {{ $lansia->desa }} &bull; {{ $lansia->kondisi_kesehatan ?? 'Perlu penanganan' }}
+                                                {{ $lansia->desa ? $lansia->desa->desa : '-' }} &bull; {{ $lansia->riwayat_penyakit ?? 'Memiliki riwayat penyakit' }}
                                             </div>
                                         </div>
                                     </a>

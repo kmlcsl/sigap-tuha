@@ -38,7 +38,7 @@
                         <th>#</th>
                         <th>Nama Organisasi</th>
                         <th>Singkatan</th>
-                        <th>Jumlah Relawan</th>
+
                         <th>Bidang Keahlian</th>
                         <th>Status</th>
                         <th>Aksi</th>
@@ -50,11 +50,7 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $org->nama_organisasi }}</td>
                         <td>{{ $org->singkatan ?? '-' }}</td>
-                        <td>
-                            <span class="badge badge--brand">
-                                <span class="badge__dot"></span> {{ $org->relawans_count }} Orang
-                            </span>
-                        </td>
+
                         <td>{{ $org->bidang_keahlian ?? '-' }}</td>
                         <td>
                             @if($org->is_active)
@@ -66,7 +62,7 @@
                         <td>
                             <div style="display: flex; gap: 8px;">
                                 <a href="{{ route('admin.organisasi-relawan.edit', $org) }}" class="btn btn-outline btn-sm">Edit</a>
-                                <a href="{{ route('admin.organisasi-relawan.relawan.index', $org) }}" class="btn btn-primary btn-sm">Kelola Anggota</a>
+
                                 <form action="{{ route('admin.organisasi-relawan.destroy', $org) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus?')">
                                     @csrf
                                     @method('DELETE')

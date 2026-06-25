@@ -77,9 +77,8 @@
 
         .hero {
             position: relative;
-            overflow: hidden;
-            height: 100vh;
-            min-height: 660px;
+            overflow: visible;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
@@ -103,6 +102,7 @@
             flex-direction: column;
             width: 100%;
             flex: 1;
+            padding-top: 100px;
         }
 
         .hero.hero--subpage>.container {
@@ -147,8 +147,11 @@
 
         /* NAV */
         nav {
-            position: relative;
-            z-index: 10;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(8px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.15);

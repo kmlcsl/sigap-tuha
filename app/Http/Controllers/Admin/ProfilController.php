@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Profil;
+use Illuminate\Support\Facades\Storage;
 
 class ProfilController extends Controller
 {
@@ -36,10 +37,10 @@ class ProfilController extends Controller
         ];
 
         if ($request->hasFile('gambar')) {
-            $image = $request->file('gambar');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/profil'), $imageName);
-            $data['gambar'] = 'images/profil/' . $imageName;
+            if ($profil->gambar) {
+                Storage::disk('public')->delete($profil->gambar);
+            }
+            $data['gambar'] = $request->file('gambar')->store('profil', 'public');
         }
 
         $profil->update($data);

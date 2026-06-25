@@ -49,15 +49,10 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
     // CARD 4: RELAWAN SIAGA
     Route::resource('organisasi-relawan', AdminOrganisasiRelawanController::class);
-    Route::resource('organisasi-relawan.relawan', AdminRelawanController::class);
 
     // CARD 5: MONITORING
     Route::prefix('monitoring')->name('monitoring.')->group(function () {
         Route::get('/', [AdminMonitoringController::class, 'index'])->name('index');
-        Route::post('/presensi', [AdminMonitoringController::class, 'storePresensi'])->name('presensi.store');
-        Route::post('/kunjungan', [AdminMonitoringController::class, 'storeKunjungan'])->name('kunjungan.store');
-        Route::post('/kasus', [AdminMonitoringController::class, 'storeKasus'])->name('kasus.store');
-        Route::post('/evaluasi', [AdminMonitoringController::class, 'storeEvaluasi'])->name('evaluasi.store');
     });
 
     Route::resource('users', AdminUserController::class);

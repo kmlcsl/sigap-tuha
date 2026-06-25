@@ -197,14 +197,14 @@
             <h1 style="font-size:30px;font-weight:900;color:#0b2c6b;margin:0 0 8px;">Pendataan Lansia</h1>
             <div style="width:60px;height:4px;background:linear-gradient(90deg,#1d4ed8,#7c3aed);border-radius:2px;margin:12px auto;"></div>
             <p style="color:#64748b;max-width:580px;margin:8px auto;font-size:14.5px;line-height:1.7;">
-                Rekap data kependudukan per kelompok usia per kecamatan — diperbarui secara berkala oleh tim <strong>SIGAP TUHA</strong>.
-                Klik nama kecamatan atau batang grafik untuk melihat detail lengkap.
+                Rekap data kependudukan per kelompok usia per desa — diperbarui secara berkala oleh tim <strong>SIGAP TUHA</strong>.
+                Klik nama desa atau batang grafik untuk melihat detail lengkap.
             </p>
         </div>
 
         {{-- ── Stat Cards ──────────────────────────────────────── --}}
         @php
-            $totalKec       = $lansias->count();
+            $totalDesa      = $lansias->count();
             $totalPendL     = $lansias->sum('jumlah_penduduk_l');
             $totalPendP     = $lansias->sum('jumlah_penduduk_p');
             $totalPend      = $totalPendL + $totalPendP;
@@ -216,8 +216,8 @@
         @endphp
         <div class="pl-stats">
             <div class="pl-stat" style="--sc:#1d4ed8;">
-                <div class="pl-stat__num">{{ $totalKec }}</div>
-                <div class="pl-stat__sub">Kecamatan</div>
+                <div class="pl-stat__num">{{ $totalDesa }}</div>
+                <div class="pl-stat__sub">Desa</div>
             </div>
             <div class="pl-stat" style="--sc:#0891b2;">
                 <div class="pl-stat__num">{{ number_format($totalPend) }}</div>
@@ -249,11 +249,11 @@
         <div class="pl-chart-card">
             <div class="pl-chart-card__title">
                 <i class="fas fa-chart-bar" style="color:#1d4ed8;"></i>
-                Distribusi Penduduk per Kecamatan
+                Distribusi Penduduk per Desa
             </div>
             <div class="pl-chart-card__hint">
                 <i class="fas fa-hand-pointer" style="color:#1d4ed8;"></i>
-                Klik batang grafik untuk melihat detail seluruh kelompok usia kecamatan tersebut.
+                Klik batang grafik untuk melihat detail seluruh kelompok usia desa tersebut.
             </div>
             <div class="chart-wrap">
                 <canvas id="chartKec"></canvas>
@@ -263,10 +263,10 @@
         {{-- ── Tabel Ringkasan ─────────────────────────────────── --}}
         <div style="margin-bottom:18px;">
             <div style="font-size:20px;font-weight:800;color:#0b2c6b;margin-bottom:4px;">
-                <i class="fas fa-table" style="margin-right:6px;color:#1d4ed8;"></i>Ringkasan Per Kecamatan
+                <i class="fas fa-table" style="margin-right:6px;color:#1d4ed8;"></i>Ringkasan Per Desa
             </div>
             <p style="color:#64748b;font-size:14px;margin:0;">
-                Klik baris atau nama kecamatan untuk melihat <strong>detail lengkap seluruh kelompok usia (L, P, Total)</strong>.
+                Klik baris atau nama desa untuk melihat <strong>detail lengkap seluruh kelompok usia (L, P, Total)</strong>.
             </p>
         </div>
 
@@ -275,7 +275,7 @@
                 <thead>
                     <tr>
                         <th style="width:40px;">#</th>
-                        <th>Kecamatan</th>
+                        <th>Desa</th>
                         <th style="text-align:center;">Penduduk L</th>
                         <th style="text-align:center;">Penduduk P</th>
                         <th style="text-align:center;">Total Penduduk</th>
@@ -292,12 +292,12 @@
                         $lansiaP = $row->usia_60_69_tahun_p + $row->usia_70_plus_p;
                         $detail  = json_encode($row->getDetailUsiaArray());
                     @endphp
-                    <tr onclick="showModal('{{ addslashes($row->kecamatan) }}', {{ $detail }})" style="cursor:pointer;">
+                    <tr onclick="showLansiaModal('{{ addslashes($row->desa) }}', {{ $detail }})" style="cursor:pointer;">
                         <td style="font-weight:700;color:#94a3b8;font-size:12px;">{{ str_pad($i+1,2,'0',STR_PAD_LEFT) }}</td>
                         <td>
                             <span class="kec-link">
                                 <i class="fas fa-location-dot" style="font-size:11px;color:#1d4ed8;"></i>
-                                {{ $row->kecamatan }}
+                                {{ $row->desa }}
                             </span>
                         </td>
                         <td style="text-align:center;"><span class="pl-pill l"><i class="fas fa-mars"></i> {{ number_format($row->jumlah_penduduk_l) }}</span></td>
@@ -307,7 +307,7 @@
                         <td style="text-align:center;"><span class="pl-pill p">{{ number_format($lansiaP) }}</span></td>
                         <td style="text-align:center;"><span class="pl-pill tot">{{ number_format($lansiaL + $lansiaP) }}</span></td>
                         <td style="text-align:center;">
-                            <button onclick="event.stopPropagation();showLansiaModal('{{ addslashes($row->kecamatan) }}', {{ $detail }})"
+                            <button onclick="event.stopPropagation();showLansiaModal('{{ addslashes($row->desa) }}', {{ $detail }})"
                                 style="background:linear-gradient(135deg,#1d4ed8,#0b2c6b);border:none;color:#fff;padding:6px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;"
                                 onmouseover="this.style.transform='scale(1.05)'"
                                 onmouseout="this.style.transform=''">
@@ -384,9 +384,9 @@
      SCRIPTS
 ═══════════════════════════════════════════ --}}
 @php
-$kecamatanJson = $lansias->map(function($r) {
+$desaJson = $lansias->map(function($r) {
     return [
-        'kecamatan'  => $r->kecamatan,
+        'desa'       => $r->desa,
         'penduduk_l' => $r->jumlah_penduduk_l,
         'penduduk_p' => $r->jumlah_penduduk_p,
         'detail'     => $r->getDetailUsiaArray(),
@@ -401,13 +401,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ── Data dari Laravel ──────────────────────────────────────────
-const kecamatanData = {!! json_encode($kecamatanJson) !!};
+const desaData = {!! json_encode($desaJson) !!};
 
 // ── Chart.js Bar Chart ─────────────────────────────────────────
 (function() {
-    const labels    = kecamatanData.map(d => d.kecamatan);
-    const dataL     = kecamatanData.map(d => d.penduduk_l);
-    const dataP     = kecamatanData.map(d => d.penduduk_p);
+    const labels    = desaData.map(d => d.desa);
+    const dataL     = desaData.map(d => d.penduduk_l);
+    const dataP     = desaData.map(d => d.penduduk_p);
 
     const chart = new Chart(document.getElementById('chartKec'), {
         type: 'bar',
@@ -468,8 +468,8 @@ const kecamatanData = {!! json_encode($kecamatanJson) !!};
             onClick(_, elements) {
                 if (!elements.length) return;
                 const idx = elements[0].index;
-                const row = kecamatanData[idx];
-                showLansiaModal(row.kecamatan, row.detail);
+                const row = desaData[idx];
+                showLansiaModal(row.desa, row.detail);
             },
             onHover(event, elements) {
                 event.native.target.style.cursor = elements.length ? 'pointer' : 'default';
@@ -479,8 +479,8 @@ const kecamatanData = {!! json_encode($kecamatanJson) !!};
 })();
 
 // ── Modal Logic ────────────────────────────────────────────────
-function showLansiaModal(kecamatan, detail) {
-    document.getElementById('modalTitle').innerHTML = '<i class="fas fa-map-marker-alt" style="color:#ef4444;margin-right:6px;"></i>' + (kecamatan || 'Kecamatan');
+function showLansiaModal(desa, detail) {
+    document.getElementById('modalTitle').innerHTML = '<i class="fas fa-map-marker-alt" style="color:#ef4444;margin-right:6px;"></i>' + (desa || 'Desa');
 
     const tbody = document.getElementById('modalBody');
     tbody.innerHTML = '';

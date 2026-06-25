@@ -10,7 +10,7 @@ class OrganisasiRelawanController extends Controller
 {
     public function index()
     {
-        $organisasiRelawans = OrganisasiRelawan::withCount('relawans')->orderBy('urutan')->get();
+        $organisasiRelawans = OrganisasiRelawan::orderBy('urutan')->get();
         return view('admin.organisasi_relawan.index', compact('organisasiRelawans'));
     }
 

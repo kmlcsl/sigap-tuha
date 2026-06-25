@@ -26,29 +26,21 @@
                     <tr>
                         <th style="width:50px">#</th>
                         <th><i class="fas fa-user" style="margin-right:4px"></i> Nama</th>
+                        <th><i class="fas fa-calendar" style="margin-right:4px"></i> Umur</th>
                         <th><i class="fas fa-map-pin" style="margin-right:4px"></i> Desa</th>
-                        <th><i class="fas fa-flag" style="margin-right:4px"></i> Status</th>
-                        <th><i class="fas fa-map" style="margin-right:4px"></i> Latitude</th>
-                        <th><i class="fas fa-map" style="margin-right:4px"></i> Longitude</th>
+                        <th><i class="fas fa-notes-medical" style="margin-right:4px"></i> Penyakit</th>
+                        <th><i class="fas fa-map" style="margin-right:4px"></i> Koordinat</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($lansias as $i => $lansia)
                     <tr>
                         <td><span style="font-weight:600; color:var(--text-tertiary);">{{ $i + 1 }}</span></td>
-                        <td><span style="font-weight:600; color:var(--text-primary);">{{ $lansia->nama }}</span></td>
-                        <td>{{ $lansia->desa }}</td>
-                        <td>
-                            @if($lansia->status == 'Stabil')
-                                <span class="badge badge--success"><span class="badge__dot"></span> Stabil</span>
-                            @elseif($lansia->status == 'Perlu pemantauan')
-                                <span class="badge badge--warning"><span class="badge__dot"></span> Pemantauan</span>
-                            @else
-                                <span class="badge badge--danger"><span class="badge__dot"></span> Rujukan</span>
-                            @endif
-                        </td>
-                        <td style="font-family:'JetBrains Mono', monospace; font-size:12.5px;">{{ $lansia->lat }}</td>
-                        <td style="font-family:'JetBrains Mono', monospace; font-size:12.5px;">{{ $lansia->lng }}</td>
+                        <td><span style="font-weight:600; color:var(--text-primary);">{{ $lansia->nama_lansia }}</span></td>
+                        <td>{{ $lansia->umur }} Thn</td>
+                        <td>{{ $lansia->desa ? $lansia->desa->desa : '-' }}</td>
+                        <td>{{ $lansia->riwayat_penyakit ?? '-' }}</td>
+                        <td style="font-family:'JetBrains Mono', monospace; font-size:12.5px;">{{ $lansia->latitude }}, {{ $lansia->longitude }}</td>
                     </tr>
                     @endforeach
                 </tbody>

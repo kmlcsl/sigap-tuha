@@ -45,7 +45,7 @@
                     @foreach($beritas as $berita)
                         <div style="background: #E6E6E6; border-radius: var(--radius-xl); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 1px solid #c0c0c0; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.08)';">
                             @if($berita->gambar)
-                                <img src="{{ asset($berita->gambar) }}" alt="{{ $berita->judul }}" class="berita-card-img" style="width: 100%; height: 200px; object-fit: cover;">
+                                <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}" class="berita-card-img" style="width: 100%; height: 200px; object-fit: cover;">
                             @else
                                 <div class="berita-card-img" style="width: 100%; height: 200px; background: var(--gray-100); display: flex; align-items: center; justify-content: center; color: var(--gray-400);">
                                     <i class="fas fa-image fa-3x"></i>
@@ -54,12 +54,12 @@
                             <div style="padding: 20px;">
                                 <div class="berita-card-date" style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 8px;"><i class="fas fa-calendar-alt"></i> {{ $berita->created_at->translatedFormat('d F Y') }}</div>
                                 <h3 class="berita-card-title" style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; line-height: 1.4;">
-                                    <a href="javascript:void(0)" onclick="openBeritaModal('{{ addslashes($berita->judul) }}', '{{ $berita->created_at->translatedFormat('d F Y') }}', '{{ $berita->gambar ? asset($berita->gambar) : '' }}', `{{ addslashes(nl2br(e($berita->konten))) }}`)" style="color: inherit; text-decoration: none;">{{ $berita->judul }}</a>
+                                    <a href="javascript:void(0)" onclick="openBeritaModal('{{ addslashes($berita->judul) }}', '{{ $berita->created_at->translatedFormat('d F Y') }}', '{{ $berita->gambar ? asset('storage/' . $berita->gambar) : '' }}', `{{ addslashes(nl2br(e($berita->konten))) }}`)" style="color: inherit; text-decoration: none;">{{ $berita->judul }}</a>
                                 </h3>
                                 <p class="berita-card-desc" style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
                                     {{ Str::limit(strip_tags($berita->konten), 100) }}
                                 </p>
-                                <a href="javascript:void(0)" onclick="openBeritaModal('{{ addslashes($berita->judul) }}', '{{ $berita->created_at->translatedFormat('d F Y') }}', '{{ $berita->gambar ? asset($berita->gambar) : '' }}', `{{ addslashes(nl2br(e($berita->konten))) }}`)" class="berita-card-link" style="display: inline-block; font-size: 14px; font-weight: 600; color: var(--brand-600); text-decoration: none; cursor:pointer;">Baca Selengkapnya <i class="fas fa-arrow-right" style="font-size: 12px; margin-left: 4px;"></i></a>
+                                <a href="javascript:void(0)" onclick="openBeritaModal('{{ addslashes($berita->judul) }}', '{{ $berita->created_at->translatedFormat('d F Y') }}', '{{ $berita->gambar ? asset('storage/' . $berita->gambar) : '' }}', `{{ addslashes(nl2br(e($berita->konten))) }}`)" class="berita-card-link" style="display: inline-block; font-size: 14px; font-weight: 600; color: var(--brand-600); text-decoration: none; cursor:pointer;">Baca Selengkapnya <i class="fas fa-arrow-right" style="font-size: 12px; margin-left: 4px;"></i></a>
                             </div>
                         </div>
                     @endforeach

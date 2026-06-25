@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Feature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Feature;
 
 class FeatureController extends Controller
 {
@@ -18,7 +18,7 @@ class FeatureController extends Controller
 
     public function create()
     {
-        $features = \App\Models\Feature::all();
+        $features = Feature::all();
         return view('admin.features.create', compact('features'));
     }
 

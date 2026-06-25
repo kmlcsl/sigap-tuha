@@ -145,7 +145,7 @@
                         <td><span style="font-weight:700; color:var(--text-tertiary);">{{ str_pad($i+1,2,'0',STR_PAD_LEFT) }}</span></td>
                         <td style="text-align:center;">
                             @if($berita->gambar)
-                                <img src="{{ asset($berita->gambar) }}" alt="{{ $berita->judul }}"
+                                <img src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}"
                                     style="width:58px; height:40px; object-fit:cover; border-radius:var(--radius-md); border:1px solid var(--border-secondary); display:block; margin:0 auto;">
                             @else
                                 <div style="width:58px; height:40px; background:var(--gray-100); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; color:var(--gray-300); margin:0 auto; border:1px dashed var(--border-primary);">

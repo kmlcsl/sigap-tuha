@@ -24,7 +24,7 @@ class PendataanLansiaExport implements FromCollection, WithEvents, WithTitle
 
     public function collection()
     {
-        return PendataanLansia::orderBy('kecamatan')->get();
+        return PendataanLansia::orderBy('desa')->get();
     }
 
     /**
@@ -36,7 +36,7 @@ class PendataanLansiaExport implements FromCollection, WithEvents, WithTitle
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet->getDelegate();
-                $data  = PendataanLansia::orderBy('kecamatan')->get();
+                $data  = PendataanLansia::orderBy('desa')->get();
 
                 $lastCol = 'AI';
                 
@@ -57,7 +57,7 @@ class PendataanLansiaExport implements FromCollection, WithEvents, WithTitle
                 // No & Kecamatan (merge baris 2-3)
                 $sheet->setCellValue('A2', 'No');
                 $sheet->mergeCells('A2:A3');
-                $sheet->setCellValue('B2', 'Kecamatan');
+                $sheet->setCellValue('B2', 'Desa');
                 $sheet->mergeCells('B2:B3');
 
                 // Grup header
@@ -93,7 +93,7 @@ class PendataanLansiaExport implements FromCollection, WithEvents, WithTitle
                 }
 
                 // ── ROW 3: Sub-header L / P / Total ─────────────────────────
-                $subHeaders = ['A', 'B']; // no & kecamatan sudah di-merge
+                $subHeaders = ['A', 'B']; // no & desa sudah di-merge
                 // Kolom dimulai C
                 $subCols = [
                     'C','D','E',
@@ -138,7 +138,7 @@ class PendataanLansiaExport implements FromCollection, WithEvents, WithTitle
 
                     $values = [
                         $idx + 1,
-                        $row->kecamatan,
+                        $row->desa,
                         $row->jumlah_penduduk_l,
                         $row->jumlah_penduduk_p,
                         $row->jumlah_penduduk_l + $row->jumlah_penduduk_p,
@@ -178,7 +178,7 @@ class PendataanLansiaExport implements FromCollection, WithEvents, WithTitle
                     foreach ($values as $ci => $val) {
                         $col = $allCols[$ci];
                         $sheet->setCellValue("{$col}{$r}", $val);
-                        // Accumulate totals (skip No & Kecamatan)
+                        // Accumulate totals (skip No & Desa)
                         if ($ci >= 2) {
                             $totals[$ci - 2] += (int) $val;
                         }

@@ -129,7 +129,7 @@
             {{-- Current Image --}}
             @if(isset($profil) && $profil->gambar)
                 <div style="margin-bottom:14px; border-radius:var(--radius-lg); overflow:hidden; border:2px solid var(--border-secondary); aspect-ratio:16/9; position:relative;">
-                    <img id="currentImg" src="{{ asset($profil->gambar) }}" alt="Gambar Profil"
+                    <img id="currentImg" src="{{ asset('storage/' . $profil->gambar) }}" alt="Gambar Profil"
                         style="width:100%; height:100%; object-fit:cover;">
                     <div style="position:absolute; bottom:0; left:0; right:0; padding:8px 12px; background:linear-gradient(0deg,rgba(0,0,0,.5),transparent); color:#fff; font-size:12px; font-weight:600;">
                         <i class="fas fa-check-circle" style="font-size:10px;"></i> Gambar saat ini

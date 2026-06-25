@@ -171,7 +171,7 @@
 
             @if($berita->gambar)
                 <div style="margin-bottom:12px; border-radius:var(--radius-md); overflow:hidden; border:1px solid var(--border-secondary); aspect-ratio:16/9;">
-                    <img id="currentImg" src="{{ asset($berita->gambar) }}" alt="{{ $berita->judul }}"
+                    <img id="currentImg" src="{{ asset('storage/' . $berita->gambar) }}" alt="{{ $berita->judul }}"
                         style="width:100%; height:100%; object-fit:cover;">
                 </div>
             @else

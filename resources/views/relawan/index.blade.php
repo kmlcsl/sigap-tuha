@@ -52,55 +52,7 @@
         }
     }
     
-    .accordion-btn {
-        width: 100%;
-        padding: 16px 20px;
-        background: rgba(255,255,255,0.5);
-        border: none;
-        border-top: 1px solid #c0c0c0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--brand-600);
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    .accordion-btn:hover {
-        background: rgba(255,255,255,0.8);
-    }
-    .accordion-content {
-        display: none;
-        padding: 0 20px 20px;
-        background: rgba(255,255,255,0.5);
-    }
-    .accordion-content.show {
-        display: block;
-    }
-    .member-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 8px;
-        margin-top: 10px;
-    }
-    .member-card {
-        background: white;
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #d1d5db;
-    }
-    .member-name {
-        font-size: 12px;
-        font-weight: 700;
-        color: #1e293b;
-        margin-bottom: 2px;
-    }
-    .member-role {
-        font-size: 10px;
-        color: #64748b;
-        font-weight: 600;
-    }
+
 </style>
 
 <div class="page-content">
@@ -115,11 +67,8 @@
             <div style="width: 60px; height: 4px; background: #12b76a; border-radius: 2px; margin: 16px auto;"></div>
             @php
                 $organisasiRelawans = $organisasi ?? collect();
-                $totalRelawan = $organisasiRelawans->sum(function($org) {
-                    return $org->relawans->where('is_aktif', true)->count();
-                });
             @endphp
-            <p style="color: var(--muted); max-width: 600px; margin: 10px auto;">Mereka yang berdedikasi melindungi lansia pasca bencana. Saat ini terdapat <strong>{{ $totalRelawan ?? 0 }} relawan aktif</strong> dari <strong>{{ $organisasiRelawans->count() ?? 0 }} organisasi</strong>.</p>
+            <p style="color: var(--muted); max-width: 600px; margin: 10px auto;">Mereka yang berdedikasi melindungi lansia pasca bencana. Saat ini terdapat <strong>{{ $organisasiRelawans->count() ?? 0 }} organisasi</strong> yang siap siaga.</p>
         </div>
 
         @if(isset($organisasiRelawans) && $organisasiRelawans->count() > 0)
@@ -152,24 +101,7 @@
                             </div>
                         </div>
 
-                        <div style="margin-top: auto;">
-                            <button class="accordion-btn" onclick="toggleMembers('org-{{ $org->id }}')">
-                                <span>Lihat Anggota ({{ $org->relawans->where('is_aktif', true)->count() }})</span>
-                                <i class="fas fa-chevron-down" id="icon-{{ $org->id }}" style="transition: transform 0.3s;"></i>
-                            </button>
-                            <div class="accordion-content" id="org-{{ $org->id }}">
-                                <div class="member-grid">
-                                    @foreach($org->relawans->where('is_aktif', true) as $relawan)
-                                        <div class="member-card">
-                                            <div class="member-name">{{ $relawan->nama_lengkap }}</div>
-                                            @if($relawan->jabatan)
-                                                <div class="member-role">{{ $relawan->jabatan }}</div>
-                                            @endif
-                                        </div>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
+
 
                     </div>
                 @endforeach
@@ -184,19 +116,5 @@
     </div>
 </div>
 
-<script>
-    function toggleMembers(id) {
-        const content = document.getElementById(id);
-        const iconId = id.replace('org-', 'icon-');
-        const icon = document.getElementById(iconId);
-        
-        if (content.classList.contains('show')) {
-            content.classList.remove('show');
-            icon.style.transform = 'rotate(0deg)';
-        } else {
-            content.classList.add('show');
-            icon.style.transform = 'rotate(180deg)';
-        }
-    }
-</script>
+
 @endsection

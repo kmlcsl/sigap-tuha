@@ -47,7 +47,7 @@ class HomeController extends Controller
 
     public function lansia()
     {
-        $lansias = PendataanLansia::orderBy('kecamatan')->get();
+        $lansias = PendataanLansia::orderBy('desa')->get();
         $feature = Feature::where('title', 'Pendataan Lansia')->first();
         return view('lansia.index', compact('lansias', 'feature'));
     }
@@ -77,7 +77,7 @@ class HomeController extends Controller
 
     public function relawan()
     {
-        $organisasi = OrganisasiRelawan::aktif()->with('relawans')->get();
+        $organisasi = OrganisasiRelawan::aktif()->get();
         $feature = Feature::where('title', 'Relawan Siaga')->first();
         return view('relawan.index', compact('organisasi', 'feature'));
     }

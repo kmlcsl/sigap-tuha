@@ -12,7 +12,7 @@
             <i class="fas fa-users" style="color:var(--brand-500);margin-right:10px;font-size:22px;"></i>
             Pendataan Lansia
         </h1>
-        <p class="page-header__desc">Rekap jumlah penduduk per kelompok usia per kecamatan — Kabupaten Bireuen.</p>
+        <p class="page-header__desc">Rekap jumlah penduduk per kelompok usia per desa — Kabupaten Bireuen.</p>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
         <a href="{{ route('admin.lansia.export') }}"
@@ -23,7 +23,7 @@
             <i class="fas fa-file-excel"></i> Cetak Hasil Excel
         </a>
         <a href="{{ route('admin.lansia.create') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Tambah Kecamatan
+            <i class="fas fa-plus"></i> Tambah Desa
         </a>
     </div>
 </div>
@@ -42,7 +42,7 @@
 ══════════════════════════════════════════════════════════ --}}
 <div class="stats-grid" style="margin-bottom:24px;">
     @php
-        $totalKecamatan   = $lansias->count();
+        $totalDesa   = $lansias->count();
         $grandPendudukL   = $totalPendudukL;
         $grandPendudukP   = $totalPendudukP;
         $grandPenduduk    = $grandPendudukL + $grandPendudukP;
@@ -51,10 +51,10 @@
 
     <div class="stat-card brand">
         <div class="stat-card__top">
-            <span class="stat-card__label">Kecamatan</span>
+            <span class="stat-card__label">Desa</span>
             <div class="stat-card__icon brand"><i class="fas fa-map-marked-alt"></i></div>
         </div>
-        <div class="stat-card__value">{{ $totalKecamatan }}</div>
+        <div class="stat-card__value">{{ $totalDesa }}</div>
         <div style="font-size:12px;color:var(--text-tertiary);margin-top:6px;">Wilayah terdaftar</div>
     </div>
 
@@ -101,12 +101,12 @@
 <div class="card">
     <div class="card__header" style="flex-wrap:wrap;gap:12px;">
         <h3 class="card__title">
-            <i class="fas fa-table-list"></i> Rekap Per Kecamatan
+            <i class="fas fa-table-list"></i> Rekap Per Desa
             <span class="badge badge--brand" style="margin-left:8px;font-size:11px;" id="countBadge">{{ $lansias->count() }}</span>
         </h3>
         <div style="position:relative;">
             <i class="fas fa-search" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-placeholder);font-size:12px;pointer-events:none;"></i>
-            <input type="text" id="quickSearch" oninput="applyFilter()" placeholder="Cari kecamatan..."
+            <input type="text" id="quickSearch" oninput="applyFilter()" placeholder="Cari desa..."
                 style="padding:7px 12px 7px 30px;border:1px solid var(--border-primary);border-radius:var(--radius-md);font-size:13px;font-family:inherit;background:var(--gray-50);color:var(--text-primary);width:200px;">
         </div>
     </div>
@@ -114,8 +114,8 @@
     @if($lansias->isEmpty())
         <div class="empty-state">
             <div class="empty-state__icon"><i class="fas fa-database"></i></div>
-            <div class="empty-state__title">Belum Ada Data Kecamatan</div>
-            <div class="empty-state__desc">Tambahkan data rekap penduduk per kecamatan untuk memulai.</div>
+            <div class="empty-state__title">Belum Ada Data Desa</div>
+            <div class="empty-state__desc">Tambahkan data rekap penduduk per desa untuk memulai.</div>
             <a href="{{ route('admin.lansia.create') }}" class="btn btn-primary" style="margin-top:4px;">
                 <i class="fas fa-plus"></i> Tambah Data Pertama
             </a>
@@ -126,7 +126,7 @@
                 <thead>
                     <tr>
                         <th style="width:40px;">#</th>
-                        <th><i class="fas fa-map-pin" style="margin-right:4px;"></i> Kecamatan</th>
+                        <th><i class="fas fa-map-pin" style="margin-right:4px;"></i> Desa</th>
                         <th style="text-align:center;background:var(--brand-50);" colspan="3">Jumlah Penduduk</th>
                         <th style="text-align:center;background:#f0fdf4;" colspan="2">Lansia 60–69</th>
                         <th style="text-align:center;background:#fff7ed;" colspan="2">Lansia >70</th>
@@ -150,12 +150,12 @@
                 </thead>
                 <tbody id="lansiaTableBody">
                     @foreach($lansias as $i => $row)
-                    <tr class="lansia-row" data-name="{{ strtolower($row->kecamatan) }}">
+                    <tr class="lansia-row" data-name="{{ strtolower($row->desa) }}">
                         <td><span style="font-weight:700;color:var(--text-tertiary);">{{ str_pad($i+1,2,'0',STR_PAD_LEFT) }}</span></td>
                         <td>
                             <div style="font-weight:700;color:var(--text-primary);font-size:14px;">
                                 <i class="fas fa-location-dot" style="color:var(--brand-400);font-size:11px;margin-right:5px;"></i>
-                                {{ $row->kecamatan }}
+                                {{ $row->desa }}
                             </div>
                         </td>
                         <td style="text-align:center;color:var(--brand-700);font-weight:600;">{{ number_format($row->jumlah_penduduk_l) }}</td>
@@ -173,7 +173,7 @@
                                     <i class="fas fa-pen"></i>
                                 </a>
                                 <form action="{{ route('admin.lansia.destroy', $row) }}" method="POST"
-                                    onsubmit="return confirm('Hapus data kecamatan {{ addslashes($row->kecamatan) }}?')">
+                                    onsubmit="return confirm('Hapus data desa {{ addslashes($row->desa) }}?')">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
                                         <i class="fas fa-trash-alt"></i>
@@ -205,12 +205,12 @@
 
         <div id="noResults" style="display:none;text-align:center;padding:32px;color:var(--text-tertiary);">
             <i class="fas fa-search" style="font-size:32px;opacity:.4;margin-bottom:12px;"></i>
-            <div style="font-weight:600;">Kecamatan tidak ditemukan</div>
+            <div style="font-weight:600;">Desa tidak ditemukan</div>
         </div>
 
         <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 4px 0;flex-wrap:wrap;gap:8px;">
             <span style="font-size:12.5px;color:var(--text-tertiary);" id="tableFooter">
-                Menampilkan <strong>{{ $lansias->count() }}</strong> kecamatan
+                Menampilkan <strong>{{ $lansias->count() }}</strong> desa
             </span>
             <span style="font-size:12px;color:var(--text-tertiary);">
                 Total penduduk: <strong>{{ number_format($totalPendudukL + $totalPendudukP) }}</strong>
@@ -242,7 +242,7 @@ function applyFilter() {
     const footer    = document.getElementById('tableFooter');
     if (noResults) noResults.style.display = visible === 0 ? 'block' : 'none';
     if (badge)     badge.textContent = visible;
-    if (footer)    footer.innerHTML  = 'Menampilkan <strong>' + visible + '</strong> kecamatan';
+    if (footer)    footer.innerHTML  = 'Menampilkan <strong>' + visible + '</strong> desa';
 }
 
 // Auto dismiss flash

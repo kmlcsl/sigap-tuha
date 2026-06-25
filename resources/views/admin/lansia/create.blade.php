@@ -159,7 +159,7 @@
         <i class="fas fa-users"></i> Pendataan Lansia
     </a>
     <i class="fas fa-chevron-right" style="font-size:10px;"></i>
-    <span>Tambah Kecamatan</span>
+    <span>Tambah Desa</span>
 </div>
 
 <div class="pl-form-wrap">
@@ -168,9 +168,9 @@
     <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;">
         <div style="background:linear-gradient(135deg,#0b2c6b,#1d4ed8);padding:22px 28px;color:#fff;">
             <h2 style="font-size:18px;font-weight:800;margin:0 0 4px;display:flex;align-items:center;gap:10px;">
-                <i class="fas fa-plus-circle"></i> Tambah Data Kecamatan
+                <i class="fas fa-plus-circle"></i> Tambah Data Desa
             </h2>
-            <p style="margin:0;font-size:13px;opacity:.85;">Isi rekap jumlah penduduk per kelompok usia untuk kecamatan baru.</p>
+            <p style="margin:0;font-size:13px;opacity:.85;">Isi rekap jumlah penduduk per kelompok usia untuk desa baru.</p>
         </div>
     </div>
 
@@ -197,14 +197,14 @@
             </div>
             <div class="pl-section__body">
                 <div class="form-group" style="max-width:420px;margin-bottom:0;">
-                    <label class="form-label" for="kecamatan">
-                        Nama Kecamatan <span style="color:var(--danger-500)">*</span>
+                    <label class="form-label" for="desa">
+                        Nama Desa <span style="color:var(--danger-500)">*</span>
                     </label>
-                    <input type="text" id="kecamatan" name="kecamatan"
-                        class="form-control @error('kecamatan') is-error @enderror"
-                        value="{{ old('kecamatan') }}"
-                        placeholder="Contoh: Pandrah" required>
-                    @error('kecamatan')<div class="form-error">{{ $message }}</div>@enderror
+                    <input type="text" id="desa" name="desa"
+                        class="form-control @error('desa') is-error @enderror"
+                        value="{{ old('desa') }}"
+                        placeholder="Contoh: Desa Suka Makmur" required>
+                    @error('desa')<div class="form-error">{{ $message }}</div>@enderror
                 </div>
             </div>
         </div>
@@ -307,6 +307,66 @@
                 </div>
             </div>
         </div>
+
+        {{-- ── SECTION 4: Data Titik Peta (Lansia Prioritas) ── --}}
+        <div class="pl-section slate">
+            <div class="pl-section__head" style="justify-content: space-between;">
+                <div><i class="fas fa-map-location-dot"></i> Data Titik Peta (Lansia Prioritas)</div>
+                <button type="button" class="btn btn-sm" onclick="addPrioritas()" style="background:#3b6cf9;color:#fff;border:none;padding:4px 10px;border-radius:4px;font-size:11px;font-weight:bold;cursor:pointer;">
+                    <i class="fas fa-plus"></i> Tambah Lansia
+                </button>
+            </div>
+            <div class="pl-section__body" style="padding:16px;">
+                <p style="font-size:12px; color:var(--text-tertiary); margin-top:0; margin-bottom:12px;">
+                    Tambahkan titik koordinat spesifik untuk lansia yang memiliki riwayat penyakit menonjol di desa ini.
+                </p>
+                <div id="prioritas-container">
+                    {{-- Akan diisi lewat JS --}}
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let pIndex = 0;
+            function addPrioritas() {
+                const html = `
+                    <div class="prioritas-row" style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:10px; position:relative;">
+                        <button type="button" onclick="this.closest('.prioritas-row').remove()" style="position:absolute; top:12px; right:12px; background:#ef4444; color:#fff; border:none; border-radius:4px; width:24px; height:24px; cursor:pointer;" title="Hapus">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        
+                        <div style="display:grid; grid-template-columns:1fr 80px; gap:10px; margin-bottom:10px;">
+                            <div>
+                                <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Nama Lansia</label>
+                                <input type="text" name="prioritas[${pIndex}][nama_lansia]" class="form-control" style="padding:6px 10px; font-size:13px;" placeholder="Cth: Nenek Fatimah" required>
+                            </div>
+                            <div>
+                                <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Usia</label>
+                                <input type="number" name="prioritas[${pIndex}][umur]" class="form-control" style="padding:6px 10px; font-size:13px;" placeholder="Cth: 75" required>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom:10px;">
+                            <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Riwayat Penyakit Dominan</label>
+                            <input type="text" name="prioritas[${pIndex}][riwayat_penyakit]" class="form-control" style="padding:6px 10px; font-size:13px;" placeholder="Cth: Hipertensi, Asam Urat">
+                        </div>
+
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                            <div>
+                                <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Latitude</label>
+                                <input type="text" name="prioritas[${pIndex}][latitude]" class="form-control" style="padding:6px 10px; font-size:13px;" placeholder="Cth: 5.12345">
+                            </div>
+                            <div>
+                                <label style="font-size:11px; font-weight:600; color:var(--text-secondary); display:block; margin-bottom:4px;">Longitude</label>
+                                <input type="text" name="prioritas[${pIndex}][longitude]" class="form-control" style="padding:6px 10px; font-size:13px;" placeholder="Cth: 96.12345">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('prioritas-container').insertAdjacentHTML('beforeend', html);
+                pIndex++;
+            }
+        </script>
 
         {{-- ── Tombol Aksi ───────────────────────────────────────── --}}
         <div class="pl-actions">
