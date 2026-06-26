@@ -52,6 +52,18 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // CARD 5: MONITORING
     Route::prefix('monitoring')->name('monitoring.')->group(function () {
         Route::get('/', [AdminMonitoringController::class, 'index'])->name('index');
+        
+        Route::get('/kegiatan', [AdminMonitoringController::class, 'kegiatanIndex'])->name('kegiatan.index');
+        Route::post('/kegiatan', [AdminMonitoringController::class, 'kegiatanStore'])->name('kegiatan.store');
+        Route::put('/kegiatan/{id}', [AdminMonitoringController::class, 'kegiatanUpdate'])->name('kegiatan.update');
+        Route::delete('/kegiatan/{id}', [AdminMonitoringController::class, 'kegiatanDestroy'])->name('kegiatan.destroy');
+
+        Route::get('/kegiatan/{id_kegiatan}/soal', [AdminMonitoringController::class, 'soalPerKegiatan'])->name('kegiatan.soal');
+        Route::post('/soal', [AdminMonitoringController::class, 'soalStore'])->name('soal.store');
+        Route::put('/soal/{id}', [AdminMonitoringController::class, 'soalUpdate'])->name('soal.update');
+        Route::delete('/soal/{id}', [AdminMonitoringController::class, 'soalDestroy'])->name('soal.destroy');
+        Route::get('/{monev}', [AdminMonitoringController::class, 'show'])->name('show');
+        Route::delete('/{monev}', [AdminMonitoringController::class, 'destroy'])->name('destroy');
     });
 
     Route::resource('users', AdminUserController::class);
@@ -85,5 +97,10 @@ Route::get('/bantuan-darurat', [HomeController::class, 'bantuanDarurat'])->name(
 Route::get('/edukasi-pelatihan', [HomeController::class, 'edukasi'])->name('edukasi');
 Route::get('/edukasi-pelatihan/{id}', [HomeController::class, 'edukasiDetail'])->name('edukasi.detail');
 Route::get('/relawan-siaga', [HomeController::class, 'relawan'])->name('relawan');
+
+// PUBLIC ROUTES: MONEV
+Route::get('/monitoring-evaluasi', [AdminMonitoringController::class, 'publicIndex'])->name('monev.index');
+Route::post('/monitoring-evaluasi/pre-test', [AdminMonitoringController::class, 'storePreTest'])->name('monev.store_pre_test');
+Route::post('/monitoring-evaluasi/post-test', [AdminMonitoringController::class, 'storePostTest'])->name('monev.store_post_test');
 
 Route::get('/{slug}', [HomeController::class, 'fitur'])->name('fitur.detail');

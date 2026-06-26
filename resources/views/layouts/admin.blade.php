@@ -927,8 +927,7 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            /* color: var(--text-tertiary); */
-            color: #000000;
+            color: var(--text-tertiary);
             border-bottom: 1px solid var(--border-secondary);
             white-space: nowrap;
         }
@@ -937,8 +936,7 @@
             padding: 14px 16px;
             border-bottom: 1px solid var(--border-secondary);
             font-size: 13.5px;
-            /* color: var(--text-secondary); */
-            color:#ffffff;
+            color: var(--text-secondary);
             vertical-align: middle;
         }
 
