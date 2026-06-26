@@ -67,7 +67,7 @@
             /* Text */
             --text-primary: var(--gray-900);
             --text-secondary: var(--gray-600);
-            --text-tertiary: var(--gray-500);
+            --text-tertiary: #000000;
             --text-placeholder: var(--gray-400);
             --text-on-brand: #ffffff;
 
@@ -927,7 +927,8 @@
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.06em;
-            color: var(--text-tertiary);
+            /* color: var(--text-tertiary); */
+            color: #000000;
             border-bottom: 1px solid var(--border-secondary);
             white-space: nowrap;
         }
@@ -936,7 +937,8 @@
             padding: 14px 16px;
             border-bottom: 1px solid var(--border-secondary);
             font-size: 13.5px;
-            color: var(--text-secondary);
+            /* color: var(--text-secondary); */
+            color:#ffffff;
             vertical-align: middle;
         }
 
@@ -1274,6 +1276,10 @@
            RESPONSIVE — MOBILE (≤ 768px)
         ══════════════════════════════════════════════ */
         @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
             .sidebar {
                 transform: translateX(-100%);
                 box-shadow: none;
@@ -1307,8 +1313,10 @@
             .topbar { padding: 0 12px; }
             .card { padding: 14px; }
             .page-header__title { font-size: 20px; }
-            .stat-card { padding: 14px 16px; }
-            .stat-card__value { font-size: 22px; }
+            .stat-card { padding: 12px; }
+            .stat-card__value { font-size: 20px; }
+            .stat-card__label { font-size: 11px; }
+            .stat-card__icon { width: 32px; height: 32px; font-size: 14px; }
             .table td, .table th { padding: 10px 10px; font-size: 12px; }
         }
 

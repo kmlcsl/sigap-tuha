@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Models\Feature;
 use App\Models\Profil;
 use App\Models\Kontak;
 use App\Models\Berita;
 use App\Models\PendataanLansia;
+use App\Models\LansiaPrioritas;
 use App\Models\BantuanDarurat;
 use App\Models\Edukasi;
 use App\Models\OrganisasiRelawan;
-use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -18,7 +19,8 @@ class HomeController extends Controller
     {
         $column = 'order';
         $features = Feature::query()->orderBy($column)->get();
-        return view('beranda', ['features' => $features]);
+        $lansias = LansiaPrioritas::with('desa')->whereNotNull('latitude')->whereNotNull('longitude')->get();
+        return view('beranda', ['features' => $features, 'lansias' => $lansias]);
     }
 
     public function profil()
@@ -39,7 +41,7 @@ class HomeController extends Controller
         return view('berita', compact('beritas'));
     }
 
-    public function beritaDetail($slug)
+    public function beritaDetail(string $slug)
     {
         $berita = Berita::where('slug', $slug)->where('status', 'published')->firstOrFail();
         return view('berita_detail', compact('berita'));
@@ -66,7 +68,7 @@ class HomeController extends Controller
         return view('edukasi.index', compact('edukasi', 'feature'));
     }
 
-    public function edukasiDetail($id)
+    public function edukasiDetail(string $id)
     {
         $edukasi = Edukasi::where('is_published', true)
             ->where(function($query) use ($id) {
@@ -82,11 +84,11 @@ class HomeController extends Controller
         return view('relawan.index', compact('organisasi', 'feature'));
     }
 
-    public function fitur($slug)
+    public function fitur(string $slug)
     {
         $features = Feature::all();
         $feature = $features->first(function ($item) use ($slug) {
-            return \Illuminate\Support\Str::slug($item->title) === $slug;
+            return Str::slug($item->title) === $slug;
         });
 
         if (!$feature) {
@@ -134,7 +136,7 @@ class HomeController extends Controller
             ];
 
             $featureArray = collect($staticFeatures)->first(function ($item) use ($slug) {
-                return \Illuminate\Support\Str::slug($item['title']) === $slug;
+                return Str::slug($item['title']) === $slug;
             });
 
             if (!$featureArray) {

@@ -135,10 +135,7 @@
 
 /* Responsive tabel */
 @media (max-width: 640px) {
-    .pl-usia-table thead th:last-child { display: none; }
-    .pl-usia-table td.input-cell:last-child { display: none; }
-    .pl-usia-table td.label { width: 50%; }
-    .pl-usia-table td.input-cell { width: 50%; }
+    .pl-usia-table { min-width: 500px; }
     .pl-section__body { padding: 14px 12px; }
     .pl-form-wrap { max-width: 100%; }
 }
@@ -220,18 +217,18 @@
                         <label class="form-label">
                             <i class="fas fa-mars" style="color:var(--brand-500);"></i> Laki-laki (L)
                         </label>
-                        <input type="number" name="jumlah_penduduk_l"
+                        <input type="number" name="jumlah_penduduk_l" id="jumlah_penduduk_l"
                             class="form-control @error('jumlah_penduduk_l') is-error @enderror"
-                            value="{{ old('jumlah_penduduk_l', 0) }}" min="0" required>
+                            value="{{ old('jumlah_penduduk_l', 0) }}" min="0" required readonly style="background-color: #f3f4f6; cursor: not-allowed; opacity: 0.8;">
                         @error('jumlah_penduduk_l')<div class="form-error">{{ $message }}</div>@enderror
                     </div>
                     <div class="form-group" style="margin-bottom:0;">
                         <label class="form-label">
                             <i class="fas fa-venus" style="color:#be185d;"></i> Perempuan (P)
                         </label>
-                        <input type="number" name="jumlah_penduduk_p"
+                        <input type="number" name="jumlah_penduduk_p" id="jumlah_penduduk_p"
                             class="form-control @error('jumlah_penduduk_p') is-error @enderror"
-                            value="{{ old('jumlah_penduduk_p', 0) }}" min="0" required>
+                            value="{{ old('jumlah_penduduk_p', 0) }}" min="0" required readonly style="background-color: #f3f4f6; cursor: not-allowed; opacity: 0.8;">
                         @error('jumlah_penduduk_p')<div class="form-error">{{ $message }}</div>@enderror
                     </div>
                 </div>
@@ -366,6 +363,36 @@
                 document.getElementById('prioritas-container').insertAdjacentHTML('beforeend', html);
                 pIndex++;
             }
+
+            // Hitung otomatis jumlah penduduk dari rekap per kelompok usia
+            function hitungJumlahPenduduk() {
+                let totalL = 0;
+                let totalP = 0;
+
+                // Jumlahkan semua input dengan class 'is-l'
+                document.querySelectorAll('input.is-l').forEach(function(input) {
+                    let val = parseInt(input.value) || 0;
+                    totalL += val;
+                });
+
+                // Jumlahkan semua input dengan class 'is-p'
+                document.querySelectorAll('input.is-p').forEach(function(input) {
+                    let val = parseInt(input.value) || 0;
+                    totalP += val;
+                });
+
+                // Set nilai ke input jumlah penduduk
+                document.getElementById('jumlah_penduduk_l').value = totalL;
+                document.getElementById('jumlah_penduduk_p').value = totalP;
+            }
+
+            // Tambahkan event listener ke setiap input rekap
+            document.querySelectorAll('input.is-l, input.is-p').forEach(function(input) {
+                input.addEventListener('input', hitungJumlahPenduduk);
+            });
+            
+            // Inisialisasi perhitungan saat halaman dimuat (jika ada old value)
+            document.addEventListener('DOMContentLoaded', hitungJumlahPenduduk);
         </script>
 
         {{-- ── Tombol Aksi ───────────────────────────────────────── --}}

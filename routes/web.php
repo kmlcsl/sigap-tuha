@@ -21,7 +21,6 @@ use App\Http\Controllers\Admin\KontakController as AdminKontakController;
 use App\Http\Controllers\Admin\BeritaController as AdminBeritaController;
 use App\Http\Controllers\Admin\BantuanDaruratController as AdminBantuanDaruratController;
 use App\Http\Controllers\Admin\OrganisasiRelawanController as AdminOrganisasiRelawanController;
-use App\Http\Controllers\Admin\RelawanController as AdminRelawanController;
 use App\Http\Controllers\Admin\MonitoringController as AdminMonitoringController;
 
 Route::get('/', [HomeController::class, 'index'])->name('beranda');

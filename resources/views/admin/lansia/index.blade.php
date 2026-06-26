@@ -121,21 +121,26 @@
             </a>
         </div>
     @else
+        <style>
+            /* Menambahkan garis grid penuh pada tabel agar terlihat sangat rapi seperti Excel */
+            #lansiaTable th, #lansiaTable td {
+                border: 1px solid #cbd5e1 !important;
+                vertical-align: middle;
+            }
+        </style>
         <div class="table-wrap" style="overflow-x:auto;">
-            <table class="table" id="lansiaTable" style="min-width:900px;">
+            <table class="table" id="lansiaTable" style="min-width:900px; border-collapse: collapse;">
                 <thead>
                     <tr>
-                        <th style="width:40px;">#</th>
-                        <th><i class="fas fa-map-pin" style="margin-right:4px;"></i> Desa</th>
+                        <th rowspan="2" style="width:40px;">#</th>
+                        <th rowspan="2"><i class="fas fa-map-pin" style="margin-right:4px;"></i> Desa</th>
                         <th style="text-align:center;background:var(--brand-50);" colspan="3">Jumlah Penduduk</th>
                         <th style="text-align:center;background:#f0fdf4;" colspan="2">Lansia 60–69</th>
                         <th style="text-align:center;background:#fff7ed;" colspan="2">Lansia >70</th>
                         <th style="text-align:center;background:#fef2f2;" colspan="2">Total Lansia (60+)</th>
-                        <th style="width:120px;text-align:center;"><i class="fas fa-cogs"></i></th>
+                        <th rowspan="2" style="width:120px;text-align:center;"><i class="fas fa-cogs"></i></th>
                     </tr>
                     <tr style="font-size:11.5px;background:var(--gray-50);">
-                        <th></th>
-                        <th></th>
                         <th style="text-align:center;font-weight:600;color:var(--brand-600);">L</th>
                         <th style="text-align:center;font-weight:600;color:#be185d;">P</th>
                         <th style="text-align:center;font-weight:700;">Total</th>
@@ -145,7 +150,6 @@
                         <th style="text-align:center;font-weight:600;color:#be185d;">P</th>
                         <th style="text-align:center;font-weight:600;color:var(--brand-600);">L</th>
                         <th style="text-align:center;font-weight:600;color:#be185d;">P</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody id="lansiaTableBody">
@@ -160,7 +164,7 @@
                         </td>
                         <td style="text-align:center;color:var(--brand-700);font-weight:600;">{{ number_format($row->jumlah_penduduk_l) }}</td>
                         <td style="text-align:center;color:#be185d;font-weight:600;">{{ number_format($row->jumlah_penduduk_p) }}</td>
-                        <td style="text-align:center;font-weight:800;font-size:15px;">{{ number_format($row->jumlah_penduduk_l + $row->jumlah_penduduk_p) }}</td>
+                        <td style="text-align:center;font-weight:800;font-size:15px;color:var(--text-primary);background-color:var(--gray-50);">{{ number_format($row->jumlah_penduduk_l + $row->jumlah_penduduk_p) }}</td>
                         <td style="text-align:center;color:var(--brand-600);">{{ number_format($row->usia_60_69_tahun_l) }}</td>
                         <td style="text-align:center;color:#be185d;">{{ number_format($row->usia_60_69_tahun_p) }}</td>
                         <td style="text-align:center;color:var(--brand-600);">{{ number_format($row->usia_70_plus_l) }}</td>

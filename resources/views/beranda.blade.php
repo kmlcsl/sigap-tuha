@@ -150,6 +150,41 @@
                 height: 300px; /* Peta lebih kecil di HP */
             }
         }
+
+        /* Custom Popup Styles */
+        .popup-wrapper {
+            font-family: 'Segoe UI', sans-serif; 
+            min-width: 200px; 
+            max-height: 240px; 
+            overflow-y: auto; 
+            padding-right: 4px;
+        }
+        .popup-alert {
+            background: #e0e7ff; padding: 6px 10px; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid #3b6cf9;
+            color: #1e40af; font-size: 13px;
+        }
+        .popup-alert strong { font-weight: 700; }
+        .popup-penyakit {
+            margin-top: 6px; padding: 6px 8px; background: #fee2e2; border-radius: 6px; font-size: 11.5px; border-left: 3px solid #ef4444;
+        }
+        .popup-penyakit strong { color:#b91c1c; }
+        .popup-penyakit span { color:#7f1d1d; }
+        .popup-divider { border:0; border-top:1px dashed #cbd5e1; margin:12px 0; }
+        .popup-person { margin-bottom: 6px; }
+        .popup-person h3 { margin: 0 0 4px 0; color: #0b2c6b; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+        .popup-meta { font-size: 12px; color: #475569; }
+
+        @media (max-width: 768px) {
+            .popup-wrapper { min-width: 160px; max-height: 180px; }
+            .popup-alert { padding: 4px 6px; font-size: 11px; margin-bottom: 8px; }
+            .popup-person h3 { font-size: 13px; gap: 4px; }
+            .popup-meta { font-size: 10.5px; }
+            .popup-penyakit { font-size: 10px; padding: 4px 6px; margin-top: 4px; }
+            .popup-divider { margin: 8px 0; }
+            
+            /* Leaflet specific overrides for mobile */
+            .custom-popup .leaflet-popup-content { margin: 10px 12px; }
+        }
     </style>
     <section class="map-section" style="padding: 20px 0 80px; margin-top: 60px;">
         <div class="content-box" style="margin-top: 20px;">
@@ -163,6 +198,22 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            var isMobile = window.innerWidth <= 768;
+            var iconW = isMobile ? 18 : 22;
+            var iconH = isMobile ? 28 : 35;
+            var shadowW = isMobile ? 28 : 35; 
+            
+            var customMarkerIcon = L.icon({
+                iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+                iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+                shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+                iconSize: [iconW, iconH],
+                iconAnchor: [iconW/2, iconH],
+                popupAnchor: [1, -Math.floor(iconH * 0.8)],
+                shadowSize: [shadowW, shadowW],
+                shadowAnchor: [iconW/2, shadowW]
+            });
+
             // Inisialisasi Peta
             // Default center ke Kecamatan Pandrah, Bireuen
             var map = L.map('map').setView([5.074190, 96.365904], 12);
@@ -197,12 +248,12 @@
                 
                 if(!isNaN(lat) && !isNaN(lng)) {
                     // Header Popup (Jika lebih dari 1 orang di 1 rumah/titik)
-                    var popupContent = `<div style="font-family: 'Segoe UI', sans-serif; min-width: 220px; max-height: 260px; overflow-y: auto; padding-right: 4px;">`;
+                    var popupContent = `<div class="popup-wrapper">`;
                     
                     if (group.length > 1) {
                         popupContent += `
-                            <div style="background: #e0e7ff; padding: 6px 10px; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid #3b6cf9;">
-                                <strong style="color: #1e40af; font-size: 13px;">🏠 Terdapat ${group.length} Lansia di Lokasi Ini</strong>
+                            <div class="popup-alert">
+                                <strong>🏠 Terdapat ${group.length} Lansia di Lokasi Ini</strong>
                             </div>
                         `;
                     }
@@ -214,21 +265,21 @@
                         
                         if(lansia.riwayat_penyakit) {
                             penyakitHtml = `
-                                <div style="margin-top: 6px; padding: 6px 8px; background: #fee2e2; border-radius: 6px; font-size: 11.5px; border-left: 3px solid #ef4444;">
-                                    <strong style="color:#b91c1c;">💊 Penyakit:</strong> <span style="color:#7f1d1d;">${lansia.riwayat_penyakit}</span>
+                                <div class="popup-penyakit">
+                                    <strong>💊 Penyakit:</strong> <span>${lansia.riwayat_penyakit}</span>
                                 </div>
                             `;
                         }
 
-                        var divider = index > 0 ? `<hr style="border:0; border-top:1px dashed #cbd5e1; margin:12px 0;">` : '';
+                        var divider = index > 0 ? `<hr class="popup-divider">` : '';
 
                         popupContent += `
                             ${divider}
-                            <div style="margin-bottom: 6px;">
-                                <h3 style="margin: 0 0 4px 0; color: #0b2c6b; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                            <div class="popup-person">
+                                <h3>
                                     <i class="fas fa-person-cane" style="color:var(--brand-500);"></i> ${lansia.nama_lansia}
                                 </h3>
-                                <div style="font-size: 12px; color: #475569;">
+                                <div class="popup-meta">
                                     <strong>📍 Desa:</strong> ${namaDesa} &nbsp;|&nbsp; <strong>⏳ Usia:</strong> ${lansia.umur} Thn
                                 </div>
                                 ${penyakitHtml}
@@ -238,7 +289,7 @@
 
                     popupContent += `</div>`;
 
-                    L.marker([lat, lng]).addTo(map)
+                    L.marker([lat, lng], {icon: customMarkerIcon}).addTo(map)
                         .bindPopup(popupContent, {
                             maxWidth: 320,
                             className: 'custom-popup'
