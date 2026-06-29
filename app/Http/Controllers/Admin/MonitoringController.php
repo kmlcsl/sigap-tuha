@@ -15,14 +15,24 @@ class MonitoringController extends Controller
     public function index()
     {
         $monevs = KegiatanMonev::with('jawabanSoal')->orderBy('created_at', 'desc')->get();
-        $masterSoals = MasterSoalMonev::orderBy('urutan')->get();
-        return view('admin.monitoring.index', compact('monevs', 'masterSoals'));
+        $maxSoal = 0;
+        foreach ($monevs as $m) {
+            $kMaster = MasterKegiatanMonev::where('nama_kegiatan', $m->nama_kegiatan)->first();
+            if ($kMaster) {
+                $c = MasterSoalMonev::where('id_kegiatan', $kMaster->id_kegiatan)->count();
+                if ($c > $maxSoal) $maxSoal = $c;
+            }
+        }
+        if ($maxSoal == 0) $maxSoal = 1;
+        return view('admin.monitoring.index', compact('monevs', 'maxSoal'));
     }
 
     public function show(int $id_monev)
     {
         $monev = KegiatanMonev::with(['jawabanSoal.masterSoal'])->findOrFail($id_monev);
-        $masterSoals = MasterSoalMonev::where('is_active', true)->orderBy('urutan')->get();
+        $kMaster = MasterKegiatanMonev::where('nama_kegiatan', $monev->nama_kegiatan)->first();
+        $id_keg = $kMaster ? $kMaster->id_kegiatan : 0;
+        $masterSoals = MasterSoalMonev::where('is_active', true)->where('id_kegiatan', $id_keg)->orderBy('urutan')->get();
         $masterKegiatan = MasterKegiatanMonev::where('is_active', true)->get();
         return view('admin.monitoring.show', compact('monev', 'masterSoals', 'masterKegiatan'));
     }

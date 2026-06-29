@@ -113,16 +113,15 @@
                             <th rowspan="2"><i class="fas fa-user" style="margin-right:4px;"></i> Identitas User</th>
                             <th rowspan="2"><i class="fas fa-calendar" style="margin-right:4px;"></i> Kegiatan & Waktu
                             </th>
-                            <th style="text-align:center;background:var(--brand-50);" colspan="{{ $masterSoals->count() }}">
-                                Perbandingan Jawaban S1 - S{{ $masterSoals->count() }} (PRE | POST)</th>
+                            <th style="text-align:center;background:var(--brand-50);" colspan="{{ $maxSoal }}">
+                                Perbandingan Jawaban S1 - S{{ $maxSoal }} (PRE | POST)</th>
                             <th rowspan="2" style="width:250px;">Deskripsi Pemahaman (Pre & Post)</th>
                             <th rowspan="2" style="width:90px;text-align:center;"><i class="fas fa-cogs"></i></th>
                         </tr>
                         <tr style="font-size:11.5px;background:var(--gray-50);">
-                            @foreach ($masterSoals as $sIndex => $mSoal)
-                                <th style="text-align:center;font-weight:600;" title="{{ $mSoal->pertanyaan }}">
-                                    S{{ $sIndex + 1 }}</th>
-                            @endforeach
+                            @for ($i = 1; $i <= $maxSoal; $i++)
+                                <th style="text-align:center;font-weight:600;">S{{ $i }}</th>
+                            @endfor
                         </tr>
                     </thead>
                     <tbody>
@@ -151,46 +150,62 @@
                                         {{ $row->waktu_isi_post ? $row->waktu_isi_post->format('d/m/Y H:i') : '-' }}
                                     </div>
                                 </td>
-                                @foreach ($masterSoals as $mSoal)
+                                @php
+                                    $kMaster = \App\Models\MasterKegiatanMonev::where('nama_kegiatan', $row->nama_kegiatan)->first();
+                                    $rowSoals = $kMaster ? \App\Models\MasterSoalMonev::where('id_kegiatan', $kMaster->id_kegiatan)->orderBy('urutan')->get() : collect();
+                                @endphp
+                                @for ($i = 0; $i < $maxSoal; $i++)
                                     @php
-                                        $map = [
-                                            'SP' => 'Sangat Paham',
-                                            'P' => 'Paham',
-                                            'CP' => 'Cukup Paham',
-                                            'KP' => 'Kurang Paham',
-                                            'SKP' => 'Sangat Kurang Paham',
-                                        ];
-                                        $ansPre = $row->jawabanSoal
-                                            ->where('jenis_test', 'PRE')
-                                            ->where('id_soal', $mSoal->id_soal)
-                                            ->first();
-                                        $ansPost = $row->jawabanSoal
-                                            ->where('jenis_test', 'POST')
-                                            ->where('id_soal', $mSoal->id_soal)
-                                            ->first();
-                                        $valPre = $ansPre ? $ansPre->pilihan_jawaban : '-';
-                                        $valPost = $ansPost ? $ansPost->pilihan_jawaban : '-';
+                                        $mSoal = $rowSoals->get($i);
+                                        if ($mSoal) {
+                                            $map = [
+                                                'SP' => 'Sangat Paham',
+                                                'P' => 'Paham',
+                                                'CP' => 'Cukup Paham',
+                                                'KP' => 'Kurang Paham',
+                                                'SKP' => 'Sangat Kurang Paham',
+                                            ];
+                                            $ansPre = $row->jawabanSoal
+                                                ->where('jenis_test', 'PRE')
+                                                ->where('id_soal', $mSoal->id_soal)
+                                                ->first();
+                                            $ansPost = $row->jawabanSoal
+                                                ->where('jenis_test', 'POST')
+                                                ->where('id_soal', $mSoal->id_soal)
+                                                ->first();
+                                            $valPre = $ansPre ? $ansPre->pilihan_jawaban : '-';
+                                            $valPost = $ansPost ? $ansPost->pilihan_jawaban : '-';
 
-                                        $fullPre = isset($map[$valPre]) ? $map[$valPre] : $valPre;
-                                        $fullPost = isset($map[$valPost]) ? $map[$valPost] : $valPost;
+                                            $fullPre = isset($map[$valPre]) ? $map[$valPre] : $valPre;
+                                            $fullPost = isset($map[$valPost]) ? $map[$valPost] : $valPost;
 
-                                        $colorPre = in_array($valPre, ['SP', 'P'])
-                                            ? 'color:var(--success-700);'
-                                            : (in_array($valPre, ['KP', 'SKP'])
-                                                ? 'color:var(--danger-700);'
-                                                : 'color:var(--text-secondary);');
-                                        $colorPost = in_array($valPost, ['SP', 'P'])
-                                            ? 'color:var(--success-700);font-weight:700;'
-                                            : (in_array($valPost, ['KP', 'SKP'])
-                                                ? 'color:var(--danger-700);font-weight:700;'
-                                                : 'color:var(--text-primary);font-weight:700;');
+                                            $colorPre = in_array($valPre, ['SP', 'P'])
+                                                ? 'color:var(--success-700);'
+                                                : (in_array($valPre, ['KP', 'SKP'])
+                                                    ? 'color:var(--danger-700);'
+                                                    : 'color:var(--text-secondary);');
+                                            $colorPost = in_array($valPost, ['SP', 'P'])
+                                                ? 'color:var(--success-700);font-weight:700;'
+                                                : (in_array($valPost, ['KP', 'SKP'])
+                                                    ? 'color:var(--danger-700);font-weight:700;'
+                                                    : 'color:var(--text-primary);font-weight:700;');
+                                        } else {
+                                            $fullPre = '-';
+                                            $fullPost = '-';
+                                            $colorPre = 'color:var(--text-secondary);';
+                                            $colorPost = 'color:var(--text-secondary);';
+                                        }
                                     @endphp
                                     <td style="text-align:center;font-size:12px;white-space:nowrap;">
-                                        <span style="{{ $colorPre }}">{{ $fullPre }}</span>
-                                        <div style="border-top:1px dashed var(--border-primary);margin:2px 0;"></div>
-                                        <span style="{{ $colorPost }}">{{ $fullPost }}</span>
+                                        @if($mSoal)
+                                            <span style="{{ $colorPre }}">{{ $fullPre }}</span>
+                                            <div style="border-top:1px dashed var(--border-primary);margin:2px 0;"></div>
+                                            <span style="{{ $colorPost }}">{{ $fullPost }}</span>
+                                        @else
+                                            <span style="color:var(--text-secondary);">-</span>
+                                        @endif
                                     </td>
-                                @endforeach
+                                @endfor
                                 <td style="font-size:12px;">
                                     <div style="margin-bottom:6px;">
                                         <span style="font-weight:600;color:var(--brand-600);">Pre:</span>

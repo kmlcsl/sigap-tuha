@@ -27,8 +27,8 @@
 
         .kegiatan-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 24px;
             margin-bottom: 40px;
         }
 
@@ -43,8 +43,12 @@
             }
 
             .kegiatan-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 12px;
+            }
+
+            .kegiatan-card {
+                min-width: 0;
             }
 
             .kegiatan-img {
@@ -56,42 +60,47 @@
             }
 
             .kegiatan-body {
-                padding: 12px 8px;
+                padding: 16px 14px;
             }
 
             .kegiatan-body h3 {
-                font-size: 13px;
+                font-size: 15px;
                 margin-bottom: 6px;
+                overflow-wrap: anywhere;
             }
 
             .kegiatan-body p {
-                font-size: 11px;
+                font-size: 12px;
                 margin-bottom: 12px;
                 line-height: 1.4;
+                overflow-wrap: anywhere;
             }
 
             .kegiatan-actions {
                 display: grid;
                 grid-template-columns: 1fr;
-                gap: 6px;
+                gap: 8px;
                 width: 100%;
                 box-sizing: border-box;
-                padding-right: 4px;
+                min-width: 0;
             }
 
             .btn-pre,
             .btn-post {
                 box-sizing: border-box;
                 width: 100%;
+                min-width: 0;
                 max-width: 100%;
                 font-size: 11px;
-                padding: 10px 4px;
+                padding: 10px 8px;
                 flex-direction: row;
                 justify-content: center;
-                gap: 6px;
-                white-space: normal;
+                gap: 5px;
+                white-space: nowrap;
                 line-height: 1.2;
                 text-align: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             .btn-pre i,
@@ -138,6 +147,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            min-width: 0;
         }
 
         .kegiatan-card::before {
@@ -184,6 +194,7 @@
             flex-direction: column;
             z-index: 1;
             position: relative;
+            min-width: 0;
         }
 
         .kegiatan-body h3 {
