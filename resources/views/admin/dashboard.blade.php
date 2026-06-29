@@ -78,7 +78,7 @@
             <div>
                 <h4 style="font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:6px;">Panel Kontrol SIGAP TUHA</h4>
                 <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.7; margin-bottom:16px;">
-                    Kelola konten landing page, pantau data lansia, dan kelola laporan darurat dari satu tempat terpusat. Pastikan semua informasi selalu akurat dan terbaru.
+                    Kelola konten landing page, pantau pendataan lansia, tanggapi pesan masuk, dan kelola kontak bantuan darurat dari satu tempat terpusat.
                 </p>
                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
                     <a href="{{ route('admin.features.index') }}" class="btn btn-primary btn-sm" style="background: #0f766e;">
@@ -130,119 +130,62 @@
     </div>
 </div>
 
-{{-- Grid: Recent Activity + Status --}}
 <div class="grid grid-2">
-    {{-- Aktivitas Terbaru --}}
+    {{-- Pesan Masuk Terbaru --}}
     <div class="card" style="background: #ffe4e6; border: none;">
         <div class="card__header">
-            <h3 class="card__title"><i class="fas fa-history" style="color: #e11d48;"></i> Aktivitas Terbaru</h3>
-            <span class="card__action">Lihat semua <i class="fas fa-arrow-right" style="font-size:10px;"></i></span>
+            <h3 class="card__title"><i class="fas fa-envelope" style="color: #e11d48;"></i> Pesan Masuk Terbaru</h3>
+            <a href="{{ route('admin.kontak.index') }}" class="card__action" style="text-decoration:none; font-size:13px; font-weight:600; color:#e11d48;">Lihat semua <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
         </div>
         <div class="activity-list">
-            <div class="activity-item">
-                <div class="activity-item__icon" style="background:var(--brand-50); color:var(--brand-600);">
-                    <i class="fas fa-user-plus"></i>
+            @forelse($pesanTerbaru as $pesan)
+            <div class="activity-item" style="padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.05); {{ !$pesan->is_read ? 'background: rgba(225,29,72,0.05);' : '' }}">
+                <div class="activity-item__icon" style="background:var(--brand-50); color:var(--brand-600); flex-shrink: 0;">
+                    <i class="fas fa-user"></i>
                 </div>
-                <div class="activity-item__content">
-                    <div class="activity-item__title">Data lansia baru ditambahkan</div>
-                    <div class="activity-item__desc">Input data lansia dari Desa Pandrah Kandeh.</div>
-                    <div class="activity-item__time"><i class="far fa-clock"></i> 10 menit lalu</div>
-                </div>
-            </div>
-            <div class="activity-item">
-                <div class="activity-item__icon" style="background:var(--danger-50); color:var(--danger-500);">
-                    <i class="fas fa-exclamation-circle"></i>
-                </div>
-                <div class="activity-item__content">
-                    <div class="activity-item__title">Laporan darurat baru</div>
-                    <div class="activity-item__desc">Lansia dengan sesak napas menunggu tindak lanjut.</div>
-                    <div class="activity-item__time"><i class="far fa-clock"></i> 30 menit lalu</div>
+                <div class="activity-item__content" style="flex: 1;">
+                    <div class="activity-item__title" style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="font-weight: 700; color: var(--text-primary);">{{ $pesan->nama_lengkap }}</span>
+                        @if(!$pesan->is_read)
+                            <span style="padding: 2px 6px; background: var(--danger-500); color: white; border-radius: 10px; font-size: 10px; font-weight: bold;">BARU</span>
+                        @endif
+                    </div>
+                    <div class="activity-item__desc" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">{{ Str::limit($pesan->isi_pesan, 80) }}</div>
+                    <div class="activity-item__time" style="font-size: 11px; color: var(--text-tertiary);"><i class="far fa-clock"></i> {{ $pesan->created_at->diffForHumans() }}</div>
                 </div>
             </div>
-            <div class="activity-item">
-                <div class="activity-item__icon" style="background:var(--success-50); color:var(--success-500);">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div class="activity-item__content">
-                    <div class="activity-item__title">Kunjungan rumah dijadwalkan</div>
-                    <div class="activity-item__desc">5 lansia prioritas dijadwalkan dikunjungi hari ini.</div>
-                    <div class="activity-item__time"><i class="far fa-clock"></i> 1 jam lalu</div>
-                </div>
-            </div>
-            <div class="activity-item">
-                <div class="activity-item__icon" style="background:var(--info-50); color:var(--info-500);">
-                    <i class="fas fa-book-medical"></i>
-                </div>
-                <div class="activity-item__content">
-                    <div class="activity-item__title">Materi edukasi diperbarui</div>
-                    <div class="activity-item__desc">BHD versi terbaru siap dipublikasikan.</div>
-                    <div class="activity-item__time"><i class="far fa-clock"></i> 2 jam lalu</div>
-                </div>
-            </div>
+            @empty
+            <div style="padding: 24px; text-align: center; color: var(--text-placeholder); font-size: 14px;">Belum ada pesan masuk.</div>
+            @endforelse
         </div>
     </div>
 
-    {{-- Status Keamanan --}}
+    {{-- Data Lansia Terbaru --}}
     <div class="card" style="background: #e0f2fe; border: none;">
         <div class="card__header">
-            <h3 class="card__title"><i class="fas fa-shield-alt" style="color: #0284c7;"></i> Status Sistem</h3>
+            <h3 class="card__title"><i class="fas fa-users" style="color: #0284c7;"></i> Data Lansia Terbaru</h3>
+            <a href="{{ route('admin.lansia.index') }}" class="card__action" style="text-decoration:none; font-size:13px; font-weight:600; color:#0284c7;">Lihat semua <i class="fas fa-arrow-right" style="font-size:10px;"></i></a>
         </div>
-        <div style="display:flex; flex-direction:column; gap:18px;">
-            {{-- Status Item --}}
-            <div style="display:flex; align-items:center; gap:14px;">
-                <div style="width:40px; height:40px; border-radius:var(--radius-full); background:var(--success-50); display:flex; align-items:center; justify-content:center;">
-                    <i class="fas fa-server" style="color:var(--success-500); font-size:14px;"></i>
+        <div class="activity-list">
+            @forelse($pendataanLansiaTerbaru as $lansia)
+            <div class="activity-item" style="padding: 16px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                <div class="activity-item__icon" style="background:var(--info-50); color:var(--info-600); flex-shrink: 0;">
+                    <i class="fas fa-map-marker-alt"></i>
                 </div>
-                <div style="flex:1;">
-                    <div style="font-size:13.5px; font-weight:600; color:var(--text-primary);">Server Status</div>
-                    <div style="font-size:12px; color:var(--text-tertiary);">Semua sistem berjalan normal</div>
-                </div>
-                <span class="badge badge--success"><span class="badge__dot"></span> Online</span>
-            </div>
-
-            <div style="display:flex; align-items:center; gap:14px;">
-                <div style="width:40px; height:40px; border-radius:var(--radius-full); background:var(--success-50); display:flex; align-items:center; justify-content:center;">
-                    <i class="fas fa-database" style="color:var(--success-500); font-size:14px;"></i>
-                </div>
-                <div style="flex:1;">
-                    <div style="font-size:13.5px; font-weight:600; color:var(--text-primary);">Database</div>
-                    <div style="font-size:12px; color:var(--text-tertiary);">MySQL 8+ terhubung</div>
-                </div>
-                <span class="badge badge--success"><span class="badge__dot"></span> Aktif</span>
-            </div>
-
-            <div style="display:flex; align-items:center; gap:14px;">
-                <div style="width:40px; height:40px; border-radius:var(--radius-full); background:var(--success-50); display:flex; align-items:center; justify-content:center;">
-                    <i class="fas fa-lock" style="color:var(--success-500); font-size:14px;"></i>
-                </div>
-                <div style="flex:1;">
-                    <div style="font-size:13.5px; font-weight:600; color:var(--text-primary);">Keamanan</div>
-                    <div style="font-size:12px; color:var(--text-tertiary);">Middleware & autentikasi aktif</div>
-                </div>
-                <span class="badge badge--success"><span class="badge__dot"></span> Aman</span>
-            </div>
-
-            <div style="display:flex; align-items:center; gap:14px;">
-                <div style="width:40px; height:40px; border-radius:var(--radius-full); background:var(--warning-50); display:flex; align-items:center; justify-content:center;">
-                    <i class="fas fa-hdd" style="color:var(--warning-500); font-size:14px;"></i>
-                </div>
-                <div style="flex:1;">
-                    <div style="font-size:13.5px; font-weight:600; color:var(--text-primary);">Penyimpanan</div>
-                    <div style="font-size:12px; color:var(--text-tertiary);">67% terpakai dari total</div>
-                </div>
-                <span class="badge badge--warning"><span class="badge__dot"></span> 67%</span>
-            </div>
-
-            {{-- Storage Bar --}}
-            <div style="margin-top:4px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                    <span style="font-size:12px; font-weight:600; color:var(--text-tertiary);">Kapasitas Storage</span>
-                    <span style="font-size:12px; font-weight:700; color:var(--text-primary);">6.7 GB / 10 GB</span>
-                </div>
-                <div style="height:8px; background:var(--gray-100); border-radius:var(--radius-full); overflow:hidden;">
-                    <div style="height:100%; width:67%; background:linear-gradient(90deg, var(--brand-500), var(--warning-500)); border-radius:var(--radius-full); transition: width 1s ease;"></div>
+                <div class="activity-item__content" style="flex: 1;">
+                    <div class="activity-item__title" style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="font-weight: 700; color: var(--text-primary);">Desa {{ $lansia->desa }}</span>
+                    </div>
+                    <div class="activity-item__desc" style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">
+                        Total Penduduk: {{ $lansia->jumlah_penduduk_total }} jiwa<br>
+                        Total Lansia: {{ $lansia->total_lansia_total }} jiwa
+                    </div>
+                    <div class="activity-item__time" style="font-size: 11px; color: var(--text-tertiary);"><i class="far fa-clock"></i> {{ $lansia->created_at->diffForHumans() }}</div>
                 </div>
             </div>
+            @empty
+            <div style="padding: 24px; text-align: center; color: var(--text-placeholder); font-size: 14px;">Belum ada data lansia.</div>
+            @endforelse
         </div>
     </div>
 </div>

@@ -1076,7 +1076,7 @@
         .form-control {
             width: 100%;
             padding: 10px 14px;
-            border: 1px solid var(--border-primary);
+            border: 2px solid #bbb;
             border-radius: var(--radius-md);
             font-size: 14px;
             font-family: inherit;
@@ -1406,9 +1406,15 @@
                         <span class="nav-link__icon" style="color: var(--warning-500)"><i class="fas fa-newspaper"></i></span>
                         <span class="nav-link__text">Berita</span>
                     </a>
+                    @php
+                        $unreadPesan = \App\Models\PesanMasuk::where('is_read', false)->count();
+                    @endphp
                     <a href="{{ route('admin.kontak.index') }}" class="nav-link {{ request()->routeIs('admin.kontak.*') ? 'active' : '' }}" id="nav-kontak">
                         <span class="nav-link__icon" style="color: var(--danger-500)"><i class="fas fa-envelope"></i></span>
                         <span class="nav-link__text">Kontak</span>
+                        @if($unreadPesan > 0)
+                            <span class="nav-link__badge">{{ $unreadPesan }}</span>
+                        @endif
                     </a>
                     <a href="{{ route('admin.features.index') }}" class="nav-link {{ request()->routeIs('admin.features.*') ? 'active' : '' }}" id="nav-features">
                         <span class="nav-link__icon" style="color: var(--brand-500)"><i class="fas fa-star"></i></span>

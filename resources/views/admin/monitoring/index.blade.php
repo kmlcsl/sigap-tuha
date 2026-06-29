@@ -13,14 +13,7 @@
         </div>
     </div>
 
-    {{-- Flash Message --}}
-    @if (session('success'))
-        <div class="flash-message success" id="flashMsg">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
-            <button onclick="document.getElementById('flashMsg').remove()"
-                style="margin-left:auto;background:none;border:none;cursor:pointer;color:inherit;opacity:.6;font-size:18px;">&times;</button>
-        </div>
-    @endif
+
 
     <style>
         @media (max-width: 768px) {

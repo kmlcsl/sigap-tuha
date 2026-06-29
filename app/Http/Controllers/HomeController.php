@@ -12,6 +12,8 @@ use App\Models\LansiaPrioritas;
 use App\Models\BantuanDarurat;
 use App\Models\Edukasi;
 use App\Models\OrganisasiRelawan;
+use App\Models\PesanMasuk;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
@@ -33,6 +35,36 @@ class HomeController extends Controller
     {
         $kontak = Kontak::first();
         return view('kontak', compact('kontak'));
+    }
+    
+    public function kirimPesan(Request $request)
+    {
+        $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'no_whatsapp' => 'required|string|max:20',
+            'isi_pesan' => 'required|string',
+        ]);
+        
+        $no_wa = $request->no_whatsapp;
+        // Bersihkan karakter selain angka dan +
+        $no_wa = preg_replace('/[^0-9+]/', '', $no_wa);
+        
+        // Konversi awalan 0 menjadi +62
+        if (substr($no_wa, 0, 1) === '0') {
+            $no_wa = '+62' . substr($no_wa, 1);
+        } elseif (substr($no_wa, 0, 2) === '62') {
+            $no_wa = '+' . $no_wa;
+        } elseif (substr($no_wa, 0, 1) !== '+') {
+            $no_wa = '+' . $no_wa;
+        }
+        
+        PesanMasuk::create([
+            'nama_lengkap' => $request->nama_lengkap,
+            'no_whatsapp' => $no_wa,
+            'isi_pesan' => $request->isi_pesan
+        ]);
+        
+        return redirect()->route('kontak')->with('success', 'Pesan Anda berhasil dikirim!');
     }
 
     public function berita()

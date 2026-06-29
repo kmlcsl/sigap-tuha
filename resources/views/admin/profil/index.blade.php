@@ -17,19 +17,7 @@
     </a>
 </div>
 
-{{-- Flash --}}
-@if(session('success'))
-    <div class="flash-message success" id="flashMsg">
-        <i class="fas fa-check-circle"></i> {{ session('success') }}
-        <button onclick="document.getElementById('flashMsg').remove()" style="margin-left:auto; background:none; border:none; cursor:pointer; color:inherit; opacity:0.6; font-size:18px;">&times;</button>
-    </div>
-@endif
-@if(session('error'))
-    <div class="flash-message error" id="flashMsgErr">
-        <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
-        <button onclick="document.getElementById('flashMsgErr').remove()" style="margin-left:auto; background:none; border:none; cursor:pointer; color:inherit; opacity:0.6; font-size:18px;">&times;</button>
-    </div>
-@endif
+
 
 @if($errors->any())
     <div class="flash-message error" style="margin-bottom:20px;">

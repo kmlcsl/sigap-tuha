@@ -139,11 +139,7 @@
         </div>
     </div>
 
-    @if (session('success'))
-        <div class="flash-message success" style="margin-bottom:20px;">
-            <i class="fas fa-check-circle"></i> {{ session('success') }}
-        </div>
-    @endif
+
 
     <div class="card">
         <table class="ms-table">

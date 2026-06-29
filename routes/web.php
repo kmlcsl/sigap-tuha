@@ -74,6 +74,8 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     
     Route::get('kontak', [AdminKontakController::class, 'index'])->name('kontak.index');
     Route::post('kontak', [AdminKontakController::class, 'update'])->name('kontak.update');
+    Route::patch('kontak/pesan/{id}/read', [AdminKontakController::class, 'markAsRead'])->name('kontak.pesan.read');
+    Route::delete('kontak/pesan/{id}', [AdminKontakController::class, 'destroyPesan'])->name('kontak.pesan.destroy');
     
     Route::resource('berita', AdminBeritaController::class);
     
@@ -90,6 +92,7 @@ Route::get('/berita', [HomeController::class, 'berita'])->name('berita');
 Route::get('/berita/{slug}', [HomeController::class, 'beritaDetail'])->name('berita.detail');
 
 Route::get('/kontak', [HomeController::class, 'kontak'])->name('kontak');
+Route::post('/kontak', [HomeController::class, 'kirimPesan'])->name('kontak.kirim');
 
 // PUBLIC ROUTES: 5 CARD UTAMA
 Route::get('/pendataan-lansia', [HomeController::class, 'lansia'])->name('lansia');

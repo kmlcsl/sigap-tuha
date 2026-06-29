@@ -11,11 +11,7 @@
     </div>
 </div>
 
-@if(session('success'))
-<div class="flash-message success">
-    {{ session('success') }}
-</div>
-@endif
+
 
 <div class="card">
     <div class="card__header">
